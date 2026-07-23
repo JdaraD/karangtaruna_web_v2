@@ -14,6 +14,6 @@ new class extends Component
 }
 ?>
 
-<div>
+<div class="flex justify-center items-center align-content-center w-full h-200">
     <p>page home user</p>
 </div>

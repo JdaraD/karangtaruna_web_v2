@@ -13,14 +13,13 @@ new class extends Component
     <div class="flex justify-center items-center align-content-center w-full h-full">
         <div class="grid grid-cols-3 h-full py-2 lg:gap-4 md:gap-4 gap-2 size-[94%]">
 
-            <div class="grid grid-rows-4 gap-2 h-full">
+            <div class="flex flex-col gap-2 h-full">
                     
                 <div class="flex row-span-1 items-center gap-2">
                     {{-- logo Start --}}
-                    <img src="{{ asset('img/logo.png') }}" alt="" class="lg:size-15 md:size-10 size-8">
+                    <img src="{{ asset('img/logo.png') }}" alt="" class="lg:size-16 md:size-12 size-10 rounded-full">
                     {{-- logo Ends --}}
 
-                    
                     {{-- identity name --}}
                     <div>
                         <p class="font-[poppins] font-medium lg:text-sm md:text-sm text-[10px] text-white normal-case">Karang Taruna</p>
@@ -31,7 +30,7 @@ new class extends Component
                 </div>
                 
                 {{-- Deskripsi --}}
-                <div class="row-span-3 h-fitt">
+                <div class="row-span-3 h-full">
                     
                     <p class="pb-2 lg:text-sm md:text-sm text-[10px] font-[poppins] font-semibold text-white normal-case">Deskripsi</p>
                     <p class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] text-justify text-white lg:line-clamp-9 md:line-clamp-9 line-clamp-5 normal-case">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, molestias. Nulla rerum, facilis officiis quaerat, voluptate et cumque, ea perspiciatis ipsa mollitia consequatur similique alias? Qui animi odio assumenda corrupti.</p>

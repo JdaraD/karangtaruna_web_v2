@@ -10,8 +10,9 @@ new class extends Component
 
 <div class="relative">
     {{-- website --}}
-    <div class="flex justify-center items-center">
-        <div id="mainNavbar" class="w-full relative transition-all duration-300 z-20 ease-in-out">
+    <div class="fixed top-0 left-0 right-0 z-50 w-full">
+        {{-- Navbar Sticky --}}
+        <div id="mainNavbar" class="sticky top-0 z-50 w-full transition-all duration-300 ease-in-out">
                 
             {{-- Navbar --}}
             <div class="flex w-full lg:h-18 md:h-18 h-18 justify-center bg-[#618764]">
@@ -21,14 +22,12 @@ new class extends Component
                     <div class="flex lg:col-span-1 md:col-span-2 col-span-3 w-full h-full lg:justify-center lg:items-center md:justify-center md:items-center justify-end items-center lg:gap-2 md:gap-4 gap-2">
                         {{-- logo --}}
                         <img src="{{ asset('img/logo.png') }}" alt="" class="lg:w-18 lg:h-18 md:w-16 md:h-16 w-14 h-14 rounded-full">
-                        {{-- logo --}}
                         
                         {{-- identity name --}}
                         <a href="#" class="flex flex-col w-40">
-                            <p class="font-[poppins] font-medium lg:text-base md:text-base text-base ">Karang Taruna</p>
-                            <p class="font-[poppins] font-normal lg:text-sm md:text-sm text-sm ">Desa Waru</p>
+                            <p class="font-[poppins] font-medium lg:text-base md:text-base text-base">Karang Taruna</p>
+                            <p class="font-[poppins] font-normal lg:text-sm md:text-sm text-sm">Desa Waru</p>
                         </a>
-                        {{-- identity name --}}
                     </div>
                     {{-- Logo End --}}
             
@@ -98,16 +97,13 @@ new class extends Component
                     </div>
                     {{-- Menu End --}}
             
-                    {{-- Kontak & Search Start --}}
+                    {{-- Kontak Start --}}
                     <div class="lg:flex md:flex flex lg:col-span-1 md:col-span-1 col-span-1 w-full h-full justify-center items-center lg:gap-4 md:gap-4 gap-0">
-            
-                        {{-- Kontak Start --}}
                         <a href="#kontak">
                             <p class="uppercase font-[poppins] lg:text-sm md:text-sm text-[12px] font-medium hover:bg-gray-50 px-4 py-2 rounded-md">kontak</p>
                         </a>
-                        
                     </div>
-                    {{-- Kontak & Search End --}}
+                    {{-- Kontak End --}}
                 </div>
             
             </div>
@@ -119,28 +115,22 @@ new class extends Component
                     <div class="flex justify-center items-center gap-3">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#006FFF" class="size-7">
                             <path d="M16.881 4.345A23.112 23.112 0 0 1 8.25 6H7.5a5.25 5.25 0 0 0-.88 10.427 21.593 21.593 0 0 0 1.378 3.94c.464 1.004 1.674 1.32 2.582.796l.657-.379c.88-.508 1.165-1.593.772-2.468a17.116 17.116 0 0 1-.628-1.607c1.918.258 3.76.75 5.5 1.446A21.727 21.727 0 0 0 18 11.25c0-2.414-.393-4.735-1.119-6.905ZM18.26 3.74a23.22 23.22 0 0 1 1.24 7.51 23.22 23.22 0 0 1-1.41 7.992.75.75 0 1 0 1.409.516 24.555 24.555 0 0 0 1.415-6.43 2.992 2.992 0 0 0 .836-2.078c0-.807-.319-1.54-.836-2.078a24.65 24.65 0 0 0-1.415-6.43.75.75 0 1 0-1.409.516c.059.16.116.321.17.483Z" />
-                        </svg>                  
+                        </svg>                   
                         <p class="lg:border-2 md:border-2 border lg:h-6.75 md:h-6.75 h-5"></p>
-
                     </div>
 
                     <div class="flex justify-center items-center px-1 w-full overflow-hidden text-white py-3 whitespace-nowrap">
-                            <div class="inline-block animate-marquee hover:[animation-play-state:paused] cursor-pointer tracking-wide">
-                                <p class="normal-case font-[poppins] lg:text-sm md:text-sm text-xs font-medium text-white ">
-                                    lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-                                </p>
-                            </div>
-
+                        <div class="inline-block animate-marquee tracking-wide">
+                            <p class="normal-case font-[poppins] lg:text-sm md:text-sm text-xs font-medium text-white">
+                                lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
+                            </p>
+                        </div>
                     </div>
-
                 </div>
             </div>
             {{-- Running Text --}}
             
-            
         </div>
-
     </div>
     {{-- website --}}
-
 </div>
