@@ -29,6 +29,21 @@ In addition, [Laracasts](https://laracasts.com) contains thousands of video tuto
 
 You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
 
+## Cloning Project
+
+How to install the Karang Taruna website project Version 2 using Laravel 13x and LiveWire 4V technology.
+
+```bash
+link clone : https://github.com/JdaraD/karangtaruna_web_v2.git
+
+composer i
+npm i
+php artisan storage:link
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+```
+
 ## Agentic Development
 
 Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
