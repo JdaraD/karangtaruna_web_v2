@@ -10,14 +10,15 @@
 
         @livewireStyles
     </head>
-<body class="bg-gray-100">
+    <body class="min-h-screen flex flex-col h-full w-full bg-white">
 
-    @livewire('user.navbar')
+        @livewire('user.navbar')
 
-    <!-- 2. KONTEN UTAMA -->
-    <main class="container mx-auto mt-6 px-4">
-        {{ $slot }} <!-- Halaman Livewire User Masuk Di Sini -->
-    </main>
+        <!-- 2. KONTEN UTAMA -->
+        <main class="flex grow w-full h-full bg-white">
+            {{ $slot }} <!-- Halaman Livewire User Masuk Di Sini -->
+        </main>
 
-</body>
+        @livewire('user.footer')
+    </body>
 </html>
