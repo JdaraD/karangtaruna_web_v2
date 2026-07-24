@@ -17,7 +17,7 @@ new class extends Component
                     
                 <div class="flex row-span-1 items-center gap-2">
                     {{-- logo Start --}}
-                    <img src="{{ asset('img/logo.png') }}" alt="" class="lg:size-16 md:size-12 size-10 rounded-full">
+                    <img src="{{ asset('img/logo.png') }}" alt="" class="lg:w-16 lg:h-16 md:w-14 md:h-14 w-12 h-12 rounded-full">
                     {{-- logo Ends --}}
 
                     {{-- identity name --}}
