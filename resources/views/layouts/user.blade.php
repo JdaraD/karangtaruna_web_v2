@@ -15,7 +15,7 @@
         @livewire('user.navbar')
 
         <!-- 2. KONTEN UTAMA -->
-        <main class="flex-1 mt-26.5 bg-white">
+        <main class="flex-1 mt-26.5 bg-gray-200 w-full h-full">
             {{ $slot }} <!-- Halaman Livewire User Masuk Di Sini -->
         </main>
 
