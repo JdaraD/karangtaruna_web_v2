@@ -189,11 +189,18 @@ new class extends Component
     {{-- Contact --}}
 
     {{-- sponsorship --}}
-    <section class="flex flex-col gap-2 w-full h-full bg-gray-100 py-8">
+    <section class="flex justify-center items-center flex-col gap-2 w-full h-full bg-gray-100 py-8">
         <article class="flex flex-col justify-center items-center gap-2 w-full h-full">
             <p class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base text-black normal-case">Sponsorship</p>
         </article>
 
+        <article class="flex justify-center flex-wrap gap-4 w-[90%] h-auto max-w-full mt-4">
+            @for ($i = 1; $i <= 10; $i++)
+                <div class="flex justify-center items-center w-28 h-20 bg-white animate-pulse rounded-lg shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
+                </div>
+            @endfor
+
+        </article>
     </section>
     {{-- sponsorship --}}
 
