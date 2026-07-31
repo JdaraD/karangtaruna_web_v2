@@ -88,12 +88,31 @@ new class extends Component
     {{-- Gallery Progress --}}
 
     {{-- Gallery Karang taruna --}}
-    <section class="flex flex-col w-full h-full py-8 bg-gray-100">
+    <section class="flex flex-col gap-2 justify-center items-center w-full h-full py-8 bg-gray-100">
         <article class="flex flex-col justify-center items-center gap-2 w-full h-full">
             <p class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base text-black normal-case">Gallery Karang Taruna</p>
         </article>
 
+        <article class="flex justify-center gap-2 w-[80%] h-90 mt-4">
+            <div class="flex w-[26%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
+            <div class="flex flex-col gap-2 w-[48%] h-full">
+                <div class="flex gap-2 w-full h-[50%]">
+                    <div class="flex w-[60%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
+                    <div class="flex w-[40%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
+                </div>
+                <div class="flex w-full h-[50%] bg-gray-300 animate-pulse rounded-lg"></div>
+            </div>
+            <div class="flex w-[26%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
+        </article>
     </section>
     {{-- Gallery Karang taruna --}}
+
+    {{-- Contact --}}
+    <section class="flex flex-col gap-2 w-full h-full bg-gray-200 py-8">
+        <article class="flex flex-col justify-center items-center gap-2 w-full h-full">
+            <p class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base text-black normal-case">Contact</p>
+        </article>
+    </section>
+    {{-- Contact --}}
 
 </section>
