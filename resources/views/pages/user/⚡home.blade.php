@@ -94,7 +94,9 @@ new class extends Component
         </article>
 
         <article class="flex justify-center gap-2 w-[80%] h-90 mt-4">
-            <div class="flex w-[26%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
+            <div class="flex w-[26%] h-full bg-gray-300 animate-pulse rounded-lg">
+                {{-- <img src="{{ asset('img/program.jpg') }}" alt="" class="w-full h-full object-cover rounded-lg"> --}}
+            </div>
             <div class="flex flex-col gap-2 w-[48%] h-full">
                 <div class="flex gap-2 w-full h-[50%]">
                     <div class="flex w-[60%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
@@ -112,7 +114,87 @@ new class extends Component
         <article class="flex flex-col justify-center items-center gap-2 w-full h-full">
             <p class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base text-black normal-case">Contact</p>
         </article>
+
+        <article class="flex justify-center items-center gap-2 w-full h-full mt-4">
+            <div class="flex gap-4 w-[80%] h-full">
+                <diV class="flex flex-col gap-4 w-[50%] h-125">
+
+                    <div class="flex flex-col gap-4 w-full h-[80%] bg-white rounded-lg shadow-md px-4 py-2">
+                        <p class="text-center capitalize font-semibold lg:text-lg md:text-base text-sm">hubungi kami</p>
+
+                        <form action="submit" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full h-[80%]">
+                            <div class="space-y-4 font-[poppins]">
+                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                    <label for="nama" class="font-semibold">Nama :</label>
+                                    <input type="text" wire:model.defer="nama" id="nama" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" />
+                                </div>
+                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                    <label for="alamat" class="font-semibold">Alamat :</label>
+                                    <textarea wire:model.defer="alamat" id="alamat" class="w-full h-22.5 border border-[#9CB080] rounded-lg px-2 py-2 bg-gray-100 resize-none"></textarea>
+                                </div>
+                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                    <label for="email" class="font-semibold">Email :</label>
+                                    <input type="email" wire:model.defer="email" id="email" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" />
+                                </div>
+                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                    <label for="no_telp" class="font-semibold">Nomor Hp:</label>
+                                    <input type="text" wire:model.defer="no_telp" id="no_telp" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" />
+                                </div>
+                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                    <label for="keperluan" class="font-semibold">Keperluan :</label>
+                                    <input type="text" wire:model.defer="keperluan" id="keperluan" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" />
+                                </div>
+                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                    <label for="tanggal" class="font-semibold">Tanggal :</label>
+                                    <input type="date" wire:model.defer="tanggal" id="tanggal" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" />
+                                </div>
+                            </div>
+    
+                            <div class="flex flex-col gap-4 justify-between">
+                                <div class="flex flex-col gap-2">
+                                    <label for="detail" class="capitalize font-[poppins] font-semibold text-center">Detail Keperluan</label>
+                                    <textarea wire:model.defer="detail_Keperluan" id="detail" class="w-full h-42 border border-[#9CB080] rounded-lg px-2 py-2 bg-gray-100 resize-none"></textarea>
+                                </div>
+                                <div class="flex justify-end items-center">
+                                    <button type="submit" class="bg-[#9CB080] w-30 h-8 rounded-md font-[poppins] font-semibold text-white hover:bg-[#618764] transition cursor-pointer">Kirim</button>
+                                    <span wire:loading wire:target="submit" class="ml-3 text-sm text-gray-600">Mengirim...</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="flex flex-col justify-center w-full h-[20%] py-2 bg-white rounded-lg shadow-md">
+                        <p class="text-center font-semibold text-black text-base ">Sosial Media</p>
+                        <div class="flex gap-2 justify-center items-center w-full h-full">
+                            <div class="flex justify-center items-center w-10 h-10 border border-[#9CB080] hover:bg-[#9CB080] rounded-full shadow-md hover:scale-110 transition-transform ease-in-out duration-120 cursor-pointer">
+                                <x-css-facebook class="w-full h-full py-2 px-2 text-[#618764] hover:text-white" />
+                            </div>
+                            <div class="flex justify-center items-center w-10 h-10 border border-[#9CB080] hover:bg-[#9CB080] rounded-full shadow-md hover:scale-110 transition-transform ease-in-out duration-120 cursor-pointer">
+                                <x-css-instagram class="w-full h-full py-2 px-2 text-[#618764] hover:text-white" />
+                            </div>
+                            <div class="flex justify-center items-center w-10 h-10 border border-[#9CB080] hover:bg-[#9CB080] rounded-full shadow-md hover:scale-105 transition-transform ease-in-out duration-110 cursor-pointer">
+                                <x-css-twitter class="w-full h-full py-2 px-2 text-[#618764] hover:text-white" />
+                            </div>
+
+                        </div>
+                    </div>
+                </diV>
+                <div class="flex w-[50%] h-125 bg-white rounded-lg shadow-md">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.8112020884155!2d106.71671107483074!3d-6.418299693572605!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69e62919a6edfb%3A0x63e7cbc78630da2!2sKantor%20Desa%20Waru!5e0!3m2!1sid!2sid!4v1785483080904!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" class="w-full h-full rounded-lg" allowfullscreen loading="lazy"></iframe>
+                </div>
+            </div>
+
+        </article>
     </section>
     {{-- Contact --}}
+
+    {{-- sponsorship --}}
+    <section class="flex flex-col gap-2 w-full h-full bg-gray-100 py-8">
+        <article class="flex flex-col justify-center items-center gap-2 w-full h-full">
+            <p class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base text-black normal-case">Sponsorship</p>
+        </article>
+
+    </section>
+    {{-- sponsorship --}}
 
 </section>
