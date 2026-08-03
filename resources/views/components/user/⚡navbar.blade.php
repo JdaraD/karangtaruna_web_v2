@@ -8,47 +8,49 @@ new class extends Component
 };
 ?>
 
-<div class="relative">
+<nav class="relative">
     {{-- website --}}
-    <div class="fixed top-0 left-0 right-0 z-100 w-full">
+    <div class="fixed top-0 inset-x-0 z-100 w-full">
         {{-- Navbar Sticky --}}
-        <div id="mainNavbar" class="sticky top-0 z-50 w-full transition-all duration-300 ease-in-out">
+        <div id="mainNavbar" class="w-full transition-all duration-300 ease-in-out">
                 
             {{-- Navbar --}}
-            <div class="flex w-full lg:h-18 md:h-18 h-18 justify-center bg-[#618764]">
+            <div class="relative flex w-full h-18 justify-center bg-[#618764]">
             
-                <div class="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-4 gap-4 h-full w-[90%]">
+                <div class="flex gap-4 h-full w-[96%] justify-between">
+                    {{-- Logo Start --}}
                         
-                    <div class="flex lg:col-span-1 md:col-span-2 col-span-3 w-full h-full lg:justify-center lg:items-center md:justify-center md:items-center justify-end items-center lg:gap-2 md:gap-4 gap-2">
+                    <div class="flex w-full h-full justify-center items-center lg:gap-2 md:gap-4 gap-2">
                         {{-- logo --}}
-                        <img src="{{ asset('img/logo.png') }}" alt="" class="lg:w-18 lg:h-18 md:w-16 md:h-16 w-14 h-14 rounded-full">
+                        <img src="{{ asset('img/logo.png') }}" alt="" class="lg:w-18 lg:h-20 md:w-16 md:h-16 w-14 h-14 rounded-full">
                         
                         {{-- identity name --}}
-                        <a href="{{ route('about-us') }}" class="flex flex-col w-40">
-                            <p class="font-[poppins] font-medium lg:text-base md:text-base text-base text-white">Karang Taruna</p>
-                            <p class="font-[poppins] font-normal lg:text-sm md:text-sm text-sm text-gray-200">Desa Waru</p>
+                        <a href="{{ route('about-us') }}" class="flex flex-col w-full">
+                            <p class="font-[poppins] font-medium lg:text-base md:text-sm text-sm text-white">Karang Taruna</p>
+                            <p class="font-[poppins] font-normal lg:text-sm md:text-sm text-xs text-gray-200">Desa Waru</p>
                         </a>
                     </div>
                     {{-- Logo End --}}
             
                     {{-- Menu Start --}}
-                    <div class="lg:flex md:hidden hidden col-span-4 w-full h-full justify-center items-center lg:gap-6 md:gap-4 gap-6">
-                        <a href="#" class="uppercase font-[poppins] text-sm font-medium text-white hover:text-black hover:bg-gray-50 px-4 py-2 rounded-md">beranda</a>
+                    <div class="lg:flex md:flex hidden w-full h-full justify-center items-center lg:gap-6 md:gap-2">
+                        <a href="#" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium text-white hover:text-black hover:bg-gray-50 px-2 py-1 rounded-md">beranda</a>
                             
                         <div x-data="{ open: false }" class="relative inline-block text-left">
                             @php
                                 $isProfilActive = request()->routeIs('tentang') || request()->routeIs('sktuktur') ||request()->routeIs('dasarhukum');
                             @endphp
-                            <button @click="open = !open" class="uppercase font-[poppins] text-sm inline-flex justify-center w-full rounded-md px-4 py-2 font-medium text-white hover:text-black hover:bg-gray-50 cursor-pointer {{ $isProfilActive ? 'bg-gray-50 shadow-md' : '' }}">
+                            <button @click="open = !open" class="uppercase font-[poppins] lg:text-sm md:text-xs inline-flex justify-center items-center gap-2 w-full rounded-md px-2 py-1 font-medium text-white hover:text-black hover:bg-gray-50 cursor-pointer {{ $isProfilActive ? 'bg-gray-50 shadow-md' : '' }}">
                                 profil
+                                <svg class="h-4 w-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" /> </svg>
                             </button>
                         
                             <div x-show="open" @click.outside="open = false" x-transition
                                 class="absolute left-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-opacity-5 z-50">
                                 <div class="py-1 flex flex-col justify-center items-center gap-2">
-                                    <a href="{{ route('about-us') }}" class="uppercase font-[poppins] w-37.5 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">tentang kami</a>
-                                    <a href="#" class="uppercase font-[poppins] w-37.5 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">struktur katar</a>
-                                    <a href="#" class="uppercase font-[poppins] w-37.5 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">dasar hukum</a>
+                                    <a href="{{ route('about-us') }}" class="uppercase font-[poppins] w-37.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">tentang kami</a>
+                                    <a href="#" class="uppercase font-[poppins] w-37.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">struktur katar</a>
+                                    <a href="#" class="uppercase font-[poppins] w-37.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">dasar hukum</a>
                                 </div>
                             </div>
                         </div>
@@ -58,16 +60,17 @@ new class extends Component
                                 $isProgramActive = request()->routeIs('menukegiatan') || request()->routeIs('usahamandiri') ||request()->routeIs('kolaborasi') || request()->routeIs('kegiatan') || request()->routeIs('detailusaha') || request()->routeIs('kolaborasidetail') || request()->routeIs('detailkolaborasi');
                             @endphp
 
-                            <button @click="open = !open" class="uppercase font-[poppins] text-sm inline-flex justify-center w-full rounded-md px-4 py-2 font-medium text-white hover:text-black hover:bg-gray-50 {{ $isProgramActive ? 'bg-gray-50 shadow-md' : '' }} cursor-pointer">
+                            <button @click="open = !open" class="uppercase font-[poppins] lg:text-sm md:text-xs inline-flex justify-center items-center gap-2 w-full rounded-md px-2 py-1 font-medium text-white hover:text-black hover:bg-gray-50 {{ $isProgramActive ? 'bg-gray-50 shadow-md' : '' }} cursor-pointer">
                                 program
+                                <svg class="h-4 w-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" /> </svg>
                             </button>
                         
                             <div x-show="open" @click.outside="open = false" x-transition
                                 class="absolute left-0 mt-2 w-38.5 rounded-md shadow-lg bg-white ring-opacity-5 z-50">
                                 <div class="py-1 flex flex-col justify-center items-center gap-2">
-                                    <a href="#" class="uppercase font-[poppins] w-36 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">kegiatan</a>
-                                    <a href="#" class="uppercase font-[poppins] w-36 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">usaha mandiri</a>
-                                    <a href="#" class="uppercase font-[poppins] w-36 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">kolaborasi</a>
+                                    <a href="#" class="uppercase font-[poppins] w-36 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">kegiatan</a>
+                                    <a href="#" class="uppercase font-[poppins] w-36 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">usaha mandiri</a>
+                                    <a href="#" class="uppercase font-[poppins] w-36 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">kolaborasi</a>
                                 </div>
                             </div>
                         </div>
@@ -78,34 +81,46 @@ new class extends Component
                             @endphp
 
                             <button @click="open = !open"
-                                class="uppercase font-[poppins] text-sm inline-flex justify-center w-full rounded-md px-4 py-2 font-medium text-white hover:text-black hover:bg-gray-50
+                                class="uppercase font-[poppins] lg:text-sm md:text-xs inline-flex justify-center items-center gap-2 w-full rounded-md px-2 py-1 font-medium text-white hover:text-black hover:bg-gray-50
                                 {{ $isMediaActive ? 'bg-gray-50 shadow-md' : '' }} cursor-pointer">
                                 media
+                                <svg class="h-4 w-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" /> </svg>
                             </button>
                         
                             <div x-show="open" @click.outside="open = false" x-transition
                                 class="absolute left-0 mt-2 w-35 rounded-md shadow-lg bg-white ring-opacity-5 z-50">
                                 <div class="py-1 flex flex-col justify-center items-center gap-2">
-                                    <a href="#" class="uppercase font-[poppins] w-32.5 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">foto</a>
-                                    <a href="#" class="uppercase font-[poppins] w-32.5 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">video</a>
+                                    <a href="#" class="uppercase font-[poppins] w-32.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">foto</a>
+                                    <a href="#" class="uppercase font-[poppins] w-32.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">video</a>
                                 </div>
                             </div>
                         </div>
             
-                        <a href="#" class="uppercase font-[poppins] text-sm font-medium text-white hover:text-black focus:bg-gray-50 hover:bg-gray-50 px-4 py-2 rounded-md">event</a>
-                        <a href="#" class="uppercase font-[poppins] text-sm font-medium text-white hover:text-black focus:bg-gray-50 hover:bg-gray-50 px-4 py-2 rounded-md">berita</a>
+                        <a href="#" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium text-white hover:text-black focus:bg-gray-50 hover:bg-gray-50 px-2 py-1 rounded-md">event</a>
+                        <a href="#" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium text-white hover:text-black focus:bg-gray-50 hover:bg-gray-50 px-2 py-1 rounded-md">berita</a>
                     </div>
                     {{-- Menu End --}}
             
                     {{-- Kontak Start --}}
-                    <div class="lg:flex md:flex flex lg:col-span-1 md:col-span-1 col-span-1 w-full h-full justify-center items-center lg:gap-4 md:gap-4 gap-0">
+                    <div class="lg:flex md:flex hidden lg:w-full md:w-auto h-full justify-center items-center">
                         <a href="#kontak">
-                            <p class="uppercase font-[poppins] lg:text-sm md:text-sm text-[12px] font-medium text-white hover:text-black hover:bg-gray-50 px-4 py-2 rounded-md">kontak</p>
+                            <p class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium text-white hover:text-black hover:bg-gray-50 px-2 py-1 rounded-md">kontak</p>
                         </a>
                     </div>
                     {{-- Kontak End --}}
+
                 </div>
-            
+
+                {{-- humburger menu --}}
+                <div class="lg:hidden md:hidden flex absolute right-4 col-span-1 w-full h-full justify-end items-center">
+                    <button @click="open = !open" class="text-white hover:text-black focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+    
+                </div>
+                {{-- humburger menu --}}
             </div>
             {{-- Navbar --}}
             
@@ -133,4 +148,4 @@ new class extends Component
         </div>
     </div>
     {{-- website --}}
-</div>
+</nav>
