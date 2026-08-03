@@ -24,29 +24,29 @@ new class extends Component
                         <img src="{{ asset('img/logo.png') }}" alt="" class="lg:w-18 lg:h-18 md:w-16 md:h-16 w-14 h-14 rounded-full">
                         
                         {{-- identity name --}}
-                        <a href="#" class="flex flex-col w-40">
-                            <p class="font-[poppins] font-medium lg:text-base md:text-base text-base">Karang Taruna</p>
-                            <p class="font-[poppins] font-normal lg:text-sm md:text-sm text-sm">Desa Waru</p>
+                        <a href="{{ route('about-us') }}" class="flex flex-col w-40">
+                            <p class="font-[poppins] font-medium lg:text-base md:text-base text-base text-white">Karang Taruna</p>
+                            <p class="font-[poppins] font-normal lg:text-sm md:text-sm text-sm text-gray-200">Desa Waru</p>
                         </a>
                     </div>
                     {{-- Logo End --}}
             
                     {{-- Menu Start --}}
                     <div class="lg:flex md:hidden hidden col-span-4 w-full h-full justify-center items-center lg:gap-6 md:gap-4 gap-6">
-                        <a href="#" class="uppercase font-[poppins] text-sm font-medium text-black hover:bg-gray-50 px-4 py-2 rounded-md">beranda</a>
+                        <a href="#" class="uppercase font-[poppins] text-sm font-medium text-white hover:text-black hover:bg-gray-50 px-4 py-2 rounded-md">beranda</a>
                             
                         <div x-data="{ open: false }" class="relative inline-block text-left">
                             @php
                                 $isProfilActive = request()->routeIs('tentang') || request()->routeIs('sktuktur') ||request()->routeIs('dasarhukum');
                             @endphp
-                            <button @click="open = !open" class="uppercase font-[poppins] text-sm inline-flex justify-center w-full rounded-md px-4 py-2 font-medium text-black hover:bg-gray-50 {{ $isProfilActive ? 'bg-gray-50 shadow-md' : '' }}">
+                            <button @click="open = !open" class="uppercase font-[poppins] text-sm inline-flex justify-center w-full rounded-md px-4 py-2 font-medium text-white hover:text-black hover:bg-gray-50 cursor-pointer {{ $isProfilActive ? 'bg-gray-50 shadow-md' : '' }}">
                                 profil
                             </button>
                         
                             <div x-show="open" @click.outside="open = false" x-transition
                                 class="absolute left-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-opacity-5 z-50">
                                 <div class="py-1 flex flex-col justify-center items-center gap-2">
-                                    <a href="#" class="uppercase font-[poppins] w-37.5 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">tentang kami</a>
+                                    <a href="{{ route('about-us') }}" class="uppercase font-[poppins] w-37.5 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">tentang kami</a>
                                     <a href="#" class="uppercase font-[poppins] w-37.5 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">struktur katar</a>
                                     <a href="#" class="uppercase font-[poppins] w-37.5 text-sm block px-4 py-2 text-black hover:bg-gray-200 rounded-md">dasar hukum</a>
                                 </div>
@@ -58,7 +58,7 @@ new class extends Component
                                 $isProgramActive = request()->routeIs('menukegiatan') || request()->routeIs('usahamandiri') ||request()->routeIs('kolaborasi') || request()->routeIs('kegiatan') || request()->routeIs('detailusaha') || request()->routeIs('kolaborasidetail') || request()->routeIs('detailkolaborasi');
                             @endphp
 
-                            <button @click="open = !open" class="uppercase font-[poppins] text-sm inline-flex justify-center w-full rounded-md px-4 py-2 font-medium text-black hover:bg-gray-50 {{ $isProgramActive ? 'bg-gray-50 shadow-md' : '' }}">
+                            <button @click="open = !open" class="uppercase font-[poppins] text-sm inline-flex justify-center w-full rounded-md px-4 py-2 font-medium text-white hover:text-black hover:bg-gray-50 {{ $isProgramActive ? 'bg-gray-50 shadow-md' : '' }} cursor-pointer">
                                 program
                             </button>
                         
@@ -78,8 +78,8 @@ new class extends Component
                             @endphp
 
                             <button @click="open = !open"
-                                class="uppercase font-[poppins] text-sm inline-flex justify-center w-full rounded-md px-4 py-2 font-medium text-black hover:bg-gray-50
-                                {{ $isMediaActive ? 'bg-gray-50 shadow-md' : '' }}">
+                                class="uppercase font-[poppins] text-sm inline-flex justify-center w-full rounded-md px-4 py-2 font-medium text-white hover:text-black hover:bg-gray-50
+                                {{ $isMediaActive ? 'bg-gray-50 shadow-md' : '' }} cursor-pointer">
                                 media
                             </button>
                         
@@ -92,15 +92,15 @@ new class extends Component
                             </div>
                         </div>
             
-                        <a href="#" class="uppercase font-[poppins] text-sm font-medium focus:bg-gray-50 hover:bg-gray-50 px-4 py-2 rounded-md">event</a>
-                        <a href="#" class="uppercase font-[poppins] text-sm font-medium hover:bg-gray-50 px-4 py-2 rounded-md">berita</a>
+                        <a href="#" class="uppercase font-[poppins] text-sm font-medium text-white hover:text-black focus:bg-gray-50 hover:bg-gray-50 px-4 py-2 rounded-md">event</a>
+                        <a href="#" class="uppercase font-[poppins] text-sm font-medium text-white hover:text-black focus:bg-gray-50 hover:bg-gray-50 px-4 py-2 rounded-md">berita</a>
                     </div>
                     {{-- Menu End --}}
             
                     {{-- Kontak Start --}}
                     <div class="lg:flex md:flex flex lg:col-span-1 md:col-span-1 col-span-1 w-full h-full justify-center items-center lg:gap-4 md:gap-4 gap-0">
                         <a href="#kontak">
-                            <p class="uppercase font-[poppins] lg:text-sm md:text-sm text-[12px] font-medium hover:bg-gray-50 px-4 py-2 rounded-md">kontak</p>
+                            <p class="uppercase font-[poppins] lg:text-sm md:text-sm text-[12px] font-medium text-white hover:text-black hover:bg-gray-50 px-4 py-2 rounded-md">kontak</p>
                         </a>
                     </div>
                     {{-- Kontak End --}}

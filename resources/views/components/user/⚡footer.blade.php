@@ -17,7 +17,7 @@ new class extends Component
                     
                 <div class="flex row-span-1 items-center gap-2">
                     {{-- logo Start --}}
-                    <img src="{{ asset('img/logo.png') }}" alt="" class="lg:w-16 lg:h-16 md:w-14 md:h-14 w-12 h-12 rounded-full">
+                    <img src="{{ asset('img/logo.png') }}" alt="" class="lg:w-16 lg:h-18 md:w-14 md:h-16 w-12 h-14 rounded-full">
                     {{-- logo Ends --}}
 
                     {{-- identity name --}}
@@ -105,7 +105,7 @@ new class extends Component
 
     {{-- copyright --}}
     <div class=" text-center py-2 text-xs flex justify-center items-center gap-2">
-        <img src="{{ asset('img/logo.png') }}" alt="Logo" class="w-4 h-4">
+        <img src="{{ asset('img/logo.png') }}" alt="Logo" class="w-4 h-5">
         <p class="font-[poppins] font-medium lg:text-sm md:text-[10px] text-[8px] text-white normal-case">Copyright &copy; {{ date('Y') }} Karang Taruna Desa Waru. All rights reserved.</p>
     </div>
         

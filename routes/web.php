@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route frontend
 Route::livewire('/', 'pages::user.home')->name('home');
-
-
+Route::livewire('/about', 'pages::user.about-us')->name('about-us');
 // controller frontend
 
 
