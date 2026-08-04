@@ -34,7 +34,7 @@ new class extends Component
             
                     {{-- Menu Start --}}
                     <div class="lg:flex md:flex hidden w-full h-full justify-center items-center lg:gap-6 md:gap-2">
-                        <a href="#" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium text-white hover:text-black hover:bg-gray-50 px-2 py-1 rounded-md">beranda</a>
+                        <a href="{{ route('home') }}" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium text-white hover:text-black hover:bg-gray-50 px-2 py-1 rounded-md">beranda</a>
                             
                         <div x-data="{ open: false }" class="relative inline-block text-left">
                             @php
@@ -49,7 +49,7 @@ new class extends Component
                                 class="absolute left-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-opacity-5 z-50">
                                 <div class="py-1 flex flex-col justify-center items-center gap-2">
                                     <a href="{{ route('about-us') }}" class="uppercase font-[poppins] w-37.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">tentang kami</a>
-                                    <a href="#" class="uppercase font-[poppins] w-37.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">struktur katar</a>
+                                    <a href="{{ route('struktur-katar') }}" class="uppercase font-[poppins] w-37.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">struktur katar</a>
                                     <a href="#" class="uppercase font-[poppins] w-37.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">dasar hukum</a>
                                 </div>
                             </div>

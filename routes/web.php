@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 // Route frontend
 Route::livewire('/', 'pages::user.home')->name('home');
 Route::livewire('/about', 'pages::user.about-us')->name('about-us');
+Route::livewire('/struktur-karar', 'pages::user.struktur-katar')->name('struktur-katar');
+
 // controller frontend
 
 
