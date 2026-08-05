@@ -69,7 +69,7 @@ new class extends Component
                                 class="absolute left-0 mt-2 w-38.5 rounded-md shadow-lg bg-white ring-opacity-5 z-50">
                                 <div class="py-1 flex flex-col justify-center items-center gap-2">
                                     <a href="{{ route('kegiatan') }}" class="uppercase font-[poppins] w-36 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">kegiatan</a>
-                                    <a href="#" class="uppercase font-[poppins] w-36 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">usaha mandiri</a>
+                                    <a href="{{  route('usahamandiri') }}" class="uppercase font-[poppins] w-36 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">usaha mandiri</a>
                                     <a href="#" class="uppercase font-[poppins] w-36 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">kolaborasi</a>
                                 </div>
                             </div>

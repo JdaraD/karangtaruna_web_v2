@@ -13,6 +13,8 @@ Route::livewire('/struktur-karar', 'pages::user.struktur-katar')->name('struktur
 Route::livewire('/legal', 'pages::user.legal')->name('legal');
 Route::livewire('/kegiatan', 'pages::user.kegiatan')->name('kegiatan');
 Route::livewire('/kegiatan-detail', 'pages::user.kegiatan-detail')->name('kegiatan-detail');
+Route::livewire('/usaha-mandiri', 'pages::user.usaha-mandiri')->name('usahamandiri');
+Route::livewire('/kategori-detail', 'pages::user.kategori-detail')->name('kategori-detail');
 // controller frontend
 
 
