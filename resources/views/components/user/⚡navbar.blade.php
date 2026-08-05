@@ -50,7 +50,7 @@ new class extends Component
                                 <div class="py-1 flex flex-col justify-center items-center gap-2">
                                     <a href="{{ route('about-us') }}" class="uppercase font-[poppins] w-37.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">tentang kami</a>
                                     <a href="{{ route('struktur-katar') }}" class="uppercase font-[poppins] w-37.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">struktur katar</a>
-                                    <a href="#" class="uppercase font-[poppins] w-37.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">dasar hukum</a>
+                                    <a href="{{ route('legal') }}" class="uppercase font-[poppins] w-37.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">dasar hukum</a>
                                 </div>
                             </div>
                         </div>

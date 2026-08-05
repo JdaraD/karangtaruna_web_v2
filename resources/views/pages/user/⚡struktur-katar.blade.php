@@ -28,7 +28,7 @@ new class extends Component
         </div>
 
         <div class="flex flex-col w-full h-full justify-center items-center mt-4">
-            <div class="relative flex flex-col w-48 h-68 rounded-md shadow-md hover:scale-105 duration-150 transition-transform ease-in-out bg-white">
+            <div class="relative flex flex-col lg:w-48 md:w-42 w-32 lg:h-68 md:h-62 h-52 rounded-md shadow-md hover:scale-105 duration-150 transition-transform ease-in-out bg-white">
                 <div class="w-full h-[90%] flex items-center justify-center p-2">
                     <img src="{{ asset('img/foto.jpg') }}" alt="Ketua" class="w-full h-full object-contain rounded-md">
                 </div>
@@ -52,7 +52,7 @@ new class extends Component
                 
             <!-- 2. PERUBAHAN PADA ELEMEN ANAK -->
             <!-- Menambahkan 'flex-none' agar ukuran w-48 tidak menciut/gepeng -->
-            <div class="relative flex flex-none flex-col w-48 h-68 rounded-md shadow-md hover:scale-105 duration-150 transition-transform ease-in-out bg-white">
+            <div class="relative flex flex-none flex-col lg:w-48 md:w-42 w-32 lg:h-68 md:h-62 h-52 rounded-md shadow-md hover:scale-105 duration-150 transition-transform ease-in-out bg-white">
                 
                 <div class="w-full h-[90%] flex items-center justify-center p-2">
                     <img src="{{ asset('img/foto.jpg') }}" alt="Ketua" class="w-full h-full object-contain rounded-md">
@@ -80,7 +80,7 @@ new class extends Component
                 
             <!-- 2. PERUBAHAN PADA ELEMEN ANAK -->
             <!-- Menambahkan 'flex-none' agar ukuran w-48 tidak menciut/gepeng -->
-            <div class="relative flex flex-none flex-col w-48 h-68 rounded-md shadow-md hover:scale-105 duration-150 transition-transform ease-in-out bg-white">
+            <div class="relative flex flex-none flex-col lg:w-48 md:w-42 w-32 lg:h-68 md:h-62 h-52 rounded-md shadow-md hover:scale-105 duration-150 transition-transform ease-in-out bg-white">
                 
                 <div class="w-full h-[90%] flex items-center justify-center p-2">
                     <img src="{{ asset('img/foto.jpg') }}" alt="Ketua" class="w-full h-full object-contain rounded-md">
