@@ -9,13 +9,27 @@ new class extends Component
     {
         return $this->view()
             ->layout('layouts.user', [
-                'title' => 'Kegiatan'
+                'title' => 'Kegiatan Detail'
             ]);
     }
 };
 ?>
 
 <section class="flex flex-col gap-6 w-full h-full">
+    <article class="flex w-full h-full justify-center items-center pt-6 rounded-md">
+        <div class="flex flex-wrap w-[90%] h-full gap-4">
+            <div class="flex h-full lg:w-[30%] w-full justify-center items-center order-1">
+                <div class="flex h-90 lg:w-102.5 md:w-90 w-full shrink-0 flex-none bg-gray-100 rounded-md shadow-md animate-pulse"></div>
+            </div>
+            <div class="flex flex-col flex-wrap shrink-0 flex-none gap-2 lg:w-[68%] w-full h-full order-2">
+                <p class="font-[poppins] font-semibold lg:text-lg md:text-base text-sm text-black normal-case">MBG</p>
+                <p class="font-[poppins] font-normal lg:text-sm md:text-sm text-xs text-black normal-case text-justify">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Est magnam provident nobis dolorum quidem fugit facere nesciunt repellendus vero facilis, labore, perferendis accusantium rerum! A id illo fugiat doloribus nostrum!</p>
+            </div>
+
+        </div>
+
+    </article>
+
     <article class="flex justify-center items-center flex-col gap-2 w-full h-full py-6 overflow-hidden">
         <div class="flex flex-col justify-center items-center gap-2 w-full h-full">
             <p class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base text-black normal-case">Program Karang Taruna</p>
