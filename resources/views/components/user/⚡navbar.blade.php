@@ -38,9 +38,9 @@ new class extends Component
                             
                         <div x-data="{ open: false }" class="relative inline-block text-left">
                             @php
-                                $isProfilActive = request()->routeIs('tentang') || request()->routeIs('sktuktur') ||request()->routeIs('dasarhukum');
+                                $isProfilActive = request()->routeIs('about-us') || request()->routeIs('struktur-katar') ||request()->routeIs('legal');
                             @endphp
-                            <button @click="open = !open" class="uppercase font-[poppins] lg:text-sm md:text-xs inline-flex justify-center items-center gap-2 w-full rounded-md px-2 py-1 font-medium text-white hover:text-black hover:bg-gray-50 cursor-pointer {{ $isProfilActive ? 'bg-gray-50 shadow-md' : '' }}">
+                            <button @click="open = !open" class="uppercase font-[poppins] lg:text-sm md:text-xs inline-flex justify-center items-center gap-2 w-full rounded-md px-2 py-1 font-medium cursor-pointer {{ $isProfilActive ? 'text-black bg-gray-50 shadow-md' : 'text-white hover:text-black hover:bg-gray-50' }}">
                                 profil
                                 <svg class="h-4 w-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" /> </svg>
                             </button>
@@ -57,10 +57,10 @@ new class extends Component
                         
                         <div x-data="{ open: false }" class="relative inline-block text-left">
                             @php
-                                $isProgramActive = request()->routeIs('menukegiatan') || request()->routeIs('usahamandiri') ||request()->routeIs('kolaborasi') || request()->routeIs('kegiatan') || request()->routeIs('detailusaha') || request()->routeIs('kolaborasidetail') || request()->routeIs('detailkolaborasi');
+                                $isProgramActive = request()->routeIs('kegiatan') || request()->routeIs('usahamandiri') ||request()->routeIs('kolaborasi') || request()->routeIs('kegiatan') || request()->routeIs('detailusaha') || request()->routeIs('kolaborasidetail') || request()->routeIs('detailkolaborasi');
                             @endphp
 
-                            <button @click="open = !open" class="uppercase font-[poppins] lg:text-sm md:text-xs inline-flex justify-center items-center gap-2 w-full rounded-md px-2 py-1 font-medium text-white hover:text-black hover:bg-gray-50 {{ $isProgramActive ? 'bg-gray-50 shadow-md' : '' }} cursor-pointer">
+                            <button @click="open = !open" class="uppercase font-[poppins] lg:text-sm md:text-xs inline-flex justify-center items-center gap-2 w-full rounded-md px-2 py-1 font-medium0 {{ $isProgramActive ? 'text-black bg-gray-50 shadow-md' : 'text-white hover:text-black hover:bg-gray-50' }} cursor-pointer">
                                 program
                                 <svg class="h-4 w-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" /> </svg>
                             </button>
@@ -68,7 +68,7 @@ new class extends Component
                             <div x-show="open" @click.outside="open = false" x-transition
                                 class="absolute left-0 mt-2 w-38.5 rounded-md shadow-lg bg-white ring-opacity-5 z-50">
                                 <div class="py-1 flex flex-col justify-center items-center gap-2">
-                                    <a href="#" class="uppercase font-[poppins] w-36 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">kegiatan</a>
+                                    <a href="{{ route('kegiatan') }}" class="uppercase font-[poppins] w-36 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">kegiatan</a>
                                     <a href="#" class="uppercase font-[poppins] w-36 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">usaha mandiri</a>
                                     <a href="#" class="uppercase font-[poppins] w-36 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">kolaborasi</a>
                                 </div>
@@ -81,8 +81,8 @@ new class extends Component
                             @endphp
 
                             <button @click="open = !open"
-                                class="uppercase font-[poppins] lg:text-sm md:text-xs inline-flex justify-center items-center gap-2 w-full rounded-md px-2 py-1 font-medium text-white hover:text-black hover:bg-gray-50
-                                {{ $isMediaActive ? 'bg-gray-50 shadow-md' : '' }} cursor-pointer">
+                                class="uppercase font-[poppins] lg:text-sm md:text-xs inline-flex justify-center items-center gap-2 w-full rounded-md px-2 py-1 font-medium 
+                                {{ $isMediaActive ? 'text-black bg-gray-50 shadow-md' : 'text-white hover:text-black hover:bg-gray-50' }} cursor-pointer">
                                 media
                                 <svg class="h-4 w-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" /> </svg>
                             </button>
