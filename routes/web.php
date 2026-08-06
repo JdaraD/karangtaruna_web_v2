@@ -18,6 +18,7 @@ Route::livewire('/kategori-detail', 'pages::user.kategori-detail')->name('katego
 Route::livewire('/detail-product', 'pages::user.detail-product')->name('detail-product');
 Route::livewire('/foto', 'pages::user.foto')->name('foto');
 Route::livewire('/foto-detail', 'pages::user.foto-detail')->name('foto-detail');
+Route::livewire('/video', 'pages::user.video')->name('video');
 // controller frontend
 
 

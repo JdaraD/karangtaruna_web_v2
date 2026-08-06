@@ -91,7 +91,7 @@ new class extends Component
                                 class="absolute left-0 mt-2 w-35 rounded-md shadow-lg bg-white ring-opacity-5 z-50">
                                 <div class="py-1 flex flex-col justify-center items-center gap-2">
                                     <a href="{{ route('foto') }}" class="uppercase font-[poppins] w-32.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">foto</a>
-                                    <a href="#" class="uppercase font-[poppins] w-32.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">video</a>
+                                    <a href="{{ route('video') }}" class="uppercase font-[poppins] w-32.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">video</a>
                                 </div>
                             </div>
                         </div>
