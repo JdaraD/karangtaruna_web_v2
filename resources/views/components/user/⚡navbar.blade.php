@@ -34,7 +34,13 @@ new class extends Component
             
                     {{-- Menu Start --}}
                     <div class="lg:flex md:flex hidden w-full h-full justify-center items-center lg:gap-6 md:gap-2">
-                        <a href="{{ route('home') }}" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium text-white hover:text-black hover:bg-gray-50 px-2 py-1 rounded-md">beranda</a>
+                        @php
+                            $isActiveBtnHome = request()->routeIs('home');
+                            $isActiveBtnEvent = request()->routeIs('event');
+                            $isActiveBtnNews = request()->routeIs('news');
+                        @endphp
+
+                        <a href="{{ route('home') }}" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium px-2 py-1 rounded-md {{ $isActiveBtnHome ? 'text-black bg-gray-50 shadow-md' : 'text-white hover:text-black hover:bg-gray-50' }}">beranda</a>
                             
                         <div x-data="{ open: false }" class="relative inline-block text-left">
                             @php
@@ -96,8 +102,9 @@ new class extends Component
                             </div>
                         </div>
             
-                        <a href="#" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium text-white hover:text-black focus:bg-gray-50 hover:bg-gray-50 px-2 py-1 rounded-md">event</a>
-                        <a href="#" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium text-white hover:text-black focus:bg-gray-50 hover:bg-gray-50 px-2 py-1 rounded-md">berita</a>
+                        <a href="{{ route('event') }}" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium hover:text-black focus:bg-gray-50 hover:bg-gray-50 px-2 py-1 rounded-md active:bg-gray-50 active:text-black {{ $isActiveBtnEvent ? 'text-black bg-gray-50 shadow-md' : 'text-white hover:text-black hover:bg-gray-50' }}">event</a>
+
+                        <a href="" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium hover:text-black focus:bg-gray-50 px-2 py-1 rounded-md {{ $isActiveBtnNews ? 'text-black bg-gray-50 shadow-md' : 'text-white hover:text-black hover:bg-gray-50' }}">berita</a>
                     </div>
                     {{-- Menu End --}}
             
