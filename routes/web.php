@@ -16,6 +16,7 @@ Route::livewire('/kegiatan-detail', 'pages::user.kegiatan-detail')->name('kegiat
 Route::livewire('/usaha-mandiri', 'pages::user.usaha-mandiri')->name('usahamandiri');
 Route::livewire('/kategori-detail', 'pages::user.kategori-detail')->name('kategori-detail');
 Route::livewire('/detail-product', 'pages::user.detail-product')->name('detail-product');
+Route::livewire('/foto', 'pages::user.foto')->name('foto');
 // controller frontend
 
 

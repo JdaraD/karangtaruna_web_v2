@@ -90,7 +90,7 @@ new class extends Component
                             <div x-show="open" @click.outside="open = false" x-transition
                                 class="absolute left-0 mt-2 w-35 rounded-md shadow-lg bg-white ring-opacity-5 z-50">
                                 <div class="py-1 flex flex-col justify-center items-center gap-2">
-                                    <a href="#" class="uppercase font-[poppins] w-32.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">foto</a>
+                                    <a href="{{ route('foto') }}" class="uppercase font-[poppins] w-32.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">foto</a>
                                     <a href="#" class="uppercase font-[poppins] w-32.5 text-sm block px-2 py-1 text-black hover:bg-gray-200 rounded-md">video</a>
                                 </div>
                             </div>

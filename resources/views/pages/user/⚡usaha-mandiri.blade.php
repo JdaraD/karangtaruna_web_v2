@@ -49,7 +49,7 @@ new class extends Component
             </div>
             <div class="flex w-full h-full scrollbar-thin scrollbar-thumb-black scrollbar-track-gray-200 overflow-y-auto gap-4 py-2 px-2 rounded-lg">
                 @for ($i = 1; $i <= 8; $i++)
-                    <a href="#" class="flex flex-none justify-center items-center w-68 h-40 bg-white rounded-lg shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
+                    <a href="{{ route('detail-product') }}" class="flex flex-none justify-center items-center w-68 h-40 bg-white rounded-lg shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
                         <img src="{{ asset('img/mbg.jpg') }}" alt="" class="w-full h-full object-cover rounded-lg">
                     </a>
                 @endfor
