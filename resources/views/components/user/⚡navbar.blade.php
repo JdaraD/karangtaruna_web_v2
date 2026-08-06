@@ -104,7 +104,7 @@ new class extends Component
             
                         <a href="{{ route('event') }}" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium hover:text-black focus:bg-gray-50 hover:bg-gray-50 px-2 py-1 rounded-md active:bg-gray-50 active:text-black {{ $isActiveBtnEvent ? 'text-black bg-gray-50 shadow-md' : 'text-white hover:text-black hover:bg-gray-50' }}">event</a>
 
-                        <a href="" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium hover:text-black focus:bg-gray-50 px-2 py-1 rounded-md {{ $isActiveBtnNews ? 'text-black bg-gray-50 shadow-md' : 'text-white hover:text-black hover:bg-gray-50' }}">berita</a>
+                        <a href="{{ route('news') }}" class="uppercase font-[poppins] lg:text-sm md:text-xs font-medium hover:text-black focus:bg-gray-50 px-2 py-1 rounded-md {{ $isActiveBtnNews ? 'text-black bg-gray-50 shadow-md' : 'text-white hover:text-black hover:bg-gray-50' }}">berita</a>
                     </div>
                     {{-- Menu End --}}
             
