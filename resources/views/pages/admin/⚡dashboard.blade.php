@@ -12,6 +12,6 @@ new class extends Component
 };
 ?>
 
-<div>
-    <p>page admin dashboard</p>
+<div class="flex w-full h-full bg-white shadow-md rounded-lg items-center justify-center ">
+    <p class="text-gray-800">page admin dashboard</p>
 </div>

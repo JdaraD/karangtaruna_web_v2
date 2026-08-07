@@ -10,21 +10,19 @@
 
         @livewireStyles
     </head>
-<body class="bg-gray-900 text-white flex min-h-screen">
-    @livewire('admin.sidebar')
+    <body x-data="{ sidebarOpen: false }" class="bg-gray-900 text-white flex min-h-screen">
+        @livewire('admin.sidebar')
 
-    <!-- 2. AREA KONTEN (Samping Kanan) -->
-    <div class="flex-1 flex flex-col">
-        <!-- Header kecil atas untuk admin (opsional) -->
-        <header class="bg-gray-800 p-4 shadow-md text-right">
-            <span>Halo,</span>
-        </header>
+        <!-- 2. AREA KONTEN (Samping Kanan) -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header kecil atas untuk admin (opsional) -->
+            @livewire('admin.header')
 
-        <!-- Konten Utama Admin -->
-        <main class="p-8 flex-1 text-gray-100">
-            {{ $slot }} <!-- Halaman Livewire Admin Masuk Di Sini -->
-        </main>
-    </div>
+            <!-- Konten Utama Admin -->
+            <main class="flex flex-1 p-6 ">
+                {{ $slot }} <!-- Halaman Livewire Admin Masuk Di Sini -->
+            </main>
+        </div>
 
-</body>
+    </body>
 </html>
