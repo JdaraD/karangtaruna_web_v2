@@ -9,12 +9,24 @@ new class extends Component
 ?>
 
 <!-- Wrapper Main Layout Admin -->
-<div class="relative flex min-h-screen bg-gray-100 font-[poppins]">
+@php
+    $isProfilActive = request()->routeIs('admin.about-us.*') || request()->routeIs('admin.struktur-katar.*') || request()->routeIs('admin.legal.*');
+    $isProgramActive = request()->routeIs('admin.kegiatan.*') || request()->routeIs('admin.usahamandiri.*') || request()->routeIs('admin.kolaborasi.*');
+    $isMediaActive = request()->routeIs('admin.foto.*') || request()->routeIs('admin.video.*');
+    
+    // Tentukan dropdown mana yang terbuka secara default berdasarkan route aktif
+    $defaultDropdown = null;
+    if ($isProfilActive) { $defaultDropdown = 'profil'; }
+    elseif ($isProgramActive) { $defaultDropdown = 'program'; }
+    elseif ($isMediaActive) { $defaultDropdown = 'media'; }
+@endphp
+
+<div x-data="{ activeDropdown: '{{ $defaultDropdown }}' }" class="relative flex min-h-screen bg-gray-100 font-[poppins]">
 
     <!-- Backdrop Overlay untuk Mobile (Tutup sidebar saat diklik) -->
     <div x-show="sidebarOpen" 
          @click="sidebarOpen = false"
-         X-cloak 
+         x-cloak 
          x-transition:enter="transition-opacity ease-linear duration-200"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
@@ -55,17 +67,16 @@ new class extends Component
             <p class="px-3 pt-4 pb-1 text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Manajemen Konten</p>
 
             <!-- Dropdown Profil -->
-            @php $isProfilActive = request()->routeIs('admin.about-us.*') || request()->routeIs('admin.struktur-katar.*') || request()->routeIs('admin.legal.*'); @endphp
-            <div x-data="{ open: {{ $isProfilActive ? 'true' : 'false' }} }">
-                <button @click="open = !open" 
-                        class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all {{ $isProfilActive ? 'bg-slate-800/80 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
+            <div>
+                <button @click="activeDropdown = (activeDropdown === 'profil' ? null : 'profil')" 
+                        class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all cursor-pointer {{ $isProfilActive ? 'bg-slate-800/80 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                         <span>Profil</span>
                     </div>
-                    <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': activeDropdown === 'profil' }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>
-                <div x-show="open" x-collapse class="pl-9 pr-2 py-1 space-y-1">
+                <div x-show="activeDropdown === 'profil'" x-collapse class="pl-9 pr-2 py-1 space-y-1">
                     <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Tentang Kami</a>
                     <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Struktur Katar</a>
                     <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Dasar Hukum</a>
@@ -73,17 +84,16 @@ new class extends Component
             </div>
 
             <!-- Dropdown Program -->
-            @php $isProgramActive = request()->routeIs('admin.kegiatan.*') || request()->routeIs('admin.usahamandiri.*') || request()->routeIs('admin.kolaborasi.*'); @endphp
-            <div x-data="{ open: {{ $isProgramActive ? 'true' : 'false' }} }">
-                <button @click="open = !open" 
-                        class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all {{ $isProgramActive ? 'bg-slate-800/80 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
+            <div>
+                <button @click="activeDropdown = (activeDropdown === 'program' ? null : 'program')" 
+                        class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all cursor-pointer {{ $isProgramActive ? 'bg-slate-800/80 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                         <span>Program</span>
                     </div>
-                    <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': activeDropdown === 'program' }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>
-                <div x-show="open" x-collapse class="pl-9 pr-2 py-1 space-y-1">
+                <div x-show="activeDropdown === 'program'" x-collapse class="pl-9 pr-2 py-1 space-y-1">
                     <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Kegiatan</a>
                     <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Usaha Mandiri</a>
                     <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Kolaborasi</a>
@@ -91,17 +101,16 @@ new class extends Component
             </div>
 
             <!-- Dropdown Media -->
-            @php $isMediaActive = request()->routeIs('admin.foto.*') || request()->routeIs('admin.video.*'); @endphp
-            <div x-data="{ open: {{ $isMediaActive ? 'true' : 'false' }} }">
-                <button @click="open = !open" 
-                        class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all {{ $isMediaActive ? 'bg-slate-800/80 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
+            <div>
+                <button @click="activeDropdown = (activeDropdown === 'media' ? null : 'media')" 
+                        class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all cursor-pointer {{ $isMediaActive ? 'bg-slate-800/80 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         <span>Galeri Media</span>
                     </div>
-                    <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': activeDropdown === 'media' }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>
-                <div x-show="open" x-collapse class="pl-9 pr-2 py-1 space-y-1">
+                <div x-show="activeDropdown === 'media'" x-collapse class="pl-9 pr-2 py-1 space-y-1">
                     <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Foto</a>
                     <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Video</a>
                 </div>
@@ -129,6 +138,14 @@ new class extends Component
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 <span>Manajemen Account</span>
             </a>
+
+            <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-slate-800 hover:text-white transition-all">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Settings</span>
+            </a>
         </div>
 
         <!-- Footer Profile & Logout -->
@@ -146,7 +163,7 @@ new class extends Component
                 <!-- Tombol Logout -->
                 <form method="POST" action="#">
                     @csrf
-                    <button type="submit" title="Logout" class="text-slate-400 hover:text-red-400 p-1.5 rounded-lg hover:bg-slate-800 transition-colors">
+                    <button type="submit" title="Logout" class="text-slate-400 hover:text-red-400 p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                     </button>
                 </form>
