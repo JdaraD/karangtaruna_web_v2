@@ -75,7 +75,7 @@ new class extends Component
                              class="absolute left-0 mt-2 w-44 rounded-md shadow-lg bg-white ring-1 ring-black/5 z-50 py-1">
                             <a href="{{ route('kegiatan') }}" class="uppercase text-xs font-medium block px-4 py-2 text-gray-800 hover:bg-gray-100">Kegiatan</a>
                             <a href="{{ route('usahamandiri') }}" class="uppercase text-xs font-medium block px-4 py-2 text-gray-800 hover:bg-gray-100">Usaha Mandiri</a>
-                            <a href="#" class="uppercase text-xs font-medium block px-4 py-2 text-gray-800 hover:bg-gray-100">Kolaborasi</a>
+                            <a href="{{ route('kolaborasi') }}" class="uppercase text-xs font-medium block px-4 py-2 text-gray-800 hover:bg-gray-100">Kolaborasi</a>
                         </div>
                     </div>
 

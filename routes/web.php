@@ -22,6 +22,7 @@ Route::livewire('/video', 'pages::user.video')->name('video');
 Route::livewire('/video-detail', 'pages::user.video-detail')->name('video-detail');
 Route::livewire('/event', 'pages::user.event')->name('event');
 Route::livewire('/news', 'pages::user.news')->name('news');
+Route::livewire('/kolaborasi', 'pages::user.kolaborasi')->name('kolaborasi');
 // controller frontend
 
 
