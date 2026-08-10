@@ -7,7 +7,9 @@ new class extends Component
     public function render()
     {
         return $this->view()
-            ->layout('layouts.admin');
+            ->layout('layouts.admin',[
+                'title' => 'Dashboard'
+            ]);
     }
 };
 ?>
