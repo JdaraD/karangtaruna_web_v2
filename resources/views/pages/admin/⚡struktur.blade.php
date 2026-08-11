@@ -88,7 +88,7 @@ new class extends Component
         </div>
 
         <!-- 3. Bagian List Pengurus (Sekretaris, dll) -->
-        <div class="flex flex-col justify-stretch items-center lg:w-[59.7%] w-full gap-4 p-4 lg:h-76 h-auto bg-white rounded-md shadow-md">
+        <div class="flex flex-col justify-stretch items-center lg:w-[59.6%] w-full gap-4 p-4 lg:h-76 h-auto bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center">
                 <h1 class="font-semibold text-base text-black capitalize">Daftar Anggota / Pengurus Lainnya</h1>
                 <div class="flex w-auto gap-1 justify-end items-center">
