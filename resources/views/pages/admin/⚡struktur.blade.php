@@ -15,7 +15,7 @@ new class extends Component
 };
 ?>
 
-<section class="flex flex-col gap-4 w-full xl:h-200 lg:h-157.5 h-full overflow-y-auto scrollbar-none">
+<section class="flex flex-col gap-4 w-full lg:h-157.5 h-full overflow-y-auto scrollbar-none">
     <!-- Header Bagian Struktur -->
     <article class="flex flex-none gap-2 items-center">
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -49,7 +49,7 @@ new class extends Component
 
     <!-- 2. Bagian Informasi Pengurus & Kartu Ketua -->
     <article class="flex flex-wrap w-full gap-4 items-center">
-        <div class="flex flex-col justify-stretch items-center lg:w-[39%] w-full gap-4 p-4  lg:h-76 h-auto bg-white rounded-md shadow-md">
+        <div class="flex flex-col justify-stretch items-center lg:w-[39%] w-full gap-4 p-4 lg:h-76 h-full bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center">
                 <div class="flex flex-col">
                     <p class="font-semibold text-base text-black capitalize">Pengurus Karang Taruna</p>
@@ -88,7 +88,7 @@ new class extends Component
         </div>
 
         <!-- 3. Bagian List Pengurus (Sekretaris, dll) -->
-        <div class="flex flex-col justify-stretch items-center lg:w-[59.6%] w-full gap-4 p-4 lg:h-76 h-auto bg-white rounded-md shadow-md">
+        <div class="flex flex-col justify-stretch items-center lg:w-[59.7%] w-full gap-4 p-4 lg:h-76 h-full bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center">
                 <h1 class="font-semibold text-base text-black capitalize">Daftar Anggota / Pengurus Lainnya</h1>
                 <div class="flex w-auto gap-1 justify-end items-center">
