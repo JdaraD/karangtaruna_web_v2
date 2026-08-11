@@ -30,6 +30,7 @@ Route::livewire('/detail-kolaborasi', 'pages::user.detail-kolaborasi')->name('de
 // Route backend
 Route::livewire('/admin', 'pages::admin.dashboard')->name('admin.dashboard');
 Route::livewire('/about-us', 'pages::admin.about-us')->name('admin.about-us');
+Route::livewire('/struktur', 'pages::admin.struktur')->name('admin.struktur');
 
 
 // controller backend
