@@ -15,7 +15,7 @@
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
 
-    --breakpoint-3xl: 1400px;
+    --breakpoint-3xl: 120rem;
 }
 
 @keyframes marquee {

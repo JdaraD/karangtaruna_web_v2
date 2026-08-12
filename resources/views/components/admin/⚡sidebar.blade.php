@@ -79,7 +79,7 @@ new class extends Component
                 <div x-show="activeDropdown === 'profil'" x-collapse class="pl-9 pr-2 py-1 space-y-1">
                     <a href="{{ route('admin.about-us') }}" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Tentang Kami</a>
                     <a href="{{ route('admin.struktur') }}" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Struktur Katar</a>
-                    <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Dasar Hukum</a>
+                    <a href="{{ route('admin.legal') }}" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Dasar Hukum</a>
                 </div>
             </div>
 

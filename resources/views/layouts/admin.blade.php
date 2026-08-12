@@ -19,7 +19,7 @@
             @livewire('admin.header')
 
             <!-- Konten Utama Admin -->
-            <main class="flex flex-1 h-screen overflow-hidden p-6">
+            <main class="flex w-full h-full overflow-hidden p-6">
                 {{ $slot }} <!-- Halaman Livewire Admin Masuk Di Sini -->
             </main>
         </div>
