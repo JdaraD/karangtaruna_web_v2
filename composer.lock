@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "936a3bbcc65b7e944758b87659fa2e76",
+    "content-hash": "fa8e1427652a15e01b09230076bc9d42",
     "packages": [
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -3857,6 +3857,66 @@
                 "source": "https://github.com/ramsey/uuid/tree/4.9.3"
             },
             "time": "2026-06-18T03:57:49+00:00"
+        },
+        {
+            "name": "robertboes/blade-selfhst-icons",
+            "version": "v0.3.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RobertBoes/blade-selfhst-icons.git",
+                "reference": "d4b44c188a0e900a72c8038c5c1f35eed32ba175"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RobertBoes/blade-selfhst-icons/zipball/d4b44c188a0e900a72c8038c5c1f35eed32ba175",
+                "reference": "d4b44c188a0e900a72c8038c5c1f35eed32ba175",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-icons": "^1.6",
+                "illuminate/support": "^11.0 || ^12.0 || ^13.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
+                "phpunit/phpunit": "^10.5 || ^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BladeUI\\SelfhstIcons\\BladeSelfhstIconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BladeUI\\SelfhstIcons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Boes"
+                }
+            ],
+            "description": "A package to easily make use of selfh.st Icons in your Laravel Blade views.",
+            "homepage": "https://github.com/RobertBoes/blade-selfhst-icons",
+            "keywords": [
+                "blade",
+                "icons",
+                "laravel",
+                "selfh.st"
+            ],
+            "support": {
+                "issues": "https://github.com/RobertBoes/blade-selfhst-icons/issues",
+                "source": "https://github.com/RobertBoes/blade-selfhst-icons/tree/v0.3.7"
+            },
+            "time": "2026-08-10T08:13:50+00:00"
         },
         {
             "name": "symfony/clock",

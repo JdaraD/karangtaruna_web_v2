@@ -24,6 +24,8 @@ Route::livewire('/event', 'pages::user.event')->name('event');
 Route::livewire('/news', 'pages::user.news')->name('news');
 Route::livewire('/kolaborasi', 'pages::user.kolaborasi')->name('kolaborasi');
 Route::livewire('/detail-kolaborasi', 'pages::user.detail-kolaborasi')->name('detail-kolaborasi');
+
+
 // controller frontend
 
 
@@ -34,6 +36,7 @@ Route::livewire('/admin.struktur', 'pages::admin.struktur')->name('admin.struktu
 Route::livewire('/admin.legal', 'pages::admin.legal')->name('admin.legal');
 Route::livewire('/admin.kegiatan', 'pages::admin.kegiatan')->name('admin.kegiatan');
 Route::livewire('/admin.usaha', 'pages::admin.usaha')->name('admin.usaha');
+Route::livewire('/admin.kolaborasi', 'pages::admin.kolaborasi')->name('admin.kolaborasi');
 
 
 // controller backend

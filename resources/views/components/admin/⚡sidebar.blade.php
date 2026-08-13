@@ -96,7 +96,7 @@ new class extends Component
                 <div x-show="activeDropdown === 'program'" x-collapse class="pl-9 pr-2 py-1 space-y-1">
                     <a href="{{ route('admin.kegiatan') }}" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Kegiatan</a>
                     <a href="{{ route('admin.usaha') }}" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Usaha Mandiri</a>
-                    <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Kolaborasi</a>
+                    <a href="{{ route('admin.kolaborasi') }}" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Kolaborasi</a>
                 </div>
             </div>
 
