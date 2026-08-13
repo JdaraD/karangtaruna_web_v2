@@ -25,7 +25,7 @@ new class extends Component
         <div class="flex flex-col justify-stretch gap-4 items-center w-full h-auto p-4 bg-white shadow-md rounded-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
-                    <h1 class="font-semibold text-base text-black capitalize">Dasar Hukum Karang Taruna Desa</h1>
+                    <h1 class="font-semibold text-base text-black capitalize">Kegiatan Karang taruna/h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
                     <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
