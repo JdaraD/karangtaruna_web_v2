@@ -94,7 +94,7 @@ new class extends Component
                     <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': activeDropdown === 'program' }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>
                 <div x-show="activeDropdown === 'program'" x-collapse class="pl-9 pr-2 py-1 space-y-1">
-                    <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Kegiatan</a>
+                    <a href="{{ route('admin.kegiatan') }}" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Kegiatan</a>
                     <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Usaha Mandiri</a>
                     <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Kolaborasi</a>
                 </div>

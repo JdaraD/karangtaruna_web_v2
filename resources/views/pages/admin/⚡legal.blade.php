@@ -16,7 +16,6 @@ new class extends Component
 ?>
 
 <section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-157.5 h-full overflow-y-auto scrollbar-none">
-    <!-- Header Bagian Struktur -->
     <article class="flex flex-none gap-2 items-center">
         <x-bi-book class="h-5 w-5"/>
         <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base">Legal</h1>
@@ -24,7 +23,7 @@ new class extends Component
 
     <article class="flex flex-wrap w-full gap-4 items-center">
         <div class="flex flex-col justify-stretch gap-4 items-center w-full h-auto p-4 bg-white shadow-md rounded-md">
-            <div class="flex w-full h-auto gap-1 justify-between items-center">
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Dasar Hukum Karang Taruna Desa</h1>
                 </div>
@@ -47,7 +46,7 @@ new class extends Component
         </div>
 
         <div class="flex flex-col justify-stretch gap-4 items-center w-full h-auto p-4 bg-white shadow-md rounded-md">
-            <div class="flex w-full h-auto gap-1 justify-between items-center">
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Pasal Tentang Berdirinya Karang Taruna</h1>
                 </div>

@@ -25,7 +25,7 @@ new class extends Component
     <!-- 1. Bagian Gambar Bagan Struktur Organisasi -->
     <article class="flex flex-wrap w-full gap-4 items-center">
         <div class="flex flex-col justify-stretch items-center w-full gap-2 p-4 lg:h-76 h-auto bg-white rounded-md shadow-md">
-            <div class="flex w-full h-auto gap-1 justify-between items-center">
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Bagan Struktur Organisasi</h1>
                 </div>
@@ -50,7 +50,7 @@ new class extends Component
     <!-- 2. Bagian Informasi Pengurus & Kartu Ketua -->
     <article class="flex flex-wrap w-full gap-4 items-center">
         <div class="flex flex-col justify-stretch items-center lg:w-[39%] w-full gap-4 p-4 lg:h-76 h-full bg-white rounded-md shadow-md">
-            <div class="flex w-full h-auto gap-1 justify-between items-center">
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex flex-col">
                     <p class="font-semibold text-base text-black capitalize">Pengurus Karang Taruna</p>
                     <p class="text-gray-500 font-normal text-sm">Desa Waru 2023 - 2031</p>
@@ -89,7 +89,7 @@ new class extends Component
 
         <!-- 3. Bagian List Pengurus (Sekretaris, dll) -->
         <div class="flex flex-col justify-stretch items-center lg:w-[59.7%] w-full gap-4 p-4 lg:h-76 h-full bg-white rounded-md shadow-md">
-            <div class="flex w-full h-auto gap-1 justify-between items-center">
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <h1 class="font-semibold text-base text-black capitalize">Daftar Anggota / Pengurus Lainnya</h1>
                 <div class="flex w-auto gap-1 justify-end items-center">
                     <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
@@ -107,7 +107,7 @@ new class extends Component
             <div class="flex w-full h-full overflow-hidden">
                 <div class="flex xl:w-240 lg:w-183.75 md:w-screen w-74 h-full justify-start items-center gap-4 scrollbar-thin overflow-x-auto p-2 rounded-md">
                     @for ($i = 1; $i <= 8; $i++)
-                    <div class="relative flex flex-none flex-col lg:w-38 md:w-32 w-22 lg:h-48 md:h-42 h-42 rounded-md shadow-md hover:scale-105 duration-150 transition-transform ease-in-out bg-white border border-gray-200">
+                    <div class="relative flex flex-none flex-col lg:w-38 md:w-32 w-22 lg:h-47 md:h-42 h-42 rounded-md shadow-md hover:scale-105 duration-150 transition-transform ease-in-out bg-white border border-gray-200">
                         <div class="w-full h-[90%] flex items-center justify-center p-2">
                             <img src="{{ asset('img/foto.jpg') }}" alt="Pengurus" class="w-full h-full object-contain rounded-md">
                         </div>

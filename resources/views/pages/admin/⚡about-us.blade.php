@@ -26,43 +26,53 @@ new class extends Component
     <article class="flex flex-wrap w-full gap-4 items-center">
 
         <div class="flex flex-col justify-stretch items-center lg:w-[36%] w-full gap-2 lg:h-76 h-auto p-4 bg-white rounded-md shadow-md">
-            <div class="flex w-full h-auto gap-1 justify-end items-center">
-                <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                    <x-css-eye class="h-4 w-4 text-white"/>
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
+                <div class="flex w-full h-auto gap-1 items-center">
+                    <h1 class="font-semibold text-base text-black capitalize">Identitas</h1>
                 </div>
-                <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                    <x-bi-plus class="h-6 w-6 text-white"/>
-                </div>
-                <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                    <x-bi-trash class="h-4 w-4 text-white"/>
+                <div class="flex w-full h-auto gap-1 justify-end items-center">
+                    <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
+                        <x-css-eye class="h-4 w-4 text-white"/>
+                    </div>
+                    <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
+                        <x-bi-plus class="h-6 w-6 text-white"/>
+                    </div>
+                    <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                        <x-bi-trash class="h-4 w-4 text-white"/>
+                    </div>
                 </div>
             </div>
             <div class="flex justify-center items-center">
-                <img src="{{ asset('img/logo.png') }}" alt="" class="w-42 h-44 rounded-md object-cover">
+                <img src="{{ asset('img/logo.png') }}" alt="" class="w-40 h-42 rounded-md object-cover">
             </div>
-            <div class="flex flex-col items-center gap-1">
+            <div class="flex flex-col items-center">
                 <div class="flex items-center gap-1">
                     <h1 class="font-semibold capitalize lg:text-lg md:text-base text-base text-black">Nama Organiasi :</h1>
                     <p class="lg:text-base text-sm text-black">Karang Taruna Desa Waru</p>
                 </div>
 
                 <div class="flex items-center gap-1">
-                    <h1 class="font-semibold capitalize lg:text-base text-sm text-black">Periode :</h1>
-                    <p class="lg:text-sm text-xs text-black">2022-2030</p>
+                    <h1 class="font-semibold capitalize lg:text-base text-sm text-black">Periode : </h1>
+                    <p class="lg:text-sm text-xs text-black"> 2022-2030</p>
                 </div>
             </div>
         </div>
 
         <div class="flex flex-col justify-stretch gap-2 items-center lg:w-[62.7%] w-full lg:h-76 h-auto p-4 bg-white shadow-md rounded-md">
-            <div class="flex w-full h-auto gap-1 justify-end items-center">
-                <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                    <x-css-eye class="h-4 w-4 text-white"/>
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
+                <div class="flex w-full h-auto gap-1 items-center">
+                    <h1 class="font-semibold text-base text-black capitalize">Karang Taruna Desa</h1>
                 </div>
-                <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                    <x-bi-plus class="h-6 w-6 text-white"/>
-                </div>
-                <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                    <x-bi-trash class="h-4 w-4 text-white"/>
+                <div class="flex w-full h-auto gap-1 justify-end items-center">
+                    <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
+                        <x-css-eye class="h-4 w-4 text-white"/>
+                    </div>
+                    <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
+                        <x-bi-plus class="h-6 w-6 text-white"/>
+                    </div>
+                    <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                        <x-bi-trash class="h-4 w-4 text-white"/>
+                    </div>
                 </div>
             </div>
             <div class="flex flex-wrap">
@@ -76,7 +86,7 @@ new class extends Component
     <article class="flex flex-wrap w-full gap-4 items-center">
 
         <div class="flex flex-col justify-stretch items-center lg:w-[49%] w-full gap-2 lg:h-76 h-44 p-4 bg-white rounded-md shadow-md">
-            <div class="flex w-full h-auto gap-1 justify-between items-center">
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Visi</h1>
                 </div>
@@ -107,7 +117,7 @@ new class extends Component
         </div>
 
         <div class="flex flex-col justify-stretch items-center lg:w-[49.7%] w-full gap-2 lg:h-76 h-44 p-4 bg-white rounded-md shadow-md">
-            <div class="flex w-full h-auto gap-1 justify-between items-center">
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Misi</h1>
                 </div>
@@ -142,7 +152,7 @@ new class extends Component
     <article class="flex flex-wrap w-full gap-4 items-center">
 
         <div class="flex flex-col justify-stretch items-center w-full gap-2 lg:h-58 h-44 p-4 bg-white rounded-md shadow-md">
-            <div class="flex w-full h-auto gap-1 justify-between items-center">
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Value</h1>
                 </div>

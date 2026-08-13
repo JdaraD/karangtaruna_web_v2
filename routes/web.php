@@ -32,6 +32,7 @@ Route::livewire('/admin', 'pages::admin.dashboard')->name('admin.dashboard');
 Route::livewire('/admin.about-us', 'pages::admin.about-us')->name('admin.about-us');
 Route::livewire('/admin.struktur', 'pages::admin.struktur')->name('admin.struktur');
 Route::livewire('/admin.legal', 'pages::admin.legal')->name('admin.legal');
+Route::livewire('/admin.kegiatan', 'pages::admin.kegiatan')->name('admin.kegiatan');
 
 
 // controller backend
