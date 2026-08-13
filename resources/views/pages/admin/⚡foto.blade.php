@@ -9,7 +9,7 @@ new class extends Component
     {
         return $this->view()
             ->layout('layouts.admin', [
-                'title' => 'Usaha Mandiri'
+                'title' => 'Foto'
             ]);
     }
 };
@@ -17,15 +17,14 @@ new class extends Component
 
 <section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-157.5 h-full overflow-y-auto scrollbar-none">
     <article class="flex flex-none gap-2 items-center">
-        <x-gmdi-business-center class="h-6 w-6" />
-        <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base">Usaha Mandiri</h1>
+        <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base">Foto</h1>
     </article>
 
     <article class="flex flex-wrap w-full gap-4 items-center">
-        <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 w-full max-h-18 gap-2 px-2 overflow-y-auto scrollbar-none"
+        <div class="flex flex-col justify-stretch gap-4 items-center w-full h-auto p-4 bg-white shadow-md rounded-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
-                    <h1 class="font-semibold text-base text-black capitalize">Kategori Usaha</h1>
+                    <h1 class="font-semibold text-base text-black capitalize">Album Foto</h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
                     <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
@@ -34,11 +33,11 @@ new class extends Component
                 </div>
             </div>
 
-            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 w-full max-h-40 gap-2 overflow-y-auto scrollbar-none">
+            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 w-full max-h-18 gap-2 px-2 overflow-y-auto scrollbar-none">
                 @for ($i = 1; $i <= 3; $i++)
                     <div class="flex flex-col w-full h-auto gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
                         <div class="flex w-full h-full gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                            <p class="text-base font-semibold capitalize">Pertanian</p>
+                            <p class="text-base font-semibold capitalize">CFD</p>
                             <div class="flex gap-1">
                                 <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                     <x-css-eye class="h-4 w-4 text-white"/>
@@ -56,7 +55,7 @@ new class extends Component
         <div class="flex flex-col justify-stretch gap-4 items-center w-full h-auto p-4 bg-white shadow-md rounded-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
-                    <h1 class="font-semibold text-base text-black capitalize">Produck Usaha</h1>
+                    <h1 class="font-semibold text-base text-black capitalize">Foto</h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
                     <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
@@ -67,7 +66,7 @@ new class extends Component
             <div class="flex w-full h-auto gap-1 items-center">
                 @for ($i = 1; $i <= 3; $i++)
                     <div class="flex w-auto h-auto gap-1 items-center bg-gray-100 hover:bg-gray-200 rounded-md p-2 cursor-pointer">
-                        <h1 class="font-semibold text-base text-black capitalize">Pertanian</h1>
+                        <h1 class="font-semibold text-base text-black capitalize">CFD</h1>
                     </div>
                 @endfor
             </div>
@@ -79,7 +78,7 @@ new class extends Component
                             <img src="{{ asset('img/foto.jpg') }}" alt="" class="w-full h-46 object-cover rounded-md">
                         </div>
                         <div class="flex w-full h-full gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                            <p class="text-base font-semibold capitalize">Pertanian</p>
+                            <p class="text-base font-semibold capitalize">Kegiatan CFD</p>
                             <div class="flex gap-1">
                                 <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                     <x-css-eye class="h-4 w-4 text-white"/>
@@ -94,6 +93,5 @@ new class extends Component
             </div>
         </div>
     </article>
-
 
 </section>
