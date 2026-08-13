@@ -17,6 +17,7 @@ new class extends Component
 
 <section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-157.5 h-full overflow-y-auto scrollbar-none">
     <article class="flex flex-none gap-2 items-center">
+        <x-bi-image class="h-5 w-5" />
         <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base">Foto</h1>
     </article>
 
