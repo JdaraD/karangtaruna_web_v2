@@ -112,7 +112,7 @@ new class extends Component
                 </button>
                 <div x-show="activeDropdown === 'media'" x-collapse class="pl-9 pr-2 py-1 space-y-1">
                     <a href="{{ route('admin.foto') }}" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Foto</a>
-                    <a href="#" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Video</a>
+                    <a href="{{ route('admin.video') }}" class="block rounded-md px-3 py-2 text-xs font-medium hover:bg-slate-800 hover:text-white transition-all">Video</a>
                 </div>
             </div>
 
