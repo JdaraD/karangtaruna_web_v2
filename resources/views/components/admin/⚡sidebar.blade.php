@@ -137,6 +137,13 @@ new class extends Component
                 <span>Banner and Slider</span>
             </a>
 
+            <!-- Kontak -->
+            <a href="{{ route('admin.kontak') }}" 
+               class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all {{ request()->routeIs('admin.news.*') ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-slate-800 hover:text-white' }}">
+               <x-gmdi-contact-phone class="w-5 h-5" />
+               <span>Kontak</span>
+            </a>
+
             <!-- Group Header -->
             <p class="px-3 pt-4 pb-1 text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Pengaturan</p>
 

@@ -42,6 +42,7 @@ Route::livewire('/admin.video', 'pages::admin.video')->name('admin.video');
 Route::livewire('/admin.event', 'pages::admin.event')->name('admin.event');
 Route::livewire('/admin.news', 'pages::admin.news')->name('admin.news');
 Route::livewire('/admin.banner', 'pages::admin.banner')->name('admin.banner');
+Route::livewire('/admin.kontak', 'pages::admin.kontak')->name('admin.kontak');
 
 
 // controller backend
