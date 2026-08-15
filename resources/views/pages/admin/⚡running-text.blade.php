@@ -4,6 +4,17 @@ use Livewire\Component;
 
 new class extends Component
 {
+    public $ovelayAdd = false;
+
+    public function btnOpenAdd()
+    {
+        $this->overlayAdd = true;
+    }
+
+    public function closeOpenAdd()
+    {
+        $this->overlayAdd = false;
+    }
     
     public function render()
     {
@@ -29,9 +40,9 @@ new class extends Component
                     <h1 class="font-semibold text-base text-black capitalize">Running Text</h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
-                    <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
+                    <button id="btbOpenAdd" name="btnOpenAdd" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
                         <x-bi-plus class="h-6 w-6 text-white"/>
-                    </div>
+                    </button>
                 </div>
             </div>
 
@@ -56,4 +67,16 @@ new class extends Component
         </div>
     </article>
 
+    {{-- overlay btn add --}}
+    <article id="overlayAdd" name="overlayAdd" class="absolute items-center justify-center top-0 left-0 w-full h-full bg-gray-400/60 z-50">
+        <div class="relative flex w-[80%] h-[80%] items-center justify-center bg-white">
+            <div id="btnCloseAdd" class="absolute top-2 right-2 rounded-md p-2 bg-amber-200">
+                <p>close</p>
+            </div>
+            <h1 class="text-2xl font-semibold text-black">text</h1>
+
+        </div>
+    </article>
+    {{-- overlay btn add --}}
+    
 </section>
