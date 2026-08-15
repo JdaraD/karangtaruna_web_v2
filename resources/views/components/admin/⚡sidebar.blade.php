@@ -83,6 +83,13 @@ new class extends Component
                 </div>
             </div>
 
+            <!-- Running Text -->
+            <a href="{{ route('admin.running-text') }}" 
+               class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all {{ request()->routeIs('admin.event.*') ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-slate-800 hover:text-white' }}">
+                <x-gmdi-info class="w-5 h-5"/> 
+                <span>Running Text</span>
+            </a>
+
             <!-- Dropdown Program -->
             <div>
                 <button @click="activeDropdown = (activeDropdown === 'program' ? null : 'program')" 

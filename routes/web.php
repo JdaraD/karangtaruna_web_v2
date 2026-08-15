@@ -43,6 +43,7 @@ Route::livewire('/admin.event', 'pages::admin.event')->name('admin.event');
 Route::livewire('/admin.news', 'pages::admin.news')->name('admin.news');
 Route::livewire('/admin.banner', 'pages::admin.banner')->name('admin.banner');
 Route::livewire('/admin.kontak', 'pages::admin.kontak')->name('admin.kontak');
+Route::livewire('/admin.running-text', 'pages::admin.running-text')->name('admin.running-text');
 
 
 // controller backend
