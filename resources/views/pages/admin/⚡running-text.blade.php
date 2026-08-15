@@ -70,8 +70,8 @@ new class extends Component
 
     {{-- overlay btn add --}}
     @if ($overlayAdd)
-        <article class="absolute flex inset-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
-            <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
+        <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
+            <form action="{{ route('runningTextController.store') }}" method="POST" class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
                 
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
@@ -91,7 +91,7 @@ new class extends Component
                             Judul Berita
                         </label>
 
-                        <input type="text" name="judul" id="judul" placeholder="Masukkan judul berita" class="md:col-span-3 w-full rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        <input type="text" name="judul" id="judul" placeholder="Masukkan judul berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
@@ -99,20 +99,33 @@ new class extends Component
                             Berita
                         </label>
 
-                        <textarea name="berita" id="berita" rows="7" placeholder="Masukkan isi berita" class="md:col-span-3 w-full resize-none rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
+                        <textarea name="text" id="text" rows="7" placeholder="Masukkan isi berita" class="md:col-span-3 w-full resize-none rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
                     </div>
 
                 </div>
 
                 <div class="flex w-full h-full justify-end items-end">
-                    <button wire:click="btnAdd" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
+                    <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
                         Tambah
                     </button>
                 </div>
-            </div>
+            </form>
+            
         </article>
         
     @endif
     {{-- overlay btn add --}}
+
+    @if (session('success'))
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="absolute top-2 right-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+
+    @if (session('gagal'))
+        <div class="absolute top-2 right-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ session('sgagal') }}</span>
+        </div>
+    @endif
     
 </section>

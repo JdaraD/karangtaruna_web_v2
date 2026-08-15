@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\runningTextController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -47,3 +48,4 @@ Route::livewire('/admin.running-text', 'pages::admin.running-text')->name('admin
 
 
 // controller backend
+Route::resource('runningTextController', runningTextController::class);

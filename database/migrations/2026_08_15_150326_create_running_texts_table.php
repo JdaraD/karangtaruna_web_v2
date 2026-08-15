@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('running_texts', function (Blueprint $table) {
             $table->id();
+            $table->boolean('is_active')->default(1);
+            $table->string('judul');
+            $table->longText('text');
             $table->timestamps();
         });
     }
