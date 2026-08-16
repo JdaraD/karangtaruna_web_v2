@@ -1,10 +1,22 @@
 <?php
 
 use Livewire\Component;
+use App\Models\runningText;
 
 new class extends Component
 {
     public $overlayAdd = false;
+    public $runningText;
+
+    public function loadRunningText()
+    {
+        $this->runningText = runningText::get();
+    }
+
+    public function mount()
+    {
+        $this->loadRunningText();
+    }
 
     public function btnOpenAdd()
     {
@@ -48,11 +60,11 @@ new class extends Component
             </div>
 
             <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 w-full 3xl:h-210 lg:h-80 md:h-66 h-64 gap-2 p-2 overflow-y-auto scrollbar-none">
-                @for ($i = 1; $i <= 2; $i++)
-                    <div class="flex flex-col w-full h-fit gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
-                        <p class="text-base font-semibold capitalize line-clamp-5">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste adipisci laudantium nam, maxime dicta ea odio. Molestiae, at cumque praesentium ab distinctio, aut quisquam reiciendis, impedit rerum itaque consequatur velit.</p>
-                        <div class="flex w-full h-full gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                            <p class="text-base font-semibold capitalize">Berita 1</p>
+                @foreach ($runningText as $text)
+                    <div class="flex flex-col w-full h-38 gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
+                        <p class="flex h-full text-base font-semibold capitalize line-clamp-5">{{$text->text}}</p>
+                        <div class="flex w-full h-8 gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
+                            <p class="text-base font-semibold capitalize">{{$text->judul}}</p>
                             <div class="flex gap-1">
                                 <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                     <x-css-eye class="h-4 w-4 text-white"/>
@@ -63,7 +75,7 @@ new class extends Component
                             </div>
                         </div>
                     </div>
-                @endfor
+                @endforeach
             </div>
         </div>
     </article>

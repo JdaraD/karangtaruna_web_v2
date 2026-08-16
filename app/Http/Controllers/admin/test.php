@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
-use App\Models\runningText;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class runningTextController extends Controller
+class test extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,22 +28,7 @@ class runningTextController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'judul' => 'required',
-            'text' => 'required'
-        ]);
-
-        try {
-            RunningText::create([
-                'judul' => $request->judul,
-                'text' => $request->text
-            ]);
-            
-            return redirect()->route('admin.running-text')->with('success', 'Data berhasil ditambahkan!');
-            } catch (\Throwable $th) {
-                return redirect()->route('admin.running-text')->with('gagal', 'Data gagal ditambahkan!');
-        }
-
+        //
     }
 
     /**
