@@ -40,9 +40,9 @@ class runningTextController extends Controller
                 'text' => $request->text
             ]);
             
-            return redirect()->route('admin.running-text')->with('success', 'Data berhasil ditambahkan!');
+            return redirect()->route('admin.running-text')->with('addSuccess', 'Data berhasil ditambahkan!');
             } catch (\Throwable $th) {
-                return redirect()->route('admin.running-text')->with('gagal', 'Data gagal ditambahkan!');
+                return redirect()->route('admin.running-text')->with('addGagal', 'Data gagal ditambahkan!');
         }
 
     }

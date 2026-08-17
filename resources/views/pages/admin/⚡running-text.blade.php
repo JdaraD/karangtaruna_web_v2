@@ -7,6 +7,8 @@ new class extends Component
 {
     public $overlayAdd = false;
     public $runningText;
+    public $deleteSuccess = '';
+    public $deleteGagal = '';
 
     public function loadRunningText()
     {
@@ -18,6 +20,7 @@ new class extends Component
         $this->loadRunningText();
     }
 
+    // button function
     public function btnOpenAdd()
     {
         $this->overlayAdd = true;
@@ -27,6 +30,29 @@ new class extends Component
     {
         $this->overlayAdd = false;
     }
+
+    public function btnDelete($id)
+    {
+        
+        try {
+            $runningText = runningText::findOrFail($id);
+            $runningText->delete();
+
+            $this->loadRunningText();
+
+            $this->deleteSuccess = 'Data berhasil dihapus!';
+            $this->deleteGagal = '';
+
+            // session()->flash('deleteSuccess', 'Data berhasil Dihapus!');
+        } catch (\Throwable $th) {
+            $this->deleteGagal = 'Data gagal dihapus!';
+            $this->deleteSuccess = '';
+            // session()->flash('deleteGagal', 'Data gagal Dihapus!');
+        }
+
+    }
+    // button function
+
 
     
     public function render()
@@ -67,11 +93,11 @@ new class extends Component
                             <p class="text-base font-semibold capitalize">{{$text->judul}}</p>
                             <div class="flex gap-1">
                                 <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
-                                    <x-css-eye class="h-4 w-4 text-white"/>
+                                    <x-bi-pencil class="h-4 w-4 text-white"/>
                                 </div>
-                                <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                <button type="button" wire:click="btnDelete({{ $text->id }})" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
                                     <x-bi-trash class="h-4 w-4 text-white"/>
-                                </div>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -128,16 +154,32 @@ new class extends Component
     @endif
     {{-- overlay btn add --}}
 
-    @if (session('success'))
+    {{-- notifikasi Add --}}
+    @if (session('addSuccess'))
         <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="absolute top-2 right-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
-            <span class="block sm:inline">{{ session('success') }}</span>
+            <span class="block sm:inline">{{ session('addSuccess') }}</span>
         </div>
     @endif
 
-    @if (session('gagal'))
+    @if (session('addGagal'))
         <div class="absolute top-2 right-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-            <span class="block sm:inline">{{ session('sgagal') }}</span>
+            <span class="block sm:inline">{{ session('addGagal') }}</span>
         </div>
     @endif
+    {{-- notifikasi Add --}}
+    
+    {{-- notifikasi delete --}}
+    @if ($deleteSuccess)
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="absolute top-2 right-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ $deleteSuccess }}</span>
+        </div>
+    @endif
+
+    @if ($deleteGagal)
+        <div class="absolute top-2 right-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ $deleteGagal }}</span>
+        </div>
+    @endif
+    {{-- notifikasi delete --}}
     
 </section>
