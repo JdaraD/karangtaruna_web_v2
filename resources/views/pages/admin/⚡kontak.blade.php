@@ -1,9 +1,11 @@
 <?php
 
 use Livewire\Component;
+use App\Models\kontakAdmin;
 
 new class extends Component
 {
+    public $kontakAdmin;
 
     public $overlayAdmin = false;
     public $overlayBantuan = false;
@@ -13,6 +15,18 @@ new class extends Component
     public $editSuccess;
     public $editGagal;
 
+    // laod data
+    public function loadKontakAdmin()
+    {
+        $this->kontakAdmin = kontakAdmin::get();
+    }
+
+    // laod data
+
+    public function mount()
+    {
+        $this->loadKontakAdmin();
+    }
 
     // function button
     public function btnOpenAdmin()
@@ -52,7 +66,7 @@ new class extends Component
         <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base">Kontak</h1>
     </article>
 
-    <article class="grid md:grid-cols-2 grid-cols-1 w-full gap-4 items-center">
+    <article class="grid md:grid-cols-1 grid-cols-1 w-full gap-4 items-center">
 
         <div class="flex flex-col justify-stretch gap-4 items-center w-full h-fit p-4 bg-white shadow-md rounded-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
@@ -66,12 +80,12 @@ new class extends Component
                 </div>
             </div>
 
-            <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-56 gap-2 p-2 overflow-y-auto scrollbar-none">
-                @for ($i = 1; $i <= 4; $i++)
+            <div class="grid lg:grid-cols-3 md:grid-cols-3 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-56 gap-2 p-2 overflow-y-auto scrollbar-none">
+                @foreach ($kontakAdmin as $ka)
                     <div class="flex w-full max-h-26 h-full gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
                         <div class="flex w-full h-full flex-col gap-1">
                             <div class="flex gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                                <p class="text-base font-semibold capitalize">Kegiatan CFD</p>
+                                <p class="text-base font-semibold capitalize">{{ $ka->name }}</p>
                                 <div class="flex gap-1">
                                     <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                         <x-bi-pencil class="h-4 w-4 text-white"/>
@@ -83,15 +97,15 @@ new class extends Component
                             </div>
                             <div class="flex gap-2 items-center">
                                 <p class="text-base font-semibold text-justify line-clamp-4">Gmail :</p>
-                                <p class="text-base font-semibold text-justify line-clamp-4">text@gmail.com</p>
+                                <p class="text-base font-semibold text-justify line-clamp-4">{{ $ka->gmail }}</p>
                             </div>
                             <div class="flex gap-2 items-center">
                                 <p class="text-base font-semibold text-justify line-clamp-4">Nomor Hp :</p>
-                                <p class="text-base font-semibold text-justify line-clamp-4">text@gmail.com</p>
+                                <p class="text-base font-semibold text-justify line-clamp-4">{{ $ka->no_hp }}</p>
                             </div>
                         </div>
                     </div>
-                @endfor
+                @endforeach
             </div>
         </div>
 
@@ -107,7 +121,7 @@ new class extends Component
                 </div>
             </div>
 
-            <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-56 gap-2 p-2 overflow-y-auto scrollbar-none">
+            <div class="grid lg:grid-cols-3 md:grid-cols-3 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-56 gap-2 p-2 overflow-y-auto scrollbar-none">
                 @for ($i = 1; $i <= 4; $i++)
                     <div class="flex w-full max-h-26 h-full gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
                         <div class="flex w-full h-full flex-col gap-1">
