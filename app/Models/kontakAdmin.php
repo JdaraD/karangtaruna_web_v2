@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class runningText extends Model
+class kontakAdmin extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'is_active',
-        'judul',
-        'text',
+        'name',
+        'gmail',
+        'no_hp',
     ];
 }

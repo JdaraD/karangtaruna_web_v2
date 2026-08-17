@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\kontakAdminController;
 use App\Http\Controllers\admin\runningTextController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,3 +50,4 @@ Route::livewire('/admin.running-text', 'pages::admin.running-text')->name('admin
 
 // controller backend
 Route::resource('/admin/runningTextController', runningTextController::class);
+Route::resource('/admin/kontakAdmin', kontakAdminController::class);

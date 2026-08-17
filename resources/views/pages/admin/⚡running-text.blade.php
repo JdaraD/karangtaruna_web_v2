@@ -182,11 +182,11 @@ new class extends Component
                 <div class="flex flex-col w-full gap-5 pt-2">
 
                     <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                        <label for="judul" class="text-sm font-semibold text-gray-800">
-                            Judul Berita
+                        <label for="name" class="text-sm font-semibold text-gray-800">
+                            Nama Admin
                         </label>
 
-                        <input type="text" name="judul" id="judul" placeholder="Masukkan judul berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        <input type="text" name="name" id="name" placeholder="Masukkan judul berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
@@ -207,7 +207,6 @@ new class extends Component
             </form>
             
         </article>
-        
     @endif
     {{-- overlay btn add --}}
 

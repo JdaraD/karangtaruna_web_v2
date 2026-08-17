@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\kontakAdmin;
 use Illuminate\Http\Request;
 
-class test extends Controller
+class kontakAdminController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,7 +29,23 @@ class test extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required',
+            'gmail' => 'required|email',
+            'no_hp' => 'required|max:20',
+        ]);
+
+        try {
+            kontakAdmin::create([
+                'name' => $request->name,
+                'gmail' => $request->gmail,
+                'no_hp' => $request->no_hp,
+            ]);
+
+            return redirect()->route('admin.kontak')->with('addSuccess', 'Data berhasil ditambah!');
+            } catch(\Throwable $th) {
+                return redirect()->route('admin.kontak')->with('addGagal', 'Data gagal ditambah!');
+        }
     }
 
     /**
