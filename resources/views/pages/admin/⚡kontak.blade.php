@@ -2,10 +2,12 @@
 
 use Livewire\Component;
 use App\Models\kontakAdmin;
+use App\Models\KontakBantuan;
 
 new class extends Component
 {
     public $kontakAdmin;
+    public $kontakBantuan;
 
     public $overlayAdmin = false;
     public $overlayBantuan = false;
@@ -20,12 +22,18 @@ new class extends Component
     {
         $this->kontakAdmin = kontakAdmin::get();
     }
+    
+    public function loadKontakBantuan()
+    {
+        $this->kontakBantuan = KontakBantuan::get();
 
+    }
     // laod data
 
     public function mount()
     {
         $this->loadKontakAdmin();
+        $this->loadKontakBantuan();
     }
 
     // function button
@@ -122,11 +130,11 @@ new class extends Component
             </div>
 
             <div class="grid lg:grid-cols-3 md:grid-cols-3 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-56 gap-2 p-2 overflow-y-auto scrollbar-none">
-                @for ($i = 1; $i <= 4; $i++)
+                @foreach ($kontakBantuan as $kb)
                     <div class="flex w-full max-h-26 h-full gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
                         <div class="flex w-full h-full flex-col gap-1">
                             <div class="flex gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                                <p class="text-base font-semibold capitalize">Kegiatan CFD</p>
+                                <p class="text-base font-semibold capitalize">{{ $kb->wilayah }}</p>
                                 <div class="flex gap-1">
                                     <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                         <x-bi-pencil class="h-4 w-4 text-white"/>
@@ -137,16 +145,12 @@ new class extends Component
                                 </div>
                             </div>
                             <div class="flex gap-2 items-center">
-                                <p class="text-base font-semibold text-justify line-clamp-4">Rw 01 :</p>
-                                <p class="text-base font-semibold text-justify line-clamp-4">0857181897</p>
-                            </div>
-                            <div class="flex gap-2 items-center">
-                                <p class="text-base font-semibold text-justify line-clamp-4">Rw 01 :</p>
-                                <p class="text-base font-semibold text-justify line-clamp-4">0857181897</p>
+                                <p class="text-base font-semibold text-justify line-clamp-4">{{ $kb->name }} :</p>
+                                <p class="text-base font-semibold text-justify line-clamp-4">{{ $kb->no_hp }}</p>
                             </div>
                         </div>
                     </div>
-                @endfor
+                @endforeach
             </div>
         </div>
 
@@ -213,10 +217,10 @@ new class extends Component
     {{-- overlayAdd Admin --}}
 
     {{-- overlayAdd Bantuan --}}
-    {{-- @if ($overlayBantuan)
+    @if ($overlayBantuan)
         <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
-            <form class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
-                @csrf
+            <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
+                
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
                         <h1 class="font-semibold text-base text-black capitalize">Tambah Kontak Bantuan</h1>
@@ -228,44 +232,47 @@ new class extends Component
                     </div>
                 </div>
 
-                <div class="flex flex-col w-full gap-5 pt-2">
-
-                    <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                        <label for="name" class="text-sm font-semibold text-gray-800">
-                            Nama Admin
-                        </label>
-
-                        <input type="text" name="name" id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                <form action="{{ route('kontakBantuan.store') }}" method="POST" class="flex flex-col gap-4">
+                    @csrf
+                    <div class="flex flex-col w-full gap-5 pt-2">
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
+                            <label for="wilayah" class="text-sm font-semibold text-gray-800">
+                                Wilayah
+                            </label>
+    
+                            <input type="text" name="wilayah" id="wilayah" placeholder="Masukkan Nama Wilayah (RW 01)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        </div>
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
+                            <label for="name" class="text-sm font-semibold text-gray-800 pt-2">
+                                Nama
+                            </label>
+    
+                           <input type="text" name="name" id="name" placeholder="Masukkan Nama" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        </div>
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
+                            <label for="no_hp" class="text-sm font-semibold text-gray-800 pt-2">
+                                Nomor Hp
+                            </label>
+    
+                           <input type="text" name="no_hp" id="no_hp" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="20" inputmode="numeric" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        </div>
+    
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                        <label for="gmail" class="text-sm font-semibold text-gray-800 pt-2">
-                            Gmail
-                        </label>
-
-                       <input type="text" name="gmail" id="gmail" placeholder="Masukkan Gmail" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+    
+                    <div class="flex w-full h-full justify-end items-end">
+                        <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
+                            Tambah
+                        </button>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                        <label for="no_hp" class="text-sm font-semibold text-gray-800 pt-2">
-                            Nomor Hp
-                        </label>
-
-                       <input type="text" name="no_hp" id="no_hp" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                    </div>
-
-                </div>
-
-                <div class="flex w-full h-full justify-end items-end">
-                    <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
-                        Tambah
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
             
         </article>
         
-    @endif --}}
+    @endif
     {{-- overlayAdd Bantuan --}}
 
         {{-- notifikasi Add --}}

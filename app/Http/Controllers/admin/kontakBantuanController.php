@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\KontakBantuan;
 use Illuminate\Http\Request;
 
 class kontakBantuanController extends Controller
@@ -28,7 +29,24 @@ class kontakBantuanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'wilayah' => 'required',
+            'name' => 'required',
+            'no_hp' => 'required|max:20'
+        ]);
+
+        try {
+            KontakBantuan::create([
+                'wilayah' => $request->wilayah,
+                'name' => $request->name,
+                'no_hp' => $request->no_hp
+            ]);
+
+            return redirect()->route('admin.kontak')->with('addSuccess','Data berhasil ditambahkan!');
+            } catch (\Throwable $th) {
+            return redirect()->route('admin.kontak')->with('addGagl','Data gagal ditambahkan!');
+
+        }
     }
 
     /**
