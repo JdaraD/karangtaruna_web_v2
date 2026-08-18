@@ -29,7 +29,7 @@ class kontakAdminController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'name' => 'required',
             'gmail' => 'required|email',
             'no_hp' => 'required|max:20',
