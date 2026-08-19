@@ -299,7 +299,7 @@ new class extends Component
                             </label>
     
                                <div class="md:col-span-3">
-                                    <input type="file" wire:model="image" name="image" id="image" required accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                    <input type="file" name="image" id="image" required accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
 
                                     @error('image')
                                         <span class="text-sm text-red-500">{{ $message }}</span>
@@ -341,7 +341,7 @@ new class extends Component
                 
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Edit Kontak Admin</h1>
+                        <h1 class="font-semibold text-base text-black capitalize">Edit Banner</h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
                         <button type="button" wire:click="btnCloseEditBanner" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
@@ -420,7 +420,7 @@ new class extends Component
                     </div>
                 </div>
 
-                <form action="" method="POST" class="flex flex-col gap-4">
+                <form action="{{ route('slider.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
@@ -430,7 +430,7 @@ new class extends Component
                                 Nama
                             </label>
     
-                            <input type="text" name="name" id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" name="name" required id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                         <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
@@ -439,14 +439,14 @@ new class extends Component
                             </label>
     
                                <div class="md:col-span-3">
-                                    <input type="file" name="image" id="image" wire:model="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                    <input type="file" name="image" required id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
 
                                     @error('image')
                                         <span class="text-sm text-red-500">{{ $message }}</span>
                                     @enderror
 
                                     <p class="mt-1 text-xs text-gray-500">
-                                        Format: JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB.
+                                        Format: JPG, JPEG, PNG, atau WEBP. Ukuran 1200x80. Maksimal 2 MB.
                                     </p>
                                 </div>
                         </div>
@@ -456,7 +456,7 @@ new class extends Component
                                 Tanggal
                             </label>
     
-                           <input type="date" name="tanggal_publish" id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                           <input type="date" name="tanggal_publish" required id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>
@@ -473,6 +473,76 @@ new class extends Component
         
     @endif
     {{-- overlay Add Slider --}}
+
+    {{-- overlay Edit Slider --}}
+    {{-- @if ($overlayEditSlider)
+        <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
+            <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
+                
+                <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
+                    <div class="flex w-full h-auto gap-1 items-center">
+                        <h1 class="font-semibold text-base text-black capitalize">Edit Slider</h1>
+                    </div>
+                    <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
+                        <button type="button" wire:click="btnCloseEditBanner" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
+                            <x-css-close class="w-3 h-3" />
+                        </button>
+                    </div>
+                </div>
+
+                <form wire:submit.prevent="updateBanner" class="flex flex-col gap-4">
+                    @csrf
+                    
+                    <div class="flex flex-col w-full gap-5 pt-2">
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
+                            <label for="name" class="text-sm font-semibold text-gray-800">
+                                Nama
+                            </label>
+    
+                            <input type="text" name="name" wire:model="name" id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        </div>
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
+                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
+                                Image
+                            </label>
+    
+                            <div class="md:col-span-3">
+                                <input type="file" name="image" id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+
+                                @error('image')
+                                    <span class="text-sm text-red-500">{{ $message }}</span>
+                                @enderror
+
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Format: JPG, JPEG, PNG, atau WEBP. Ukuran: 2900x900. Maksimal 2 MB.
+                                </p>
+                            </div>
+                        </div>
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
+                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
+                                Tanggal
+                            </label>
+    
+                           <input type="date" wire:model="tanggal_publish" name="tanggal_publish" id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        </div>
+    
+                    </div>
+    
+                    <div class="flex w-full h-full justify-end items-end">
+                        <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
+                            Edit
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+        </article>
+        
+    @endif --}}
+    {{-- overlay Edit Slider --}}
 
 
     {{-- notifikasi Add --}}

@@ -34,7 +34,7 @@ new class extends Component
     {{-- screen media --}}
 
     {{-- banner --}}
-    <article class="flex w-[80%] h-20 bg-gray-100 rounded-md shadow-md">
+    <article class="flex max-w-300 w-full h-20 bg-gray-100 rounded-md shadow-md">
 
     </article>
     {{-- banner --}}
