@@ -168,9 +168,9 @@ new class extends Component
             $this->editGagal = '';
             $this->overlayEditBantuan = false;
         } catch (\Throwable $th) {
-            // $this->editGagal = 'Data Gagal Diedit!';
-            // $this->editSuccess = '';
-            dd($th->getMessage());
+            $this->editGagal = 'Data Gagal Diedit!';
+            $this->editSuccess = '';
+            // dd($th->getMessage());
 
         }
     }
