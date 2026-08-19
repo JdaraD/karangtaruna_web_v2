@@ -1,10 +1,12 @@
 <?php
 
 use Livewire\Component;
+use App\Models\Banner;
 
 new class extends Component
 {
-
+    public $banner;
+    public $slider;
 
     public $overlayAddBanner = false;
     public $overlayEditBanner = false;
@@ -17,13 +19,17 @@ new class extends Component
     public $editGagal;
 
     // load data
+    public function loadBanner()
+    {
+        $this->banner = Banner::get();
+    }
 
     // load data
 
     // view data
     public function mount()
     {
-
+        $this->loadBanner();
     }
     // view data
 
@@ -54,6 +60,22 @@ new class extends Component
     // update function
 
     // delete function
+    public function btnDeleteBanner($id)
+    {
+        try {
+            $banner = Banner::findOrFail($id);
+            $banner->delete();
+
+            $this->loadBanner();
+
+            $this->deleteSuccess = 'Data Berhasil Dihapus!';
+            $this->deleteGagal = '';
+        } catch (\Throwable $th) {
+            $this->deleteGagal = 'Data Gagal Dihapus!';
+            $this->deleteSuccess = '';
+        }
+        
+    }
 
     // delete function
     
@@ -88,27 +110,27 @@ new class extends Component
             </div>
 
             <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-64 gap-2 p-2 overflow-y-auto scrollbar-none">
-                @for ($i = 1; $i <= 4; $i++)
+                @foreach ($banner as $b)
                     <div class="flex w-full h-36.75 gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
                         <div class="flex w-[70%] h-full">
-                            <img src="{{ asset('img/foto.jpg') }}" alt="" class="w-full h-32 object-cover rounded-md">
+                            <img src="{{ asset('storage/'. $b->image) }}" alt="" class="w-full h-32 object-cover rounded-md">
                         </div>
                         <div class="flex w-[30%] h-full flex-col gap-1">
                             <div class="flex gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                                <p class="text-base font-semibold capitalize">Kegiatan CFD</p>
+                                <p class="text-base font-semibold capitalize">{{ $b->name }}</p>
                                 <div class="flex gap-1">
                                     <button wire:click="btnEditBanner" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                         <x-bi-pencil class="h-4 w-4 text-white"/>
                                     </button>
-                                    <button wire:click="btnDeleteBanner" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                    <button wire:click="btnDeleteBanner({{ $b->id }})" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
                                         <x-bi-trash class="h-4 w-4 text-white"/>
                                     </button>
                                 </div>
                             </div>
-                            <p class="text-base font-semibold text-justify line-clamp-4">14/07/2026</p>
+                            <p class="text-base font-semibold text-justify line-clamp-4">{{ $b->tanggal_publish }}</p>
                         </div>
                     </div>
-                @endfor
+                @endforeach
             </div>
         </div>
 
@@ -194,7 +216,7 @@ new class extends Component
                                     @enderror
 
                                     <p class="mt-1 text-xs text-gray-500">
-                                        Format: JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB.
+                                        Format: JPG, JPEG, PNG, atau WEBP. Ukuran: 2900x900. Maksimal 2 MB.
                                     </p>
                                 </div>
                         </div>
