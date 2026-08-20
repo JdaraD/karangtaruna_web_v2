@@ -4,6 +4,24 @@ use Livewire\Component;
 
 new class extends Component
 {
+
+    // load data
+    // load data
+
+    // function mount
+    // function mount
+
+    // function Button
+    // function Button
+
+    // add function
+    // add function
+
+    // update function
+    // update function
+
+    // delete function
+    // delete function
     
     public function render()
     {

@@ -17,7 +17,7 @@ new class extends Component
 
 <section class="w-full h-full flex flex-col justify-center items-center py-6 gap-6">
     <article class="flex flex-col w-[90%] h-full gap-2">
-        <h1 class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base normal-case">News</h1>
+        <h1 class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base normal-case">Berita</h1>
         <div class="border border-b-gray-300"></div>
     </article>
 
