@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use App\Models\Slider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -66,7 +67,7 @@ class SliderController extends Controller
                 $encoded
             );
 
-            Banner::create([
+            Slider::create([
                 'name' => $request->name,
                 'image' => $path,
                 'tanggal_publish' => $request->tanggal_publish
