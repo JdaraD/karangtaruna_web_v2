@@ -221,9 +221,9 @@ new class extends Component
 
                     $this->image = null;
             } catch (\Throwable $th) {
-                // $this->editGagal = 'Data Gagal Diedit!';
-                // $this->editSuccess = '';
-                dd($th->getMessage());
+                $this->editGagal = 'Data Gagal Diedit!';
+                $this->editSuccess = '';
+                // dd($th->getMessage());
             }
         }
     // update function
