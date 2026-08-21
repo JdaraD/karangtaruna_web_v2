@@ -13,7 +13,7 @@ class News extends Model
         'is_active',
         'name',
         'image',
-        'news',
+        'isi_berita',
         'tanggal_publish'
     ];
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(1);
             $table->string('name');
             $table->string('image');
-            $table->text('news');
+            $table->text('isi_berita');
             $table->date('tanggal_publish');
             $table->timestamps();
         });

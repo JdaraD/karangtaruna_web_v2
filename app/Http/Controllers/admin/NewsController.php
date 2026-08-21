@@ -36,7 +36,7 @@ class NewsController extends Controller
         $request->validate([
             'name' => 'required',
             'image' => 'required|mimes:png,jpg,jpeg,webp|image|max:2048',
-            'news' => 'required',
+            'isi_berita' => 'required',
             'tanggal_publish' => 'required'
         ]);
 
@@ -73,14 +73,13 @@ class NewsController extends Controller
             News::create([
                 'name' => $request->name,
                 'image' => $path,
-                'news' => $request->news,
+                'isi_berita' => $request->isi_berita,
                 'tanggal_publish' => $request->tanggal_publish
             ]);
 
             return redirect()->route('admin.news')->with('addSuccess', 'Data berhasil ditambah!');
         } catch (\Throwable $th) {
             return redirect()->route('admin.news')->with('addGagal', 'Data gagal ditambah!');
-            // dd($th->getMessage());
         }
     }
 

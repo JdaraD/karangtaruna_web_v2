@@ -3,10 +3,18 @@
 use Livewire\Component;
 use App\Models\Banner;
 use App\Models\Slider;
+use Livewire\WithFileUploads;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\WebpEncoder;
+use Intervention\Image\Format;
+use Illuminate\Http\UploadedFile;
 
 new class extends Component
 {
-    public $name, $image, $tanggal_publish;
+    use WithFileUploads;
+
+    public $name, $image, $tanggal_publish, $currentImage;
 
     public $banner;
     public $bannerId;
@@ -61,14 +69,11 @@ new class extends Component
 
         $this->bannerId = $banner->id;
         $this->name = $banner->name;
-        $this->image = $banner->image;
+        $this->currentImage = $banner->image;
         $this->tanggal_publish = $banner->tanggal_publish;
 
-        $this->currentImage = $banner->image;
         $this->image = null;
-
         $this->overlayEditBanner = true;
-        
     }
 
     public function btnCloseEditBanner()
@@ -98,12 +103,10 @@ new class extends Component
 
         $this->sliderId = $slider->id;
         $this->name = $slider->name;
-        $this->image = $slider->image;
+        $this->currentImage = $slider->image;
         $this->tanggal_publish = $slider->tanggal_publish;
 
-        $this->currentImage = $slider->image;
         $this->image = null;
-
         $this->overlayEditSlider = true;
     }
 
@@ -127,7 +130,9 @@ new class extends Component
             'tanggal_publish' => 'required'
         ];
 
-        if ($this->image) {
+        $isNewImageUploaded = $this->image instanceof UploadedFile;
+
+        if ($isNewImageUploaded) {
             $rules['image'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
         }
 
@@ -136,31 +141,29 @@ new class extends Component
         try {
             $banner = Banner::findOrFail($this->bannerId);
 
-            // 2. Siapkan data dasar yang PASTI diubah (tanpa menyertakan image dulu)
             $dataToUpdate = [
                 'name' => $this->name,
                 'tanggal_publish' => $this->tanggal_publish,
             ];
 
-            // 3. Cek apakah user mengupload file GAMBAR BARU
-            // Kita pastikan $this->image berisi objek file, bukan string kosong/null
-            if ($this->image && !is_string($this->image)) {
-                
-                // Masukkan kode pemrosesan gambar Anda di sini (misal upload biasa):
-                $path = $this->image->store('uploads/banner', 'public');
-                
-                // Masukkan path baru ini ke dalam array yang akan diupdate
-                $dataToUpdate['image'] = $path;
+            if ($this->image instanceof UploadedFile) {
+                $filename = time() . '_' . uniqid() . '.webp';
 
-                // (Opsional) Hapus file gambar lama di folder storage agar hemat ruang
+                $manager = ImageManager::usingDriver(Driver::class);
+                $image = $manager->decode(file_get_contents($this->image->getRealPath()));
+                $image->scaleDown(width: 2800, height: 900);
+                $encoded = $image->encodeUsingFormat(Format::WEBP, quality: 80);
+
+                $path = "uploads/banner/{$filename}";
+                Storage::disk('public')->put($path, (string) $encoded);
+
                 if ($banner->image && Storage::disk('public')->exists($banner->image)) {
                     Storage::disk('public')->delete($banner->image);
                 }
+
+                $dataToUpdate['image'] = $path;
             }
 
-            // 4. Jalankan perintah update ke database
-            // Jika tidak ada gambar baru, $dataToUpdate HANYA berisi 'name' dan 'tanggal_publish'
-            // Sehingga database tidak akan protes soal kolom 'image' yang null
             $banner->update($dataToUpdate); 
 
             $this->loadBanner();
@@ -169,12 +172,11 @@ new class extends Component
             $this->editGagal = '';
             $this->overlayEditBanner = false;
             
-            // Reset input file gambar agar bersih kembali
             $this->image = null;
+            $this->currentImage = null;
         } catch (\Throwable $th) {
             $this->editGagal = 'Data Gagal Diedit!';
             $this->editSuccess = '';
-            // dd($th->getMessage());
         }
         
     }
@@ -187,7 +189,7 @@ new class extends Component
             ];
 
             if ($this->image) {
-                $rules[image] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
+                $rules['image'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
             }
 
             $this->validate($rules);
@@ -200,16 +202,22 @@ new class extends Component
                     'tanggal_publish' => $this->tanggal_publish
                 ];
 
-                if ($this->image && !is_string($this->image)) {
-                    
-                    $path = $this->image->storage('uploads/slider'. 'public');
+                if ($this->image instanceof UploadedFile) {
+                    $filename = time() . '_' . uniqid() . '.webp';
 
-                    $dataToUpdate[image] = $path; 
+                    $manager = ImageManager::usingDriver(Driver::class);
+                    $image = $manager->decode(file_get_contents($this->image->getRealPath()));
+                    $image->scaleDown(width: 1200, height: 80);
+                    $encoded = $image->encodeUsingFormat(Format::WEBP, quality: 80);
+
+                    $path = "uploads/slider/{$filename}";
+                    Storage::disk('public')->put($path, (string) $encoded);
 
                     if ($slider->image && Storage::disk('public')->exists($slider->image)) {
                         Storage::disk('public')->delete($slider->image);
                     }
 
+                    $dataToUpdate['image'] = $path;
                 }
                     $slider->update($dataToUpdate);
 
@@ -463,11 +471,15 @@ new class extends Component
                             </label>
     
                             <div class="md:col-span-3">
-                                <input type="file" name="image" id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                <input type="file" name="image" wire:model="image" id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
 
                                 @error('image')
                                     <span class="text-sm text-red-500">{{ $message }}</span>
                                 @enderror
+
+                                @if ($currentImage)
+                                    <img src="{{ asset('storage/' . $currentImage) }}" class="w-28 h-20 object-cover rounded-md">
+                                @endif
 
                                 <p class="mt-1 text-xs text-gray-500">
                                     Format: JPG, JPEG, PNG, atau WEBP. Ukuran: 2900x900. Maksimal 2 MB.
@@ -603,14 +615,18 @@ new class extends Component
                             </label>
     
                             <div class="md:col-span-3">
-                                <input type="file" name="image" id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                <input type="file" name="image" wire:model="image" id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
 
                                 @error('image')
                                     <span class="text-sm text-red-500">{{ $message }}</span>
                                 @enderror
 
+                                @if ($currentImage)
+                                    <img src="{{ asset('storage/' . $currentImage) }}" class="w-28 h-20 object-cover rounded-md">
+                                @endif
+
                                 <p class="mt-1 text-xs text-gray-500">
-                                    Format: JPG, JPEG, PNG, atau WEBP. Ukuran: 2900x900. Maksimal 2 MB.
+                                    Format: JPG, JPEG, PNG, atau WEBP. Ukuran: 1200x80. Maksimal 2 MB.
                                 </p>
                             </div>
                         </div>
