@@ -60,7 +60,7 @@ new class extends Component
 <section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-157.5 h-full overflow-y-auto scrollbar-none">
     <article class="flex flex-none gap-2 items-center">
         <x-bi-newspaper class="h-6 w-6" />
-        <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base">News</h1>
+        <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base">Berita</h1>
     </article>
 
     <article class="flex flex-wrap w-full gap-4 items-center">
@@ -68,7 +68,7 @@ new class extends Component
         <div class="flex flex-col justify-stretch gap-4 items-center w-full h-fit p-4 bg-white shadow-md rounded-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
-                    <h1 class="font-semibold text-base text-black capitalize">Event</h1>
+                    <h1 class="font-semibold text-base text-black capitalize">Berita</h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
                     <div class="flex w-29 h-6">
@@ -122,7 +122,7 @@ new class extends Component
                     </div>
                 </div>
 
-                <form action="{{ route('slider.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
+                <form action="{{ route('admin.news.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">

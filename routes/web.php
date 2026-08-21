@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\kontakAdminController;
 use App\Http\Controllers\admin\kontakBantuanController;
+use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\runningTextController;
 use App\Http\Controllers\SliderController;
 use Illuminate\Support\Facades\Route;
@@ -57,3 +58,4 @@ Route::resource('/admin/kontakAdmin', kontakAdminController::class);
 Route::resource('/admin/kontakBantuan', kontakBantuanController::class);
 Route::resource('/admin/banner', BannerController::class);
 Route::resource('/admin/slider', SliderController::class);
+Route::post('/admin/news', [NewsController::class, 'store'])->name('admin.news.store');
