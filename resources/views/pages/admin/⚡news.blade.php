@@ -142,9 +142,20 @@ new class extends Component
     // update function
 
     // delete function
-    public function btnDelete()
+    public function btnDelete($id)
     {
+        try {
+            $news = News::findOrFail($id);
+            $news->delete();
 
+            $this->loadNews();
+
+            $this->deleteSuccess = 'Data Berhasil Dihapus!';
+            $this->deleteGagal = '';
+        } catch (\Throwable $th) {
+            $this->deleteGagal = 'Data Gagal Dihapus!';
+            $this->deleteSuccess = '';
+        }
     }
     // delete function
 
