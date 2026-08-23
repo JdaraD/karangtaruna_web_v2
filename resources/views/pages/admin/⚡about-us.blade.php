@@ -1,9 +1,12 @@
 <?php
 
 use Livewire\Component;
+use App\Models\tentang;
 
 new class extends Component
 {
+    public $tentang;
+
     public $overlayAddTentang = false;
     public $overlayEditTentang = false;
 
@@ -13,9 +16,19 @@ new class extends Component
     public $editGagal;
 
     // load data
+    public function loadTentang()
+    {
+        $this->tentang = tentang::latest()
+            ->take(1)
+            ->get();
+    }
     // load data
 
     // function mount
+    public function mount()
+    {
+        $this->loadTentang();
+    }
     // function mount
 
     // function Button
@@ -92,28 +105,35 @@ new class extends Component
             </div>
         </div>
 
-        <div class="flex flex-col justify-stretch gap-2 items-center lg:w-[62.7%] w-full lg:h-76 h-auto p-4 bg-white shadow-md rounded-md">
-            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
-                <div class="flex w-full h-auto gap-1 items-center">
-                    <h1 class="font-semibold text-base text-black capitalize">Karang Taruna Desa</h1>
-                </div>
-                <div class="flex w-full h-auto gap-1 justify-end items-center">
-                    <button type="button" wire:click="btnOpenAddTentang" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
-                        <x-bi-plus class="h-6 w-6 text-white"/>
-                    </button>
-                    <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
-                        <x-bi-pencil class="h-4 w-4 text-white"/>
+        @foreach ($tentang as $te )  
+            <div class="flex flex-col justify-stretch gap-2 items-center lg:w-[62.7%] w-full lg:h-76 h-auto p-4 bg-white shadow-md rounded-md">
+                <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
+                    <div class="flex w-full h-auto gap-1 items-center">
+                        <h1 class="font-semibold text-base text-black capitalize">{{ $te->name }}</h1>
                     </div>
-                    <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
-                        <x-bi-trash class="h-4 w-4 text-white"/>
+                    <div class="flex w-full h-auto gap-1 justify-end items-center">
+                        @if (empty($te))
+                            <button type="button" wire:click="btnOpenAddTentang" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
+                                <x-bi-plus class="h-6 w-6 text-white"/>
+                            </button>
+                        @else
+                            <button type="button" wire:click="openEditTentang({{ $te->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
+                                <x-bi-pencil class="h-4 w-4 text-white"/>
+                            </button>
+                            <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                <x-bi-trash class="h-4 w-4 text-white"/>
+                            </div>
+                        @endif
+                        
                     </div>
                 </div>
-            </div>
-            <div class="flex flex-wrap">
-                <p class="lg:text-base text-sm lg:line-clamp-9 md:line-clamp-8 line-clamp-5 text-black text-justify">Karang Taruna adalah organisasi sosial yang berfokus pada pengembangan dan pemberdayaan pemuda di tingkat desa. Organisasi ini bertujuan untuk meningkatkan kualitas hidup masyarakat melalui berbagai program dan kegiatan yang melibatkan generasi muda. Karang Taruna Desa Waru memiliki visi untuk menciptakan lingkungan yang inklusif, kreatif, dan produktif bagi para pemuda, serta berperan aktif dalam pembangunan desa. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Commodi molestias pariatur dolorum! Exercitationem corrupti doloremque aperiam aut cupiditate deleniti beatae labore et sint nisi similique minima est, voluptas veritatis eius!, Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum possimus ex adipisci. Alias obcaecati corporis quidem delectus sed quasi accusantium atque vero magnam quod, esse quos. Ad, excepturi. Illum, ipsa.</p>
+                <div class="flex flex-wrap">
+                    <p class="lg:text-base text-sm lg:line-clamp-9 md:line-clamp-8 line-clamp-5 text-black text-justify">{{ $te->isi }}</p>
 
+                </div>
             </div>
-        </div>
+        @endforeach
+
 
     </article>
 
