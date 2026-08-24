@@ -5,7 +5,7 @@ use App\Models\tentang;
 
 new class extends Component
 {
-    public $tentang;
+    public $tentang, $tentangId, $name, $isi;
 
     public $overlayAddTentang = false;
     public $overlayEditTentang = false;
@@ -41,12 +41,57 @@ new class extends Component
     {
         $this->overlayAddTentang = false;
     }
+
+    public function btnEditTentang($id)
+    {
+        $tentang = tentang::findOrFail($id);
+
+        $this->tentangId = $tentang->id;
+        $this->name = $tentang->name;
+        $this->isi = $tentang->isi;
+
+        $this->overlayEditTentang = true;
+    }
+
+    public function btnCloseEditTentang()
+    {
+        $this->overlayEditTentang = false;
+        $this->reset([
+            'tentangId',
+            'name',
+            'isi'
+        ]);
+    }
     // function Button
 
     // add function
     // add function
 
     // update function
+    public function updateTentang()
+    {
+        $this->validate([
+            'name' => 'required',
+            'isi' => 'required'
+        ]);
+
+        try {
+            $tentang = tentang::findOrFail($this->tentangId);
+
+            $tentang->update([
+                'name' => $this->name,
+                'isi' => $this->isi
+            ]);
+
+            $this->editSuccess = 'Data Berhasil Diedit!';
+            $this->editGagal = '';
+
+            $this->overlayEditTentang = false;
+        } catch (\Throwable $th) {
+            $this->editGagal = 'Data Gagal Diedit!';
+            $this->editSuccess = '';
+        }
+    }
     // update function
 
     // delete function
@@ -105,35 +150,37 @@ new class extends Component
             </div>
         </div>
 
-        @foreach ($tentang as $te )  
-            <div class="flex flex-col justify-stretch gap-2 items-center lg:w-[62.7%] w-full lg:h-76 h-auto p-4 bg-white shadow-md rounded-md">
-                <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
+        <div class="flex flex-col justify-stretch gap-2 items-center lg:w-[62.7%] w-full lg:h-76 h-auto p-4 bg-white shadow-md rounded-md">
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
+                    @foreach ($tentang as $te )  
                     <div class="flex w-full h-auto gap-1 items-center">
                         <h1 class="font-semibold text-base text-black capitalize">{{ $te->name }}</h1>
                     </div>
+                    @endforeach
                     <div class="flex w-full h-auto gap-1 justify-end items-center">
-                        @if (empty($te))
-                            <button type="button" wire:click="btnOpenAddTentang" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
-                                <x-bi-plus class="h-6 w-6 text-white"/>
-                            </button>
+                        @if ($tentang->isEmpty())
+                        <button type="button" wire:click="btnOpenAddTentang" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
+                            <x-bi-plus class="h-6 w-6 text-white"/>
+                        </button>
                         @else
-                            <button type="button" wire:click="openEditTentang({{ $te->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
-                                <x-bi-pencil class="h-4 w-4 text-white"/>
-                            </button>
-                            <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
-                                <x-bi-trash class="h-4 w-4 text-white"/>
-                            </div>
+                            @foreach ($tentang as $te )
+                                <button type="button" wire:click="btnEditTentang({{ $te->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
+                                    <x-bi-pencil class="h-4 w-4 text-white"/>
+                                </button>
+                                <button type="button" wire:click="btnDeleteTentang({{ $te->id }})" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                    <x-bi-trash class="h-4 w-4 text-white"/>
+                                </button>
+                            @endforeach
                         @endif
-                        
                     </div>
                 </div>
+                @foreach ($tentang as $te )
                 <div class="flex flex-wrap">
                     <p class="lg:text-base text-sm lg:line-clamp-9 md:line-clamp-8 line-clamp-5 text-black text-justify">{{ $te->isi }}</p>
 
                 </div>
+                @endforeach
             </div>
-        @endforeach
-
 
     </article>
 
@@ -296,60 +343,31 @@ new class extends Component
                         <h1 class="font-semibold text-base text-black capitalize">Edit Berita</h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
-                        <button type="button" wire:click="btnCloseEdit" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
+                        <button type="button" wire:click="btnCloseEditTentang" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
                             <x-css-close class="w-3 h-3" />
                         </button>
                     </div>
                 </div>
 
-                <form wire:submit.prevent="updateNews" class="flex flex-col gap-4">
+                <form wire:submit.prevent="updateTentang" class="flex flex-col gap-4">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
     
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
                             <label for="name" class="text-sm font-semibold text-gray-800">
-                                Nama
+                                Nama Organisasi
                             </label>
     
-                            <input type="text" wire:model="name" name="name" required id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
-                                Image
-                            </label>
-    
-                               <div class="md:col-span-3">
-                                    <input type="file" name="image" wire:model="image" required id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-
-                                    @error('image')
-                                        <span class="text-sm text-red-500">{{ $message }}</span>
-                                    @enderror
-
-                                    @if ($currentImage)
-                                        <img src="{{ asset('storage/' . $currentImage) }}" class="w-28 h-20 object-cover rounded-md">
-                                    @endif
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Format: JPG, JPEG, PNG, atau WEBP. Ukuran 520x320. Maksimal 2 MB.
-                                    </p>
-                                </div>
+                            <input type="text" name="name" wire:model="name" required id="name" placeholder="Masukkan Nama Organisasi" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="isi_berita" class="text-sm font-semibold text-gray-800">
-                                Isi Berita
+                            <label for="isi" class="text-sm font-semibold text-gray-800">
+                                Isi Paragraf
                             </label>
     
-                            <textarea cols="4" rows="2" wire:model="isi_berita" name="isi_berita" required id="isi_berita" placeholder="Masukkan Isi berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
-                                Tanggal
-                            </label>
-    
-                           <input type="date" wire:model="tanggal_publish" name="tanggal_publish" required id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <textarea cols="4" rows="2" wire:model="isi" name="isi" required id="isi" placeholder="Masukkan Isi berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
                         </div>
     
                     </div>
