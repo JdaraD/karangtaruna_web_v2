@@ -95,6 +95,21 @@ new class extends Component
     // update function
 
     // delete function
+    public function btnDeleteTentang()
+    {
+        try {
+            $tentang = tentang::latest()->first();
+            $tentang->delete();
+
+            $this->loadTentang();
+
+            $this->deleteSuccess = 'Data Berhasil Dihapus!';
+            $this->deleteGagal = '';
+        } catch (\Throwable $th) {
+            $this->deleteGagal = 'Data Gagal Dihapus!';
+            $this->deleteSuccess = '';
+        }
+    }
     // delete function
     
     public function render()
@@ -167,7 +182,7 @@ new class extends Component
                                 <button type="button" wire:click="btnEditTentang({{ $te->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                     <x-bi-pencil class="h-4 w-4 text-white"/>
                                 </button>
-                                <button type="button" wire:click="btnDeleteTentang({{ $te->id }})" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                <button type="button" wire:click="btnDeleteTentang" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
                                     <x-bi-trash class="h-4 w-4 text-white"/>
                                 </button>
                             @endforeach
