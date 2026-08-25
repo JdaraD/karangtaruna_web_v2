@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\BannerController;
+use App\Http\Controllers\admin\identityController;
 use App\Http\Controllers\admin\kontakAdminController;
 use App\Http\Controllers\admin\kontakBantuanController;
 use App\Http\Controllers\admin\NewsController;
@@ -61,3 +62,4 @@ Route::resource('/admin/banner', BannerController::class);
 Route::resource('/admin/slider', SliderController::class);
 Route::post('/admin/news', [NewsController::class, 'store'])->name('admin.news.store');
 Route::post('/admin/tentang', [tentangController::class, 'store'])->name('admin.tentang.store');
+Route::post('/admin/identity', [identityController::class, 'store'])->name('admin.identity.store');

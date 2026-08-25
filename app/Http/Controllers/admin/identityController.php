@@ -73,9 +73,9 @@ class identityController extends Controller
                 'periode' => $request->periode
             ]);
 
-            return redirect()->route('admin.banner')->with('addSuccess', 'Data berhasil ditambah!');
+            return redirect()->route('admin.about-us')->with('addSuccess', 'Data berhasil ditambah!');
         } catch (\Throwable $th) {
-            return redirect()->route('admin.banner')->with('addGagal', 'Data gagal ditambah!');
+            return redirect()->route('admin.about-us')->with('addGagal', 'Data gagal ditambah!');
         }
     }
 
