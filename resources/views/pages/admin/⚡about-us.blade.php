@@ -3,10 +3,18 @@
 use Livewire\Component;
 use App\Models\tentang;
 use App\Models\identity;
+use Livewire\WithFileUploads;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\WebpEncoder;
+use Intervention\Image\Format;
+use Illuminate\Http\UploadedFile;
 
 new class extends Component
 {
-    public $tentang, $tentangId, $name, $isi, $identity, $identityId;
+    use WithFileUploads;
+
+    public $tentang, $tentangId, $image, $name, $isi, $identity, $identityId, $currentImage, $periode;
 
     public $overlayAddTentang = false;
     public $overlayEditTentang = false;
@@ -53,6 +61,29 @@ new class extends Component
         $this->overlayAddIdentity = false;
     }
 
+    public function btnOpenEditIdentity($id)
+    {
+        $identity = identity::findOrFail($id);
+
+        $this->identityId = $identity->id;
+        $this->name = $identity->name;
+        $this->currentImage = $identity->image;
+        $this->periode = $identity->periode;
+
+        $this->image = null;
+        $this->overlayEditIdentity = true;
+    }
+
+    public function btnCloseEditIdentity()
+    {
+        $this->overlayEditIdentity = false;
+        $this->reset([
+            'identityId',
+            'name',
+            'image',
+            'periode'
+        ]);
+    }
 
     public function btnOpenAddTentang()
     {
@@ -117,7 +148,59 @@ new class extends Component
 
     public function updateIdentity()
     {
+        $rules = [
+            'name' => 'required',
+            'periode' => 'required'
+        ];
 
+        $newImage = $this->image instanceof UploadedFile;
+
+        if ($newImage) {
+            $rules['image'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
+        }
+
+        $this->validate($rules);
+
+        try {
+            $identity = identity::findOrFail($this->identityId);
+
+            $dataToUpdate = [
+                'name' => $this->name,
+                'periode' => $this->periode,
+            ];
+
+            if ($this->image instanceof UploadedFile) {
+                $filename = time() . '_' . uniqid() . '.webp';
+
+                $manager = ImageManager::usingDriver(Driver::class);
+                $image = $manager->decode(file_get_contents($this->image->getRealPath()));
+                $image->scaleDown(width: 160, height: 168);
+                $encoded = $image->encodeUsingFormat(Format::WEBP, quality: 80);
+
+                $path = "uploads/identity/{$filename}";
+                Storage::disk('public')->put($path, (string) $encoded);
+
+                if ($identity->image && Storage::disk('public')->exists($identity->image)) {
+                    Storage::disk('public')->delete($identity->image);
+                }
+
+                $dataToUpdate['image'] = $path;
+            }
+
+            $identity->update($dataToUpdate);
+
+            $this->loadIdentity();
+
+            $this->editSuccess = 'Data Berhasil Diedit!';
+            $this->editGagal = '';
+            $this->overlayEditIdentity = false;
+            
+            $this->image = null;
+            $this->currentImage = null;
+        } catch (\Throwable $th) {
+            $this->editGagal = 'Data Gagal Diedit!';
+            $this->editSuccess = '';
+        }
     }
     // update function
 
@@ -187,7 +270,7 @@ new class extends Component
                         </button>
                     @else
                         @foreach ($identity as $it )
-                            <button type="button" wire:click="btnEditIdentity({{ $it->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
+                            <button type="button" wire:click="btnOpenEditIdentity({{ $it->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                 <x-bi-pencil class="h-4 w-4 text-white"/>
                             </button>
                             <button type="button" wire:click="deleteIdentity" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
@@ -197,20 +280,22 @@ new class extends Component
                     @endif
                 </div>
             </div>
+            @foreach ($identity as $it )
             <div class="flex justify-center items-center">
-                <img src="{{ asset('img/logo.png') }}" alt="" class="w-40 h-42 rounded-md object-cover">
+                <img src="{{ asset('storage/'. $it->image) }}" alt="" class="w-40 h-42 rounded-md object-cover">
             </div>
             <div class="flex flex-col items-center">
                 <div class="flex items-center gap-1">
                     <h1 class="font-semibold capitalize lg:text-lg md:text-base text-base text-black">Nama Organiasi :</h1>
-                    <p class="lg:text-base text-sm text-black">Karang Taruna Desa Waru</p>
+                    <p class="lg:text-base text-sm text-black">{{ $it->name }}</p>
                 </div>
 
                 <div class="flex items-center gap-1">
                     <h1 class="font-semibold capitalize lg:text-base text-sm text-black">Periode : </h1>
-                    <p class="lg:text-sm text-xs text-black"> 2022-2030</p>
+                    <p class="lg:text-sm text-xs text-black"> {{ $it->periode }}</p>
                 </div>
             </div>
+            @endforeach
         </div>
 
         <div class="flex flex-col justify-stretch gap-2 items-center lg:w-[62.7%] w-full lg:h-76 h-auto p-4 bg-white shadow-md rounded-md">
@@ -396,7 +481,7 @@ new class extends Component
                                 Periode
                             </label>
     
-                            <input type="text" name="periode" id=""periode placeholder="Masukkan Periode" oninput="this.value = this.value.replace(/[^0-9-]/g, '')" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" name="periode" id="periode" placeholder="Masukkan Periode" oninput="this.value = this.value.replace(/[^0-9-]/g, '')" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>
@@ -421,16 +506,16 @@ new class extends Component
                 
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Edit Berita</h1>
+                        <h1 class="font-semibold text-base text-black capitalize">Edit Identity </h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
-                        <button type="button" wire:click="btnCloseEditTentang" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
+                        <button type="button" wire:click="btnCloseEditIdentity" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
                             <x-css-close class="w-3 h-3" />
                         </button>
                     </div>
                 </div>
 
-                <form wire:submit.prevent="updateTentang" class="flex flex-col gap-4">
+                <form wire:submit.prevent="updateIdentity" class="flex flex-col gap-4">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
@@ -443,12 +528,33 @@ new class extends Component
                             <input type="text" name="name" wire:model="name" required id="name" placeholder="Masukkan Nama Organisasi" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="isi" class="text-sm font-semibold text-gray-800">
-                                Isi Paragraf
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
+                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
+                                Image
                             </label>
     
-                            <textarea cols="4" rows="2" wire:model="isi" name="isi" required id="isi" placeholder="Masukkan Isi berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
+                            <div class="md:col-span-3">
+                                <input type="file" name="image" wire:model="image" required id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+
+                                @error('image')
+                                    <span class="text-sm text-red-500">{{ $message }}</span>
+                                @enderror
+
+                                @if ($currentImage)
+                                    <img src="{{ asset('storage/' . $currentImage) }}" class="w-28 h-20 object-cover rounded-md">
+                                @endif
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Format: JPG, JPEG, PNG, atau WEBP. Ukuran 520x320. Maksimal 2 MB.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
+                            <label for="periode" class="text-sm font-semibold text-gray-800">
+                                Periode
+                            </label>
+    
+                            <input type="text" name="periode" id="periode" wire:model="periode" placeholder="Masukkan Periode" oninput="this.value = this.value.replace(/[^0-9-]/g, '')" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>
