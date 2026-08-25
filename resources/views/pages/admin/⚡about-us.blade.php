@@ -117,7 +117,7 @@ new class extends Component
 
     public function updateIdentity()
     {
-        
+
     }
     // update function
 
@@ -129,6 +129,22 @@ new class extends Component
             $tentang->delete();
 
             $this->loadTentang();
+
+            $this->deleteSuccess = 'Data Berhasil Dihapus!';
+            $this->deleteGagal = '';
+        } catch (\Throwable $th) {
+            $this->deleteGagal = 'Data Gagal Dihapus!';
+            $this->deleteSuccess = '';
+        }
+    }
+
+    public function deleteIdentity()
+    {
+        try {
+            $identity = identity::latest()->first();
+            $identity->delete();
+
+            $this->loadIdentity();
 
             $this->deleteSuccess = 'Data Berhasil Dihapus!';
             $this->deleteGagal = '';
@@ -170,12 +186,14 @@ new class extends Component
                             <x-bi-plus class="h-6 w-6 text-white"/>
                         </button>
                     @else
-                        <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
-                            <x-bi-pencil class="h-4 w-4 text-white"/>
-                        </div>
-                        <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
-                            <x-bi-trash class="h-4 w-4 text-white"/>
-                        </div>
+                        @foreach ($identity as $it )
+                            <button type="button" wire:click="btnEditIdentity({{ $it->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
+                                <x-bi-pencil class="h-4 w-4 text-white"/>
+                            </button>
+                            <button type="button" wire:click="deleteIdentity" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                <x-bi-trash class="h-4 w-4 text-white"/>
+                            </button>
+                        @endforeach
                     @endif
                 </div>
             </div>
