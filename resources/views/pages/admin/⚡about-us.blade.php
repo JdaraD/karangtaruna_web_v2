@@ -31,6 +31,23 @@ new class extends Component
     public $editSuccess;
     public $editGagal;
 
+    public $actionType = '';
+
+    // function set
+    public function setSelectMode($action)
+    {
+        $this->isSelectMode = true;
+        $this->actionType = $action;
+    }
+
+    public function cancelSelectMode()
+    {
+        $this->isSelectMode = false;
+        $this->actionType = '';
+        $this->selectedVisiId = null; // Reset ID yang sudah telanjur diklik
+    }
+    // function set
+
     // load data
     public function loadTentang()
     {
@@ -313,6 +330,36 @@ new class extends Component
             $this->deleteSuccess = '';
         }
     }
+
+    public function deleteVisi()
+    {
+        // Cegah eksekusi jika user belum memilih radio button
+        if (!$this->selectedVisiId) {
+            $this->editGagal = 'Pilih salah satu data terlebih dahulu untuk dihapus!';
+            return; 
+        }
+
+        try {
+            // Mencari data berdasarkan ID
+            $visi = Visi::findOrFail($this->selectedVisiId);
+
+            // Menghapus data
+            $visi->delete();
+
+            // Pesan sukses
+            $this->editSuccess = 'Data Berhasil Dihapus!';
+            $this->editGagal = '';
+
+            // Mereset form/pilihan
+            $this->isSelectMode = false;
+            $this->selectedVisiId = null;
+            
+        } catch (\Throwable $th) {
+            // Pesan gagal jika terjadi error
+            $this->editGagal = 'Data Gagal Dihapus!';
+            $this->editSuccess = '';
+        }
+    }
     // delete function
     
     public function render()
@@ -416,29 +463,43 @@ new class extends Component
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Visi</h1>
                 </div>
+
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
-                    
+    
                     <!-- Jika tidak dalam mode pilih, tampilkan tombol default -->
                     @if(!$isSelectMode)
                         <button type="button" wire:click="btnOpenAddVisi" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
                             <x-bi-plus class="h-6 w-6 text-white"/>
                         </button>
-                        <!-- Tombol Edit (Pensil) -> Mengaktifkan Select Mode -->
-                        <button type="button" wire:click="$toggle('isSelectMode')" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                        
+                        <!-- Tombol Edit (Pensil) -> Mengaktifkan Select Mode dengan tipe 'edit' -->
+                        <button type="button" wire:click="setSelectMode('edit')" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
                             <x-bi-pencil class="h-4 w-4 text-white"/>
                         </button>
-                        <button type="button" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                        
+                        <!-- Tombol Hapus (Sampah) -> Mengaktifkan Select Mode dengan tipe 'delete' -->
+                        <button type="button" wire:click="setSelectMode('delete')" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
                             <x-bi-trash class="h-4 w-4 text-white"/>
                         </button>
                     @else
-                        <!-- Jika dalam mode pilih, tampilkan tombol Batal dan Edit Pilihan -->
-                        <button type="button" wire:click="$toggle('isSelectMode')" class="px-2 py-1 text-xs text-white bg-gray-500 hover:bg-gray-700 rounded-md shadow-md cursor-pointer">
+                        <!-- Tombol Batal -->
+                        <button type="button" wire:click="cancelSelectMode" class="px-2 py-1 text-xs text-white bg-gray-500 hover:bg-gray-700 rounded-md shadow-md cursor-pointer">
                             Batal
                         </button>
-                        <!-- Tombol ini hanya bisa diklik jika $selectedVisiId sudah terisi -->
-                        <button type="button" wire:click="btnOpenEditVisi" class="px-2 py-1 text-xs text-white bg-yellow-500 hover:bg-yellow-700 rounded-md shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" @if(!$selectedVisiId) disabled @endif>
-                            Pilih & Edit
-                        </button>
+                        
+                        <!-- HANYA MUNCUL JIKA KLIK PENSIL -->
+                        @if($actionType === 'edit')
+                            <button type="button" wire:click="btnOpenEditVisi" class="px-2 py-1 text-xs text-white bg-yellow-500 hover:bg-yellow-700 rounded-md shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" @if(!$selectedVisiId) disabled @endif>
+                                Pilih & Edit
+                            </button>
+                        @endif
+
+                        <!-- HANYA MUNCUL JIKA KLIK SAMPAH -->
+                        @if($actionType === 'delete')
+                            <button type="button" wire:click="deleteVisi" class="px-2 py-1 text-xs text-white bg-red-500 hover:bg-red-700 rounded-md shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" @if(!$selectedVisiId) disabled @endif>
+                                Pilih & Hapus
+                            </button>
+                        @endif
                     @endif
 
                 </div>
