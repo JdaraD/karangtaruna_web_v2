@@ -3,6 +3,7 @@
 use Livewire\Component;
 use App\Models\tentang;
 use App\Models\identity;
+use App\Models\visi;
 use Livewire\WithFileUploads;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -14,8 +15,10 @@ new class extends Component
 {
     use WithFileUploads;
 
-    public $tentang, $tentangId, $image, $name, $isi, $identity, $identityId, $currentImage, $periode;
+    public $tentang, $tentangId, $image, $name, $isi, $identity, $identityId, $currentImage, $periode, $visi, $isi_visi;
 
+    public $isSelectMode = false; // Untuk memunculkan radio button
+    public $selectedVisiId = null;
     public $overlayAddTentang = false;
     public $overlayEditTentang = false;
     public $overlayAddIdentity = false;
@@ -42,6 +45,11 @@ new class extends Component
             ->take(1)
             ->get();
     }
+
+    public function loadVisi()
+    {
+        $this->visi = visi::get();
+    }
     // load data
 
     // function mount
@@ -49,6 +57,7 @@ new class extends Component
     {
         $this->loadTentang();
         $this->loadIdentity();
+        $this->loadVisi();
     }
     // function mount
 
@@ -126,6 +135,29 @@ new class extends Component
     public function btnCloseAddVisi()
     {
         $this->overlayAddVisi = false;
+    }
+
+    public function btnOpenEditVisi()
+    {
+        // Cegah eksekusi jika user belum memilih radio button
+        if (!$this->selectedVisiId) {
+            $this->editGagal = 'Pilih salah satu data terlebih dahulu!';
+            return; // Hentikan fungsi
+        }
+
+        $visi = Visi::find($this->selectedVisiId);
+        
+        if ($visi) {
+            $this->isi_visi = $visi->isi_visi;
+            $this->overlayEditVisi = true;
+            $this->isSelectMode = false; 
+        }
+    }
+
+    public function btnCloseEditVisi()
+    {
+        $this->overlayEditVisi = false;
+        $this->selectedVisiId = null; // Reset pilihan
     }
     // function Button
 
@@ -210,6 +242,39 @@ new class extends Component
             $this->image = null;
             $this->currentImage = null;
         } catch (\Throwable $th) {
+            $this->editGagal = 'Data Gagal Diedit!';
+            $this->editSuccess = '';
+        }
+    }
+
+    public function updateVisi()
+    {
+        // Validasi
+        $this->validate([
+            'isi_visi' => 'required'
+        ]);
+
+        try {
+            // Mencari data berdasarkan ID yang dipilih dari radio button
+            $visi = Visi::findOrFail($this->selectedVisiId);
+
+            // Melakukan update hanya pada kolom isi_visi
+            $visi->update([
+                'isi_visi' => $this->isi_visi
+            ]);
+
+            // Pesan sukses
+            $this->editSuccess = 'Data Berhasil Diedit!';
+            $this->editGagal = '';
+
+            // Menutup overlay dan mereset form/pilihan
+            $this->overlayEditVisi = false;
+            $this->isSelectMode = false;
+            $this->selectedVisiId = null;
+            $this->isi_visi = ''; 
+            
+        } catch (\Throwable $th) {
+            // Pesan gagal jika terjadi error (misal ID tidak ditemukan atau gagal save DB)
             $this->editGagal = 'Data Gagal Diedit!';
             $this->editSuccess = '';
         }
@@ -352,27 +417,49 @@ new class extends Component
                     <h1 class="font-semibold text-base text-black capitalize">Visi</h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
-                    <button type="button" wire:click="btnOpenAddVisi" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-plus class="h-6 w-6 text-white"/>
-                    </button>
-                    <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-pencil class="h-4 w-4 text-white"/>
-                    </div>
-                    <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-trash class="h-4 w-4 text-white"/>
-                    </div>
+                    
+                    <!-- Jika tidak dalam mode pilih, tampilkan tombol default -->
+                    @if(!$isSelectMode)
+                        <button type="button" wire:click="btnOpenAddVisi" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                            <x-bi-plus class="h-6 w-6 text-white"/>
+                        </button>
+                        <!-- Tombol Edit (Pensil) -> Mengaktifkan Select Mode -->
+                        <button type="button" wire:click="$toggle('isSelectMode')" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                            <x-bi-pencil class="h-4 w-4 text-white"/>
+                        </button>
+                        <button type="button" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                            <x-bi-trash class="h-4 w-4 text-white"/>
+                        </button>
+                    @else
+                        <!-- Jika dalam mode pilih, tampilkan tombol Batal dan Edit Pilihan -->
+                        <button type="button" wire:click="$toggle('isSelectMode')" class="px-2 py-1 text-xs text-white bg-gray-500 hover:bg-gray-700 rounded-md shadow-md cursor-pointer">
+                            Batal
+                        </button>
+                        <!-- Tombol ini hanya bisa diklik jika $selectedVisiId sudah terisi -->
+                        <button type="button" wire:click="btnOpenEditVisi" class="px-2 py-1 text-xs text-white bg-yellow-500 hover:bg-yellow-700 rounded-md shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" @if(!$selectedVisiId) disabled @endif>
+                            Pilih & Edit
+                        </button>
+                    @endif
+
                 </div>
             </div>
 
             <div class="flex w-full h-60 overflow-y-auto scrollbar-none">
-                    
                 <ul class="flex flex-col gap-3 list-disc">
-                    @for ($i = 1; $i <= 8; $i++)
-                    <li class="flex items-center gap-3">
-                        <div class="lg:w-4 w-2 lg:h-4 h-2 shrink-0 bg-[#9CB080] rounded-full"></div>
-                        <span class="text-black lg:text-sm text-xs text-justify">Menjadikan pemuda desa Waru sebagai generasi yang berkualitas, berdaya saing, dan berkontribusi positif dalam pembangunan desa.</span>
+                    @foreach ( $visi as $v)
+                    <li class="flex items-start gap-3"> <!-- Ubah items-center jadi items-start agar sejajar jika text panjang -->
+                        
+                        @if($isSelectMode)
+                            <!-- Berubah menjadi Radio Button untuk memilih 1 ID -->
+                            <input type="radio" wire:model.live="selectedVisiId" value="{{ $v->id }}" class="mt-1 lg:w-4 w-3 lg:h-4 h-3 shrink-0 cursor-pointer accent-[#9CB080]">
+                        @else
+                            <!-- Buletan Hijau Default -->
+                            <div class="mt-1.5 lg:w-4 w-2 lg:h-4 h-2 shrink-0 bg-[#9CB080] rounded-full"></div>
+                        @endif
+                        
+                        <span class="text-black lg:text-sm text-xs text-justify">{{ $v->isi_visi }}</span>
                     </li>
-                    @endfor
+                    @endforeach
                 </ul>
             </div>
         </div>
@@ -733,69 +820,32 @@ new class extends Component
     {{-- overlay Add Visi--}}
 
     {{-- overlay Edit Visi--}}
-    {{-- @if ($overlayEdit)
+    @if ($overlayEditVisi)
         <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
             <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
                 
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Edit Berita</h1>
+                        <h1 class="font-semibold text-base text-black capitalize">Edit Visi</h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
-                        <button type="button" wire:click="btnCloseEdit" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
+                        <button type="button" wire:click="btnCloseEditVisi" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
                             <x-css-close class="w-3 h-3" />
                         </button>
                     </div>
                 </div>
 
-                <form wire:submit.prevent="updateNews" class="flex flex-col gap-4">
+                <form wire:submit.prevent="updateVisi" class="flex flex-col gap-4">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
     
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="name" class="text-sm font-semibold text-gray-800">
-                                Nama
+                            <label for="isi_visi" class="text-sm font-semibold text-gray-800">
+                                Visi
                             </label>
     
-                            <input type="text" wire:model="name" name="name" required id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
-                                Image
-                            </label>
-    
-                               <div class="md:col-span-3">
-                                    <input type="file" name="image" wire:model="image" required id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-
-                                    @error('image')
-                                        <span class="text-sm text-red-500">{{ $message }}</span>
-                                    @enderror
-
-                                    @if ($currentImage)
-                                        <img src="{{ asset('storage/' . $currentImage) }}" class="w-28 h-20 object-cover rounded-md">
-                                    @endif
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Format: JPG, JPEG, PNG, atau WEBP. Ukuran 520x320. Maksimal 2 MB.
-                                    </p>
-                                </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="isi_berita" class="text-sm font-semibold text-gray-800">
-                                Isi Berita
-                            </label>
-    
-                            <textarea cols="4" rows="2" wire:model="isi_berita" name="isi_berita" required id="isi_berita" placeholder="Masukkan Isi berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
-                                Tanggal
-                            </label>
-    
-                           <input type="date" wire:model="tanggal_publish" name="tanggal_publish" required id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" wire:model="isi_visi" name="isi_visi" required id="isi_visi" placeholder="Masukkan Isi Visi" class="md:col-span-3 w-80 rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>
@@ -810,7 +860,7 @@ new class extends Component
             
         </article>
         
-    @endif --}}
+    @endif
     {{-- overlay Edit Visi--}}
 
     {{-- overlay Add --}}
