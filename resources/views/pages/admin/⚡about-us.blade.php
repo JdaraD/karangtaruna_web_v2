@@ -20,6 +20,8 @@ new class extends Component
     public $overlayEditTentang = false;
     public $overlayAddIdentity = false;
     public $overlayEditIdentity= false;
+    public $overlayAddVisi = false;
+    public $overlayEditVisi= false;
 
     public $deleteSuccess;
     public $deleteGagal;
@@ -114,6 +116,16 @@ new class extends Component
             'name',
             'isi'
         ]);
+    }
+
+    public function btnOpenAddVisi()
+    {
+        $this->overlayAddVisi = true;
+    }
+
+    public function btnCloseAddVisi()
+    {
+        $this->overlayAddVisi = false;
     }
     // function Button
 
@@ -340,11 +352,11 @@ new class extends Component
                     <h1 class="font-semibold text-base text-black capitalize">Visi</h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
-                    <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-css-eye class="h-4 w-4 text-white"/>
-                    </div>
-                    <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                    <button type="button" wire:click="btnOpenAddVisi" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
                         <x-bi-plus class="h-6 w-6 text-white"/>
+                    </button>
+                    <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                        <x-bi-pencil class="h-4 w-4 text-white"/>
                     </div>
                     <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
                         <x-bi-trash class="h-4 w-4 text-white"/>
@@ -676,67 +688,33 @@ new class extends Component
     @endif
     {{-- overlay Edit Tentang--}}
 
-    {{-- overlay Add --}}
-    {{-- @if ($overlayAdd)
+    {{-- overlay Add Visi--}}
+    @if ($overlayAddVisi)
         <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
             <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
                 
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Tambah Berita</h1>
+                        <h1 class="font-semibold text-base text-black capitalize">Tambah Visi</h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
-                        <button wire:click="btnCloseAdd" class="top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
+                        <button wire:click="btnCloseAddVisi" class="top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
                             <x-css-close class="w-3 h-3" />
                         </button>
                     </div>
                 </div>
 
-                <form action="{{ route('admin.news.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
+                <form action="{{ route('admin.visi.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="name" class="text-sm font-semibold text-gray-800">
-                                Nama
-                            </label>
-    
-                            <input type="text" name="name" required id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
-                                Image
-                            </label>
-    
-                               <div class="md:col-span-3">
-                                    <input type="file" name="image" required id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-
-                                    @error('image')
-                                        <span class="text-sm text-red-500">{{ $message }}</span>
-                                    @enderror
-
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Format: JPG, JPEG, PNG, atau WEBP. Ukuran 520x320. Maksimal 2 MB.
-                                    </p>
-                                </div>
-                        </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="isi_berita" class="text-sm font-semibold text-gray-800">
-                                Isi Berita
+                            <label for="isi_visi" class="text-sm font-semibold text-gray-800">
+                                Isi Visi
                             </label>
     
-                            <textarea cols="4" rows="2" name="isi_berita" required id="isi_berita" placeholder="Masukkan Isi berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
-                                Tanggal
-                            </label>
-    
-                           <input type="date" name="tanggal_publish" required id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <textarea cols="4" rows="2" name="isi_visi" required id="isi_visi" placeholder="Masukkan Isi Visi" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
                         </div>
     
                     </div>
@@ -751,10 +729,10 @@ new class extends Component
             
         </article>
         
-    @endif --}}
-    {{-- overlay Add --}}
+    @endif
+    {{-- overlay Add Visi--}}
 
-    {{-- overlay Edit --}}
+    {{-- overlay Edit Visi--}}
     {{-- @if ($overlayEdit)
         <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
             <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
@@ -833,7 +811,7 @@ new class extends Component
         </article>
         
     @endif --}}
-    {{-- overlay Edit--}}
+    {{-- overlay Edit Visi--}}
 
     {{-- overlay Add --}}
     {{-- @if ($overlayAdd)
