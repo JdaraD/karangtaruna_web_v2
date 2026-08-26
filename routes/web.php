@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\kontakBantuanController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\runningTextController;
 use App\Http\Controllers\admin\tentangController;
+use App\Http\Controllers\admin\visiController;
 use App\Http\Controllers\SliderController;
 use Illuminate\Support\Facades\Route;
 
@@ -63,3 +64,5 @@ Route::resource('/admin/slider', SliderController::class);
 Route::post('/admin/news', [NewsController::class, 'store'])->name('admin.news.store');
 Route::post('/admin/tentang', [tentangController::class, 'store'])->name('admin.tentang.store');
 Route::post('/admin/identity', [identityController::class, 'store'])->name('admin.identity.store');
+Route::post('/admin/visi', [visiController::class, 'store'])->name('admin.visi.store');
+// Route::post('/admin/misi', [misiController::class, 'store'])->name('admin.misi.store');

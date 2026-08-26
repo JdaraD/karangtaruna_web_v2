@@ -708,13 +708,13 @@ new class extends Component
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
-
+    
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
                             <label for="isi_visi" class="text-sm font-semibold text-gray-800">
-                                Isi Visi
+                                Visi
                             </label>
     
-                            <textarea cols="4" rows="2" name="isi_visi" required id="isi_visi" placeholder="Masukkan Isi Visi" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
+                            <input type="text" name="isi_visi" required id="isi_visi" placeholder="Masukkan Isi Visi" class="md:col-span-3 w-80 rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>
