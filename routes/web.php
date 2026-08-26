@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\identityController;
 use App\Http\Controllers\admin\kontakAdminController;
 use App\Http\Controllers\admin\kontakBantuanController;
+use App\Http\Controllers\admin\misiController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\runningTextController;
 use App\Http\Controllers\admin\tentangController;
@@ -65,4 +66,4 @@ Route::post('/admin/news', [NewsController::class, 'store'])->name('admin.news.s
 Route::post('/admin/tentang', [tentangController::class, 'store'])->name('admin.tentang.store');
 Route::post('/admin/identity', [identityController::class, 'store'])->name('admin.identity.store');
 Route::post('/admin/visi', [visiController::class, 'store'])->name('admin.visi.store');
-// Route::post('/admin/misi', [misiController::class, 'store'])->name('admin.misi.store');
+Route::post('/admin/misi', [misiController::class, 'store'])->name('admin.misi.store');
