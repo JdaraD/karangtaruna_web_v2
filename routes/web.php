@@ -8,6 +8,7 @@ use App\Http\Controllers\admin\misiController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\runningTextController;
 use App\Http\Controllers\admin\tentangController;
+use App\Http\Controllers\admin\valueController;
 use App\Http\Controllers\admin\visiController;
 use App\Http\Controllers\SliderController;
 use Illuminate\Support\Facades\Route;
@@ -67,3 +68,4 @@ Route::post('/admin/tentang', [tentangController::class, 'store'])->name('admin.
 Route::post('/admin/identity', [identityController::class, 'store'])->name('admin.identity.store');
 Route::post('/admin/visi', [visiController::class, 'store'])->name('admin.visi.store');
 Route::post('/admin/misi', [misiController::class, 'store'])->name('admin.misi.store');
+Route::post('/admin/value', [valueController::class, 'store'])->name('admin.value.store');

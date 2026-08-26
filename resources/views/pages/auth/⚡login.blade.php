@@ -8,6 +8,6 @@ new class extends Component
 };
 ?>
 
-<div>
+<section>
     {{-- Simplicity is the consequence of refined emotions. - Jean D'Alembert --}}
-</div>
+</section>

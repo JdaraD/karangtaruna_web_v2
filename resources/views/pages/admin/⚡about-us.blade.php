@@ -5,6 +5,7 @@ use App\Models\tentang;
 use App\Models\identity;
 use App\Models\visi;
 use App\Models\misi;
+use App\Models\value;
 use Livewire\WithFileUploads;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -16,13 +17,16 @@ new class extends Component
 {
     use WithFileUploads;
 
-    public $tentang, $tentangId, $image, $name, $isi, $identity, $identityId, $currentImage, $periode, $visi, $isi_visi, $misi, $isi_misi;
+    public $tentang, $tentangId, $image, $name, $isi, $identity, $identityId, $currentImage, $periode, $visi, $isi_visi, $misi, $isi_misi, $value, $isi_value;
 
     public $isSelectMode = false; // Untuk memunculkan radio button
     public $selectedVisiId = null;
     public $selectedMisiId = null;
     public $isSelectModeMisi = false;
     public $actionTypeMisi = '';
+    public $selectedValueId = null;
+    public $isSelectModeValue = false;
+    public $actionTypeValue = '';
     public $overlayAddTentang = false;
     public $overlayEditTentang = false;
     public $overlayAddIdentity = false;
@@ -31,6 +35,8 @@ new class extends Component
     public $overlayEditVisi= false;
     public $overlayAddMisi = false;
     public $overlayEditMisi= false;
+    public $overlayAddValue = false;
+    public $overlayEditValue= false;
 
     public $deleteSuccess;
     public $deleteGagal;
@@ -40,6 +46,19 @@ new class extends Component
     public $actionType = '';
 
     // function set
+    public function setSelectModeValue($action)
+    {
+        $this->isSelectModeValue = true;
+        $this->actionTypeValue = $action;
+    }
+
+    public function cancelSelectModeValue()
+    {
+        $this->isSelectModeValue = false;
+        $this->actionTypeValue = '';
+        $this->selectedValueId = null;
+    }
+
     public function setSelectModeMisi($action)
     {
         $this->isSelectModeMisi = true;
@@ -91,6 +110,11 @@ new class extends Component
     {
         $this->misi = misi::get();
     }
+
+    public function loadValue()
+    {
+        $this->value = value::get();
+    }
     // load data
 
     // function mount
@@ -100,6 +124,7 @@ new class extends Component
         $this->loadIdentity();
         $this->loadVisi();
         $this->loadMisi();
+        $this->loadValue();
     }
     // function mount
 
@@ -233,6 +258,40 @@ new class extends Component
         $this->overlayEditMisi = false;
         $this->selectedMisiId = null;
         $this->actionTypeMisi = '';
+    }
+
+    public function btnOpenAddValue()
+    {
+        $this->overlayAddValue = true;
+    }
+
+    public function btnCloseAddValue()
+    {
+        $this->overlayAddValue = false;
+    }
+
+    public function btnOpenEditValue()
+    {
+        if (!$this->selectedValueId) {
+            $this->editGagal = 'Pilih salah satu data terlebih dahulu!';
+            return;
+        }
+
+        $value = Value::find($this->selectedValueId);
+        
+        if ($value) {
+            $this->name = $value->name;
+            $this->isi_value = $value->isi_value;
+            $this->overlayEditValue = true;
+            $this->isSelectModeValue = false; 
+        }
+    }
+
+    public function btnCloseEditValue()
+    {
+        $this->overlayEditValue = false;
+        $this->selectedValueId = null;
+        $this->actionTypeValue = '';
     }
     // function Button
 
@@ -382,6 +441,37 @@ new class extends Component
             $this->editSuccess = '';
         }
     }
+
+    public function updateValue()
+    {
+        $this->validate([
+            'name' => 'required',
+            'isi_value' => 'required'
+        ]);
+
+        try {
+            $value = Value::findOrFail($this->selectedValueId);
+
+            $value->update([
+                'name' => $this->name,
+                'isi_value' => $this->isi_value
+            ]);
+
+            $this->editSuccess = 'Data Value Berhasil Diedit!';
+            $this->editGagal = '';
+
+            $this->overlayEditValue = false;
+            $this->isSelectModeValue = false;
+            $this->selectedValueId = null;
+            $this->name = '';
+            $this->isi_value = '';
+            $this->actionTypeValue = ''; 
+            
+        } catch (\Throwable $th) {
+            $this->editGagal = 'Data Gagal Diedit!';
+            $this->editSuccess = '';
+        }
+    }
     // update function
 
     // delete function
@@ -470,6 +560,30 @@ new class extends Component
             $this->editSuccess = '';
         }
     }
+
+    public function deleteValue()
+    {
+        if (!$this->selectedValueId) {
+            $this->editGagal = 'Pilih salah satu data terlebih dahulu untuk dihapus!';
+            return; 
+        }
+
+        try {
+            $value = Value::findOrFail($this->selectedValueId);
+            $value->delete();
+
+            $this->editSuccess = 'Data Value Berhasil Dihapus!';
+            $this->editGagal = '';
+
+            $this->isSelectModeValue = false;
+            $this->selectedValueId = null;
+            $this->actionTypeValue = '';
+            
+        } catch (\Throwable $th) {
+            $this->editGagal = 'Data Gagal Dihapus!';
+            $this->editSuccess = '';
+        }
+    }
     // delete function
     
     public function render()
@@ -492,7 +606,7 @@ new class extends Component
 
     <article class="flex flex-wrap w-full gap-4 items-center">
 
-        <div class="flex flex-col justify-stretch items-center lg:w-[36%] w-full gap-2 lg:h-76 h-auto p-4 bg-white rounded-md shadow-md">
+        <div wire:poll.1s class="flex flex-col justify-stretch items-center lg:w-[36%] w-full gap-2 lg:h-76 h-auto p-4 bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Identitas</h1>
@@ -532,7 +646,7 @@ new class extends Component
             @endforeach
         </div>
 
-        <div class="flex flex-col justify-stretch gap-2 items-center lg:w-[62.7%] w-full lg:h-76 h-auto p-4 bg-white shadow-md rounded-md">
+        <div wire:poll.1s class="flex flex-col justify-stretch gap-2 items-center lg:w-[62.7%] w-full lg:h-76 h-auto p-4 bg-white shadow-md rounded-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     @foreach ($tentang as $te )  
                     <div class="flex w-full h-auto gap-1 items-center">
@@ -568,7 +682,7 @@ new class extends Component
 
     <article class="flex flex-wrap w-full gap-4 items-center">
 
-        <div class="flex flex-col justify-stretch items-center lg:w-[49%] w-full gap-2 lg:h-76 h-44 p-4 bg-white rounded-md shadow-md">
+        <div wire:poll.1s class="flex flex-col justify-stretch items-center lg:w-[49%] w-full gap-2 lg:h-76 h-44 p-4 bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Visi</h1>
@@ -635,7 +749,7 @@ new class extends Component
             </div>
         </div>
 
-        <div class="flex flex-col justify-stretch items-center lg:w-[49.7%] w-full gap-2 lg:h-76 h-44 p-4 bg-white rounded-md shadow-md">
+        <div wire:poll.1s class="flex flex-col justify-stretch items-center lg:w-[49.7%] w-full gap-2 lg:h-76 h-44 p-4 bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Misi</h1>
@@ -700,33 +814,64 @@ new class extends Component
 
     <article class="flex flex-wrap w-full gap-4 items-center">
 
-        <div class="flex flex-col justify-stretch items-center w-full gap-2 lg:h-58 h-44 p-4 bg-white rounded-md shadow-md">
+        <div wire:poll.1s class="flex flex-col justify-stretch items-center w-full gap-2 lg:h-58 h-44 p-4 bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Value</h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
-                    <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-css-eye class="h-4 w-4 text-white"/>
-                    </div>
-                    <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-plus class="h-6 w-6 text-white"/>
-                    </div>
-                    <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-trash class="h-4 w-4 text-white"/>
-                    </div>
+                    
+                    <!-- Jika tidak dalam mode pilih Value -->
+                    @if(!$isSelectModeValue)
+                        <button type="button" wire:click="btnOpenAddValue" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                            <x-bi-plus class="h-6 w-6 text-white"/>
+                        </button>
+                        <button type="button" wire:click="setSelectModeValue('edit')" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                            <x-bi-pencil class="h-4 w-4 text-white"/>
+                        </button>
+                        <button type="button" wire:click="setSelectModeValue('delete')" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                            <x-bi-trash class="h-4 w-4 text-white"/>
+                        </button>
+                    @else
+                        <!-- Tombol Batal -->
+                        <button type="button" wire:click="cancelSelectModeValue" class="px-2 py-1 text-xs text-white bg-gray-500 hover:bg-gray-700 rounded-md shadow-md cursor-pointer">
+                            Batal
+                        </button>
+                        
+                        <!-- HANYA MUNCUL JIKA KLIK PENSIL -->
+                        @if($actionTypeValue === 'edit')
+                            <button type="button" wire:click="btnOpenEditValue" class="px-2 py-1 text-xs text-white bg-yellow-500 hover:bg-yellow-700 rounded-md shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" @if(!$selectedValueId) disabled @endif>
+                                Pilih & Edit
+                            </button>
+                        @endif
+
+                        <!-- HANYA MUNCUL JIKA KLIK SAMPAH -->
+                        @if($actionTypeValue === 'delete')
+                            <button type="button" wire:click="deleteValue" class="px-2 py-1 text-xs text-white bg-red-500 hover:bg-red-700 rounded-md shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" @if(!$selectedValueId) disabled @endif>
+                                Pilih & Hapus
+                            </button>
+                        @endif
+                    @endif
+
                 </div>
             </div>
 
-            <div class="flex flex-col w-full h-full overflow-y-auto scrollbar-none">
+            <div class="flex flex-col w-full h-full gap-2 overflow-y-auto scrollbar-none mt-2">
                     
-                @for ( $i =1; $i <= 4; $i++)
-                <div class="flex lg:gap-6 gap-2 justify-center">
-                    <p class="capitalize text-black font-semibold text-bold font-[poppins] lg:text-base text-xs">kejujuran :</p>
-                    <p class="capitalize text-black font-[poppins] lg:text-base text-xs text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </div>
-            @endfor
+                @foreach ( $value as $v )
+                    <div class="flex items-start lg:gap-4 gap-2 justify-start"> <!-- Ubah jadi justify-start & items-start agar sejajar -->
+                        
+                        @if($isSelectModeValue)
+                            <!-- Berubah menjadi Radio Button Value -->
+                            <input type="radio" wire:model.live="selectedValueId" value="{{ $v->id }}" class="mt-1 lg:w-4 w-3 lg:h-4 h-3 shrink-0 cursor-pointer accent-[#9CB080]">
+                        @endif
+
+                        <p class="capitalize text-black font-semibold text-bold font-[poppins] lg:text-base text-xs shrink-0">{{ $v->name }} :</p>
+                        <p class="capitalize text-black font-[poppins] lg:text-base text-xs text-justify">{{$v->isi_value}}</p>
+                    </div>
+                @endforeach
             </div>
+        </div>
     </article>
 
     {{-- overlay Add Identity--}}
@@ -1134,7 +1279,7 @@ new class extends Component
                                 Misi
                             </label>
     
-                            <input type="text" wire:model="isi_misi" name="isi_misi" required id="isi_misi" placeholder="Masukkan Isi Misi" class="md:col-span-3 max-w-80 rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" wire:model="isi_misi" name="isi_misi" required id="isi_misi" placeholder="Masukkan Isi Misi" class="md:col-span-3 w-80 rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>
@@ -1152,14 +1297,14 @@ new class extends Component
     @endif
     {{-- overlay Edit Misi--}}
 
-    {{-- overlay Add --}}
-    {{-- @if ($overlayAdd)
+    {{-- overlay Add Value--}}
+    @if ($overlayAddValue)
         <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
             <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
                 
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Tambah Berita</h1>
+                        <h1 class="font-semibold text-base text-black capitalize">Tambah Value</h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
                         <button wire:click="btnCloseAdd" class="top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
@@ -1168,51 +1313,25 @@ new class extends Component
                     </div>
                 </div>
 
-                <form action="{{ route('admin.news.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
+                <form action="{{ route('admin.value.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
     
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
                             <label for="name" class="text-sm font-semibold text-gray-800">
-                                Nama
+                                Judul
                             </label>
     
-                            <input type="text" name="name" required id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" name="name" required id="name" placeholder="Masukkan Judul Value" class="md:col-span-3 w-80 rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
-                                Image
-                            </label>
-    
-                               <div class="md:col-span-3">
-                                    <input type="file" name="image" required id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-
-                                    @error('image')
-                                        <span class="text-sm text-red-500">{{ $message }}</span>
-                                    @enderror
-
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Format: JPG, JPEG, PNG, atau WEBP. Ukuran 520x320. Maksimal 2 MB.
-                                    </p>
-                                </div>
-                        </div>
-
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="isi_berita" class="text-sm font-semibold text-gray-800">
-                                Isi Berita
+                            <label for="isi_value" class="text-sm font-semibold text-gray-800">
+                                Value
                             </label>
     
-                            <textarea cols="4" rows="2" name="isi_berita" required id="isi_berita" placeholder="Masukkan Isi berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
-                                Tanggal
-                            </label>
-    
-                           <input type="date" name="tanggal_publish" required id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" name="isi_value" required id="isi_value" placeholder="Masukkan Isi Value" class="md:col-span-3 w-80 rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>
@@ -1227,17 +1346,17 @@ new class extends Component
             
         </article>
         
-    @endif --}}
-    {{-- overlay Add --}}
+    @endif
+    {{-- overlay Add Value--}}
 
-    {{-- overlay Edit --}}
-    {{-- @if ($overlayEdit)
+    {{-- overlay Edit Value--}}
+    @if ($overlayEditValue)
         <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
             <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
                 
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Edit Berita</h1>
+                        <h1 class="font-semibold text-base text-black capitalize">Edit Value</h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
                         <button type="button" wire:click="btnCloseEdit" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
@@ -1246,54 +1365,25 @@ new class extends Component
                     </div>
                 </div>
 
-                <form wire:submit.prevent="updateNews" class="flex flex-col gap-4">
+                <form wire:submit.prevent="updateValue" class="flex flex-col gap-4">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
     
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
                             <label for="name" class="text-sm font-semibold text-gray-800">
-                                Nama
+                                Judul
                             </label>
     
-                            <input type="text" wire:model="name" name="name" required id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" wire:model="name" name="name" required id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-80 rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
-                                Image
-                            </label>
-    
-                               <div class="md:col-span-3">
-                                    <input type="file" name="image" wire:model="image" required id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-
-                                    @error('image')
-                                        <span class="text-sm text-red-500">{{ $message }}</span>
-                                    @enderror
-
-                                    @if ($currentImage)
-                                        <img src="{{ asset('storage/' . $currentImage) }}" class="w-28 h-20 object-cover rounded-md">
-                                    @endif
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Format: JPG, JPEG, PNG, atau WEBP. Ukuran 520x320. Maksimal 2 MB.
-                                    </p>
-                                </div>
-                        </div>
-
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="isi_berita" class="text-sm font-semibold text-gray-800">
-                                Isi Berita
+                            <label for="isi_value" class="text-sm font-semibold text-gray-800">
+                                Value
                             </label>
     
-                            <textarea cols="4" rows="2" wire:model="isi_berita" name="isi_berita" required id="isi_berita" placeholder="Masukkan Isi berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
-                                Tanggal
-                            </label>
-    
-                           <input type="date" wire:model="tanggal_publish" name="tanggal_publish" required id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" wire:model="isi_value" name="isi_value" required id="isi_value" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-80 rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>
@@ -1308,167 +1398,8 @@ new class extends Component
             
         </article>
         
-    @endif --}}
-    {{-- overlay Edit--}}
-
-    {{-- overlay Add --}}
-    {{-- @if ($overlayAdd)
-        <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
-            <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
-                
-                <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
-                    <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Tambah Berita</h1>
-                    </div>
-                    <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
-                        <button wire:click="btnCloseAdd" class="top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
-                            <x-css-close class="w-3 h-3" />
-                        </button>
-                    </div>
-                </div>
-
-                <form action="{{ route('admin.news.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
-                    @csrf
-                    
-                    <div class="flex flex-col w-full gap-5 pt-2">
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="name" class="text-sm font-semibold text-gray-800">
-                                Nama
-                            </label>
-    
-                            <input type="text" name="name" required id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
-                                Image
-                            </label>
-    
-                               <div class="md:col-span-3">
-                                    <input type="file" name="image" required id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-
-                                    @error('image')
-                                        <span class="text-sm text-red-500">{{ $message }}</span>
-                                    @enderror
-
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Format: JPG, JPEG, PNG, atau WEBP. Ukuran 520x320. Maksimal 2 MB.
-                                    </p>
-                                </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="isi_berita" class="text-sm font-semibold text-gray-800">
-                                Isi Berita
-                            </label>
-    
-                            <textarea cols="4" rows="2" name="isi_berita" required id="isi_berita" placeholder="Masukkan Isi berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
-                                Tanggal
-                            </label>
-    
-                           <input type="date" name="tanggal_publish" required id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
-                    </div>
-    
-                    <div class="flex w-full h-full justify-end items-end">
-                        <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
-                            Tambah
-                        </button>
-                    </div>
-                </form>
-            </div>
-            
-        </article>
-        
-    @endif --}}
-    {{-- overlay Add --}}
-
-    {{-- overlay Edit --}}
-    {{-- @if ($overlayEdit)
-        <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
-            <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
-                
-                <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
-                    <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Edit Berita</h1>
-                    </div>
-                    <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
-                        <button type="button" wire:click="btnCloseEdit" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
-                            <x-css-close class="w-3 h-3" />
-                        </button>
-                    </div>
-                </div>
-
-                <form wire:submit.prevent="updateNews" class="flex flex-col gap-4">
-                    @csrf
-                    
-                    <div class="flex flex-col w-full gap-5 pt-2">
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="name" class="text-sm font-semibold text-gray-800">
-                                Nama
-                            </label>
-    
-                            <input type="text" wire:model="name" name="name" required id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
-                                Image
-                            </label>
-    
-                               <div class="md:col-span-3">
-                                    <input type="file" name="image" wire:model="image" required id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-
-                                    @error('image')
-                                        <span class="text-sm text-red-500">{{ $message }}</span>
-                                    @enderror
-
-                                    @if ($currentImage)
-                                        <img src="{{ asset('storage/' . $currentImage) }}" class="w-28 h-20 object-cover rounded-md">
-                                    @endif
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Format: JPG, JPEG, PNG, atau WEBP. Ukuran 520x320. Maksimal 2 MB.
-                                    </p>
-                                </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="isi_berita" class="text-sm font-semibold text-gray-800">
-                                Isi Berita
-                            </label>
-    
-                            <textarea cols="4" rows="2" wire:model="isi_berita" name="isi_berita" required id="isi_berita" placeholder="Masukkan Isi berita" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
-                                Tanggal
-                            </label>
-    
-                           <input type="date" wire:model="tanggal_publish" name="tanggal_publish" required id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
-                    </div>
-    
-                    <div class="flex w-full h-full justify-end items-end">
-                        <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
-                            Edit
-                        </button>
-                    </div>
-                </form>
-            </div>
-            
-        </article>
-        
-    @endif --}}
-    {{-- overlay Edit--}}
+    @endif
+    {{-- overlay Edit Value--}}
 
     {{-- notifikasi Add --}}
     @if (session('addSuccess'))
