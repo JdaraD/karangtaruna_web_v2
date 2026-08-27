@@ -40,6 +40,8 @@ Route::livewire('/detail-kolaborasi', 'pages::user.detail-kolaborasi')->name('de
 // controller frontend
 
 
+Route::livewire('/login', 'pages::auth.login')->name('login');
+
 // Route backend
 Route::livewire('/admin', 'pages::admin.dashboard')->name('admin.dashboard');
 Route::livewire('/admin.about-us', 'pages::admin.about-us')->name('admin.about-us');
