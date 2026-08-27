@@ -96,10 +96,17 @@ new class extends Component
                     <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">Lupa Kata Sandi?</a>
                 </div>
 
-                <button type="submit" class="w-full py-3.5 px-4 bg-linear-to-r from-indigo-600 to-cyan-500 hover:from-indigo-700 hover:to-cyan-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/20 transform active:scale-95 transition duration-150">
-                    <span wire:loading.remove wire:target="login">Masuk</span>
-                    <span wire:loading wire:target="login">Memproses...</span>
-                </button>
+                <div class="flex flex-col gap-2 w-full h-full">
+                    <button type="submit" class="w-full py-3.5 px-4 bg-linear-to-r from-indigo-600 to-cyan-500 hover:from-indigo-700 hover:to-cyan-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/20 transform active:scale-95 transition duration-150">
+                        <span wire:loading.remove wire:target="login">Masuk</span>
+                        <span wire:loading wire:target="login">Memproses...</span>
+                    </button>
+    
+                    <div class="flex w-full h-auto justify-end">
+                        <a href="{{ route('registrasi') }}" class="text-xs font-semibold capitalize text-white hover:text-gray-100 hover:underline">Registrasi Akun</a>
+                    </div>
+
+                </div>
             </form>
         </div>
     </div>

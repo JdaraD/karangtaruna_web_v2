@@ -41,6 +41,7 @@ Route::livewire('/detail-kolaborasi', 'pages::user.detail-kolaborasi')->name('de
 
 
 Route::livewire('/login', 'pages::auth.login')->name('login');
+Route::livewire('/registrasi', 'pages::auth.registrasi')->name('registrasi');
 
 // Route backend
 Route::livewire('/admin', 'pages::admin.dashboard')->name('admin.dashboard');
