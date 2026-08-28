@@ -648,35 +648,34 @@ new class extends Component
 
         <div wire:poll.1s class="flex flex-col justify-stretch gap-2 items-center lg:w-[62.7%] w-full lg:h-76 h-auto p-4 bg-white shadow-md rounded-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
-                    @foreach ($tentang as $te )  
-                    <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">{{ $te->name }}</h1>
-                    </div>
-                    @endforeach
-                    <div class="flex w-full h-auto gap-1 justify-end items-center">
-                        @if ($tentang->isEmpty())
-                        <button type="button" wire:click="btnOpenAddTentang" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
-                            <x-bi-plus class="h-6 w-6 text-white"/>
-                        </button>
-                        @else
-                            @foreach ($tentang as $te )
-                                <button type="button" wire:click="btnEditTentang({{ $te->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
-                                    <x-bi-pencil class="h-4 w-4 text-white"/>
-                                </button>
-                                <button type="button" wire:click="btnDeleteTentang" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
-                                    <x-bi-trash class="h-4 w-4 text-white"/>
-                                </button>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-                @foreach ($tentang as $te )
-                <div class="flex flex-wrap">
-                    <p class="lg:text-base text-sm lg:line-clamp-9 md:line-clamp-8 line-clamp-5 text-black text-justify">{{ $te->isi }}</p>
-
+                @foreach ($tentang as $te )  
+                <div class="flex w-full h-auto gap-1 items-center">
+                    <h1 class="font-semibold text-base text-black capitalize">{{ $te->name }}</h1>
                 </div>
                 @endforeach
+                <div class="flex w-full h-auto gap-1 justify-end items-center">
+                    @if ($tentang->isEmpty())
+                    <button type="button" wire:click="btnOpenAddTentang" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
+                        <x-bi-plus class="h-6 w-6 text-white"/>
+                    </button>
+                    @else
+                        @foreach ($tentang as $te )
+                            <button type="button" wire:click="btnEditTentang({{ $te->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
+                                <x-bi-pencil class="h-4 w-4 text-white"/>
+                            </button>
+                            <button type="button" wire:click="btnDeleteTentang" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                <x-bi-trash class="h-4 w-4 text-white"/>
+                            </button>
+                        @endforeach
+                    @endif
+                </div>
             </div>
+            @foreach ($tentang as $te )
+            <div class="flex flex-wrap">
+                <p class="lg:text-base text-sm lg:line-clamp-9 md:line-clamp-8 line-clamp-5 text-black text-justify">{{ $te->isi }}</p>
+
+            </div>
+            @endforeach
         </div>
 
     </article>
