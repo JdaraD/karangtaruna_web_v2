@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\kontakBantuanController;
 use App\Http\Controllers\admin\legalController;
 use App\Http\Controllers\admin\misiController;
 use App\Http\Controllers\admin\NewsController;
+use App\Http\Controllers\admin\pasalController;
 use App\Http\Controllers\admin\runningTextController;
 use App\Http\Controllers\admin\tentangController;
 use App\Http\Controllers\admin\valueController;
@@ -74,3 +75,4 @@ Route::post('/admin/visi', [visiController::class, 'store'])->name('admin.visi.s
 Route::post('/admin/misi', [misiController::class, 'store'])->name('admin.misi.store');
 Route::post('/admin/value', [valueController::class, 'store'])->name('admin.value.store');
 Route::post('/admin/legal', [legalController::class, 'store'])->name('admin.legal.store');
+Route::post('/admin/pasal', [pasalController::class, 'store'])->name('admin.pasal.store');
