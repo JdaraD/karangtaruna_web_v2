@@ -28,12 +28,12 @@ new class extends Component
                     <h1 class="font-semibold text-base text-black capitalize">Dasar Hukum Karang Taruna Desa</h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
-                    <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
-                        <x-css-eye class="h-4 w-4 text-white"/>
-                    </div>
                     <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
                         <x-bi-plus class="h-6 w-6 text-white"/>
                     </div>
+                    <button type="button" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
+                        <x-bi-pencil class="h-4 w-4 text-white"/>
+                    </button>
                     <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
                         <x-bi-trash class="h-4 w-4 text-white"/>
                     </div>
