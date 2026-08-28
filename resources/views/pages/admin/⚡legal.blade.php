@@ -5,7 +5,7 @@ use App\Models\legal;
 
 new class extends Component
 {
-    public $legal, $name, $paragraf;
+    public $legal, $legalId, $name, $paragraf;
 
     public $overlayAddLegal = false;
     public $overlayEditLegal = false;
@@ -39,15 +39,78 @@ new class extends Component
     {
         $this->overlayAddLegal = false;
     }
+
+    public function btnOpenEditLegal($id)
+    {
+        $legal = legal::findOrFail($id);
+
+        $this->legalId = $legal->id;
+        $this->name = $legal->name;
+        $this->paragraf = $legal->paragraf;
+
+        $this->overlayEditLegal = true;
+
+    }
+
+    public function btnCloseEditLegal()
+    {
+        $this->overlayEditLegal = false;
+        $this->reset([
+            'legalId',
+            'name',
+            'paragraf'
+        ]);
+    }
     // function Button
 
     // add function
     // add function
 
     // update function
+    public function updateLegal()
+    {
+        $this->validate([
+            'name' => 'required',
+            'paragraf' => 'required'
+        ]);
+
+        try {
+            $legal = legal::findOrfail($this->legalId);
+            
+            $legal->update([
+                'name' => $this->name,
+                'paragarf' => $this->paragraf
+            ]);
+
+            $this->editSuccess = 'Data Berhasil Diedit!';
+            $this->editGagal = '';
+        } catch (\Throwable $th) {
+            $this->editGagal = 'Data Gagal Diedit!';
+            $this->editSuccess = '';
+        }
+
+    }
     // update function
 
     // delete function
+    public function btnDeleteLegal()
+    {
+        try {
+            $legal = legal::latest()->first();
+            $legal->delete();
+
+            $this->loadLegal();
+
+            $this->deleteSuccess = 'Data Berhasil Dihapus!';
+            $this->deleteGagal = '';
+
+            $this->overlayEditLegal = false;
+            } catch (\Throwable $th) {
+                $this->deleteGagal = 'Data Gagal Dihapus!';
+            $this->deleteSuccess = '';
+        }
+        
+    }
     // delete function
     
     public function render()
@@ -80,16 +143,18 @@ new class extends Component
                             <x-bi-plus class="h-6 w-6 text-white"/>
                         </button>
                     @else
-                        <button type="button" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
-                            <x-bi-pencil class="h-4 w-4 text-white"/>
-                        </button>
-                        <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
-                            <x-bi-trash class="h-4 w-4 text-white"/>
-                        </div>
+                        @foreach ($legal as $l)
+                            <button type="button" wire:click="btnOpenEditLegal({{ $l->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
+                                <x-bi-pencil class="h-4 w-4 text-white"/>
+                            </button>
+                            <button type="button" wire:click="btnDeleteLegal" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                <x-bi-trash class="h-4 w-4 text-white"/>
+                            </button>
+                        @endforeach
                     @endif
                 </div>
             </div>
-            <div class="flex flex-wrap">
+            <div class="flex flex-wrap" wire:poll.1s>
                 @foreach ($legal as $l)
                     <p class="lg:text-base text-sm lg:line-clamp-9 md:line-clamp-8 line-clamp-5 text-black text-justify">{{ $l->paragraf }}</p>
                     
@@ -186,42 +251,34 @@ new class extends Component
                 
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Edit Kontak Bantuan</h1>
+                        <h1 class="font-semibold text-base text-black capitalize">Edit Dasar Hukum</h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
-                        <button type="button" wire:click="btnCloseEditBantuan" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
+                        <button type="button" wire:click="btnCloseEditLegal" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
                             <x-css-close class="w-3 h-3" />
                         </button>
                     </div>
                 </div>
 
-                <form wire:submit.prevent="updateBantuan" class="flex flex-col gap-4">
+                <form wire:submit.prevent="updateLegal" class="flex flex-col gap-4">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
     
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="wilayah" class="text-sm font-semibold text-gray-800">
-                                Wilayah
-                            </label>
-    
-                            <input type="text" wire:model="wilayah" name="wilayah" id="wilayah" placeholder="Masukkan Nama Wilayah (RW 01)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
                         <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
                             <label for="name" class="text-sm font-semibold text-gray-800 pt-2">
-                                Nama
+                                Judul
                             </label>
     
-                           <input type="text" wire:model="name" name="name" id="name" placeholder="Masukkan Nama" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                           <input type="text" name="name" wire:model="name" id="name" placeholder="Masukkan Nama" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="no_hp" class="text-sm font-semibold text-gray-800 pt-2">
-                                Nomor Hp
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
+                            <label for="paragraf" class="text-sm font-semibold text-gray-800">
+                                Isi Dasar Hukum
                             </label>
     
-                           <input type="text" wire:model="no_hp" name="no_hp" id="no_hp" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="20" inputmode="numeric" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <textarea cols="4" rows="2" wire:model="paragraf" name="paragraf" required id="paragraf" placeholder="Masukkan Isi Dasar Hukum" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
                         </div>
     
                     </div>
@@ -356,7 +413,6 @@ new class extends Component
         </article>
         
     @endif --}}
-    overlayEdit Legal
 
         {{-- notifikasi Add --}}
     @if (session('addSuccess'))
