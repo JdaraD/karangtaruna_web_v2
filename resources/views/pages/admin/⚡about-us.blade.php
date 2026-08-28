@@ -677,6 +677,7 @@ new class extends Component
                 </div>
                 @endforeach
             </div>
+        </div>
 
     </article>
 

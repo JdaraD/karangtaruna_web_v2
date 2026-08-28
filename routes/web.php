@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\identityController;
 use App\Http\Controllers\admin\kontakAdminController;
 use App\Http\Controllers\admin\kontakBantuanController;
+use App\Http\Controllers\admin\legalController;
 use App\Http\Controllers\admin\misiController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\runningTextController;
@@ -72,3 +73,4 @@ Route::post('/admin/identity', [identityController::class, 'store'])->name('admi
 Route::post('/admin/visi', [visiController::class, 'store'])->name('admin.visi.store');
 Route::post('/admin/misi', [misiController::class, 'store'])->name('admin.misi.store');
 Route::post('/admin/value', [valueController::class, 'store'])->name('admin.value.store');
+Route::post('/admin/legal', [legalController::class, 'store'])->name('admin.legal.store');
