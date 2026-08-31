@@ -128,4 +128,46 @@ new class extends Component
         </div>
     </article>
 
+
+    {{-- notifikasi Add --}}
+    @if (session('addSuccess'))
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="absolute top-2 right-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ session('addSuccess') }}</span>
+        </div>
+    @endif
+
+    @if (session('addGagal'))
+        <div class="absolute top-2 right-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ session('addGagal') }}</span>
+        </div>
+    @endif
+    {{-- notifikasi Add --}}
+    
+    {{-- notifikasi delete --}}
+    @if ($deleteSuccess)
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="absolute top-2 right-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ $deleteSuccess }}</span>
+        </div>
+    @endif
+
+    @if ($deleteGagal)
+        <div class="absolute top-2 right-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ $deleteGagal }}</span>
+        </div>
+    @endif
+    {{-- notifikasi delete --}}
+
+    {{-- notifikasi Edit --}}
+    @if ($editSuccess)
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="absolute top-2 right-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ $editSuccess }}</span>
+        </div>
+    @endif
+
+    @if ($editGagal)
+        <div class="absolute top-2 right-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ $editGagal }}</span>
+        </div>
+    @endif
+    {{-- notifikasi Edit --}}
 </section>
