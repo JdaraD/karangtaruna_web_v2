@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\misiController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\pasalController;
 use App\Http\Controllers\admin\runningTextController;
+use App\Http\Controllers\admin\StrukturOrgController;
 use App\Http\Controllers\admin\tentangController;
 use App\Http\Controllers\admin\valueController;
 use App\Http\Controllers\admin\visiController;
@@ -76,3 +77,4 @@ Route::post('/admin/misi', [misiController::class, 'store'])->name('admin.misi.s
 Route::post('/admin/value', [valueController::class, 'store'])->name('admin.value.store');
 Route::post('/admin/legal', [legalController::class, 'store'])->name('admin.legal.store');
 Route::post('/admin/pasal', [pasalController::class, 'store'])->name('admin.pasal.store');
+Route::post('/admin/struktur', [StrukturOrgController::class, 'store'])->name('admin.struktur.store');

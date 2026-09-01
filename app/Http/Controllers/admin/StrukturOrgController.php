@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Banner;
+use App\Models\strukturOrg;
 use Illuminate\Http\Request;
-use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Format;
-use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
 
-class BannerController extends Controller
+class StrukturOrgController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -36,7 +36,6 @@ class BannerController extends Controller
         $request->validate([
             'name' => 'required',
             'image' => 'required|image|mimes:png,jpg,jpeg,webp|max:2048',
-            'tanggal_publish' => 'required|date'
         ]);
 
         try {
@@ -52,8 +51,7 @@ class BannerController extends Controller
 
             // Resize dengan mempertahankan aspect ratio
             $image->scaleDown(
-                width: 2800,
-                height: 900
+                height: 216
             );
 
             // Encode menjadi WebP quality 80
@@ -62,21 +60,20 @@ class BannerController extends Controller
                 quality: 80
             );
 
-            $path = "uploads/banner/{$filename}";
+            $path = "uploads/struktur_org/{$filename}";
 
             Storage::disk('public')->put(
                 $path,
                 $encoded
             );
 
-            Banner::create([
+            strukturOrg::create([
                 'name' => $request->name,
                 'image' => $path,
-                'tanggal_publish' => $request->tanggal_publish,
             ]);
-            return redirect()->route('admin.banner')->with('addSuccess', 'Data berhasil ditambah!');
+            return redirect()->route('admin.struktur')->with('addSuccess', 'Data berhasil ditambah!');
         } catch (\Throwable $th) {
-            return redirect()->route('admin.banner')->with('addGagal', 'Data gagal ditambah!');
+            return redirect()->route('admin.struktur')->with('addGagal', 'Data gagal ditambah!');
         }
     }
 
@@ -85,7 +82,7 @@ class BannerController extends Controller
      */
     public function show(string $id)
     {
-        // 
+        //
     }
 
     /**
