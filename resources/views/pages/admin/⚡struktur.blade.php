@@ -1,9 +1,20 @@
 <?php
 
 use Livewire\Component;
+use App\Models\strukturOrg;
+use Livewire\WithFileUploads;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\WebpEncoder;
 
 new class extends Component
 {
+    use WithFileUploads;
+
+    public $name, $image, $currentImage, $strukturId, $struktur;
+
     public $overlayAddStruktur = false;
     public $overlayEditStruktur = false;
 
@@ -13,9 +24,19 @@ new class extends Component
     public $editGagal;
 
     // load data
+    public function loadStruktur()
+    {
+        $this->struktur = strukturOrg::latest()
+            ->take(1)
+            ->get();
+    }
     // load data
 
     // function mount
+    public function mount()
+    {
+        $this->loadStruktur();
+    }
     // function mount
 
     // function Button
@@ -28,15 +49,114 @@ new class extends Component
     {
         $this->overlayAddStruktur = false;
     }
+
+    public function btnOpenEditStruktur($id)
+    {
+        $struktur = strukturOrg::findOrFail($id);
+        
+        $this->strukturId = $id;
+        $this->name = $struktur->name;
+        $this->currentImage = $struktur->image;
+        $this->overlayEditStruktur = true;
+    }
+
+    public function btnCloseEditStruktur()
+    {
+        $this->overlayEditStruktur = false;
+        $this->reset([
+            'name',
+            'image',
+            'currentImage',
+            'strukturId',
+        ]);
+    }
     // function Button
 
     // add function
     // add function
 
     // update function
+    public function updateStruktur()
+    {
+        $rules = [
+            'name' => 'required|string|max:255',
+        ];
+
+        // Gambar hanya divalidasi jika ada file baru yang diunggah
+        if ($this->image instanceof UploadedFile) {
+            $rules['image'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
+        }
+
+        $this->validate($rules);
+
+        try {
+            $struktur = strukturOrg::findOrFail($this->strukturId);
+
+            $dataToUpdate = [
+                'name' => $this->name,
+            ];
+
+            // Jika ada pengunggahan gambar baru
+            if ($this->image instanceof UploadedFile) {
+                $filename = time() . '_' . uniqid() . '.webp';
+
+                // Kompresi & enkode ke format WebP menggunakan Intervention Image v3
+                $manager = ImageManager::usingDriver(Driver::class);
+                $img = $manager->decode(file_get_contents($this->image->getRealPath()));
+                $img->scaleDown(width: 2800, height: 900);
+                $encoded = $img->encode(new WebpEncoder(quality: 80));
+
+                $path = "uploads/struktur/{$filename}";
+                Storage::disk('public')->put($path, (string) $encoded);
+
+                // Hapus gambar lama jika ada di storage
+                if ($struktur->image && Storage::disk('public')->exists($struktur->image)) {
+                    Storage::disk('public')->delete($struktur->image);
+                }
+
+                $dataToUpdate['image'] = $path;
+            }
+
+            $struktur->update($dataToUpdate);
+
+            // Menutup modal dan reset input
+            $this->btnCloseEditStruktur();
+
+            // Refresh data yang dikirim ke view
+            $this->loadStruktur(); 
+            
+            $this->editSuccess = 'Data Berhasil Diedit!';
+            $this->editGagal = '';
+        } catch (\Throwable $th) {
+            $this->editSuccess = '';
+            $this->editGagal = 'Gagal memperbarui struktur organisasi!';
+        }
+    }
     // update function
 
     // delete function
+    public function btnDeleteStruktur($id)
+    {
+        try {
+            $struktur = strukturOrg::findOrFail($id);
+
+            // Hapus file gambar dari disk storage terlebih dahulu
+            if ($struktur->image && Storage::disk('public')->exists($struktur->image)) {
+                Storage::disk('public')->delete($struktur->image);
+            }
+
+            $struktur->delete();
+
+            // Refresh data setelah penghapusan
+            $this->loadStruktur();
+
+            $this->deleteSuccess = 'Data Berhasil Dihapus!';
+            $this->deleteGagal = '';
+        } catch (\Throwable $th) {
+            $this->deleteSuccess = '';
+            $this->deleteGagal = 'Gagal menghapus struktur organisasi!';
+        }
+    }
     // delete function
     
     public function render()
@@ -64,19 +184,31 @@ new class extends Component
                     <h1 class="font-semibold text-base text-black capitalize">Bagan Struktur Organisasi</h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
-                    <button type="button" wire:click="btnOpenAddStruktur" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
-                        <x-bi-plus class="h-6 w-6 text-white"/>
-                    </button>
-                    <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
-                        <x-bi-pencil class="h-4 w-4 text-white"/>
-                    </div>
-                    <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
-                        <x-bi-trash class="h-4 w-4 text-white"/>
-                    </div>
+                    @if ($struktur->isEmpty())
+                        <button type="button" wire:click="btnOpenAddStruktur" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah">
+                            <x-bi-plus class="h-6 w-6 text-white"/>
+                        </button>
+                    @else
+                        @foreach ($struktur as $st)
+                            <button type="button" wire:click="btnOpenEditStruktur({{ $st->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Edit">
+                                <x-bi-pencil class="h-4 w-4 text-white"/>
+                            </button>
+                            
+                            <!-- Ditambahkan wire:click untuk aksi Delete -->
+                            <button type="button" wire:click="btnDeleteStruktur({{ $st->id }})" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                <x-bi-trash class="h-4 w-4 text-white"/>
+                            </button>
+                        @endforeach
+                    @endif
                 </div>
             </div>
             <div class="flex justify-center items-center p-2 border border-gray-200 rounded-md w-full bg-gray-50">
-                <img src="{{ asset('img/struktur.png') }}" alt="Struktur Organisasi" class="h-54 w-auto object-contain rounded-md shadow-sm">
+                <!-- Menampilkan gambar dinamis dari DB jika ada, fallback ke static jika kosong -->
+                @if(isset($st) && $st->image)
+                    <img src="{{ asset('storage/' . $st->image) }}" alt="Struktur Organisasi" class="h-54 w-auto object-contain rounded-md shadow-sm">
+                @else
+                    <div class="h-54 w-auto bg-gray-200 animate-pulse object-contain rounded-md shadow-sm">
+                @endif
             </div>
         </div>
     </article>
@@ -225,7 +357,7 @@ new class extends Component
     {{-- overlay Add Struktur --}}
 
     {{-- overlay Edit Struktur --}}
-    {{-- @if ($overlayEditStruktur)
+    @if ($overlayEditStruktur)
         <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
             <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
                 
@@ -234,7 +366,7 @@ new class extends Component
                         <h1 class="font-semibold text-base text-black capitalize">Edit Struktur</h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
-                        <button type="button" wire:click="btnCloseEditStruktur" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
+                        <button type="button" wire:click="btnCloseEditStruktur" class="top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer text-white">
                             <x-css-close class="w-3 h-3" />
                         </button>
                     </div>
@@ -242,60 +374,56 @@ new class extends Component
 
                 <form wire:submit.prevent="updateStruktur" class="flex flex-col gap-4">
                     @csrf
-                    
                     <div class="flex flex-col w-full gap-5 pt-2">
-    
+
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
                             <label for="name" class="text-sm font-semibold text-gray-800">
                                 Nama
                             </label>
-    
-                            <input type="text" name="name" wire:model="name" id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <!-- Ditambahkan wire:model="name" -->
+                            <input type="text" name="name" id="name" wire:model="name" placeholder="Masukkan Nama Struktur" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            @error('name')
+                                <span class="text-sm text-red-500 col-span-4">{{ $message }}</span>
+                            @enderror
                         </div>
-    
+
                         <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
                             <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
                                 Image
                             </label>
-    
+
                             <div class="md:col-span-3">
-                                <input type="file" name="image" wire:model="image" id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                <!-- Ditambahkan wire:model="image" dan hapus atribut required agar opsional saat edit -->
+                                <input type="file" name="image" id="image" wire:model="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
 
                                 @error('image')
-                                    <span class="text-sm text-red-500">{{ $message }}</span>
+                                    <span class="text-sm text-red-500 block">{{ $message }}</span>
                                 @enderror
 
-                                @if ($currentImage)
-                                    <img src="{{ asset('storage/' . $currentImage) }}" class="w-28 h-20 object-cover rounded-md">
+                                <!-- Preview gambar yang sedang di-upload atau gambar lama -->
+                                @if ($image && !$errors->has('image'))
+                                    <img src="{{ $image->temporaryUrl() }}" class="w-28 h-20 object-cover rounded-md mt-2">
+                                @elseif ($currentImage)
+                                    <img src="{{ asset('storage/' . $currentImage) }}" class="w-28 h-20 object-cover rounded-md mt-2">
                                 @endif
 
                                 <p class="mt-1 text-xs text-gray-500">
-                                    Format: JPG, JPEG, PNG, atau WEBP. Ukuran: 2900x900. Maksimal 2 MB.
+                                    Format: JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB.
                                 </p>
                             </div>
                         </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
-                                Tanggal
-                            </label>
-    
-                           <input type="date" wire:model="tanggal_publish" name="tanggal_publish" id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
+
                     </div>
-    
+
                     <div class="flex w-full h-full justify-end items-end">
-                        <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
+                        <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 text-white font-semibold text-sm shadow-md cursor-pointer">
                             Edit
                         </button>
                     </div>
                 </form>
             </div>
-            
         </article>
-        
-    @endif --}}
+    @endif
     {{-- overlay Edit Struktur --}}
 
     {{-- overlay Add Banner --}}
@@ -627,4 +755,5 @@ new class extends Component
         </div>
     @endif
     {{-- notifikasi Edit --}}
+
 </section>
