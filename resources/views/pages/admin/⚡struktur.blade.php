@@ -2,6 +2,7 @@
 
 use Livewire\Component;
 use App\Models\strukturOrg;
+use App\Models\anggota;
 use Livewire\WithFileUploads;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -17,6 +18,8 @@ new class extends Component
 
     public $overlayAddStruktur = false;
     public $overlayEditStruktur = false;
+    public $overlayAddPengurus = false;
+    public $overlayEditPengurus = false;
 
     public $deleteSuccess;
     public $deleteGagal;
@@ -69,6 +72,16 @@ new class extends Component
             'currentImage',
             'strukturId',
         ]);
+    }
+
+    public function btnOpenAddPengurus()
+    {
+        $this->overlayAddPengurus = true;
+    }
+
+    public function btnClosePengurus()
+    {
+        $this->overlayAddPengurus = false;
     }
     // function Button
 
@@ -158,15 +171,20 @@ new class extends Component
         }
     }
     // delete function
-    
     public function render()
     {
-        return $this->view()
+        // 1. Cek apakah di database sudah ada yang jabatannya 'ketua'
+        $hasKetua = anggota::where('jabatan', 'ketua')->exists();
+
+        // 2. Kirim data $hasKetua ke view
+        // Ganti 'livewire.nama-view-anda' dengan nama file view Livewire Anda yang sebenarnya
+    return $this->view()
+            ->with('hasKetua', $hasKetua)
             ->layout('layouts.admin', [
                 'title' => 'struktur'
             ]);
-    }
-};
+        }
+    };
 ?>
 
 <section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-157.5 h-full overflow-y-auto scrollbar-none">
@@ -215,54 +233,15 @@ new class extends Component
 
     <!-- 2. Bagian Informasi Pengurus & Kartu Ketua -->
     <article class="flex flex-wrap w-full gap-4 items-center">
-        <div class="flex flex-col justify-stretch items-center lg:w-[39%] w-full gap-4 p-4 lg:h-76 h-full bg-white rounded-md shadow-md">
-            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
-                <div class="flex flex-col">
-                    <p class="font-semibold text-base text-black capitalize">Pengurus Karang Taruna</p>
-                    <p class="text-gray-500 font-normal text-sm">Desa Waru 2023 - 2031</p>
-                </div>
-                <div class="flex w-auto gap-1 justify-end items-center">
-                    <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-pencil class="h-4 w-4 text-white"/>
-                    </div>
-                    <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-plus class="h-6 w-6 text-white"/>
-                    </div>
-                    <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-trash class="h-4 w-4 text-white"/>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card Ketua -->
-            <div class="flex justify-center w-full">
-                <div class="relative flex flex-col lg:w-38 md:w-32 w-22 lg:h-48 md:h-42 h-42 rounded-md shadow-md hover:scale-105 duration-150 transition-transform ease-in-out bg-white border border-gray-200">
-                    <div class="w-full h-[90%] flex items-center justify-center p-2">
-                        <img src="{{ asset('img/foto.jpg') }}" alt="Ketua" class="w-full h-full object-contain rounded-md">
-                    </div>
-                    <div class="w-full h-[10%] flex flex-col justify-center items-center bg-gray-200 rounded-b-md">
-                        <p class="text-black font-semibold text-sm normal-case">Sekretaris</p>
-                    </div>
-                    <div class="absolute top-0 left-0 w-full h-full bg-gray-400 bg-opacity-90 opacity-0 hover:opacity-90 duration-150 transition-opacity ease-in-out rounded-md z-10">
-                        <div class="flex flex-col w-full h-full justify-center items-center gap-2 p-2 whitespace-normal">
-                            <p class="font-semibold lg:text-base text-xs text-black normal-case">Nama Pengurus</p>
-                            <p class="text-black font-normal text-xs text-center normal-case">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. Bagian List Pengurus (Sekretaris, dll) -->
-        <div class="flex flex-col justify-stretch items-center lg:w-[59.7%] w-full gap-4 p-4 lg:h-76 h-full bg-white rounded-md shadow-md">
+        <div class="flex flex-col justify-stretch items-center w-full gap-4 p-4 lg:h-76 h-full bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <h1 class="font-semibold text-base text-black capitalize">Daftar Anggota / Pengurus Lainnya</h1>
                 <div class="flex w-auto gap-1 justify-end items-center">
+                    <button type="button" wire:click="btnOpenAddPengurus" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                        <x-bi-plus class="h-6 w-6 text-white"/>
+                    </button>
                     <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
                         <x-bi-pencil class="h-4 w-4 text-white"/>
-                    </div>
-                    <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-plus class="h-6 w-6 text-white"/>
                     </div>
                     <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
                         <x-bi-trash class="h-4 w-4 text-white"/>
@@ -292,6 +271,7 @@ new class extends Component
 
             </div>
         </div>
+
     </article>
 
     {{-- overlay Add Struktur --}}
@@ -426,93 +406,116 @@ new class extends Component
     @endif
     {{-- overlay Edit Struktur --}}
 
-    {{-- overlay Add Banner --}}
-    {{-- @if ($overlayAddBanner)
-        <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
-            <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
+    {{-- overlay Add Pengurus --}}
+    @if ($overlayAddPengurus)
+        <article class="fixed flex top-0 left-0 items-center justify-center w-full h-full bg-gray-900/60 z-50 p-4">
+            <div class="flex flex-col w-full max-w-2xl max-h-[90vh] bg-white rounded-md shadow-xl overflow-hidden">
                 
-                <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
-                    <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Tambah Banner</h1>
-                    </div>
-                    <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
-                        <button wire:click="btnCloseBanner" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
-                            <x-css-close class="w-3 h-3" />
-                        </button>
-                    </div>
+                <!-- Header -->
+                <div class="flex w-full gap-1 justify-between items-center bg-gray-100 border-b border-gray-200 p-4">
+                    <h1 class="font-semibold text-lg text-black capitalize">Tambah Pengurus / Anggota</h1>
+                    <button wire:click="btnClosePengurus" class="rounded-full p-1 bg-red-500 hover:bg-red-700 text-white transition-colors cursor-pointer">
+                        <x-css-close class="w-4 h-4" />
+                    </button>
                 </div>
 
-                <form action="{{ route('banner.store') }}" enctype="multipart/form-data" method="POST" class="flex flex-col gap-4">
-                    @csrf
-                    
-                    <div class="flex flex-col w-full gap-5 pt-2">
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="name" class="text-sm font-semibold text-gray-800">
-                                Nama
-                            </label>
-    
-                            <input type="text" name="name" id="name" required placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
-                                Image
-                            </label>
-    
-                               <div class="md:col-span-3">
-                                    <input type="file" name="image" id="image" required accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                <!-- Form Container (Scrollable) -->
+                <div class="p-4 overflow-y-auto custom-scrollbar">
+                    <form action="{{ route('admin.anggota.store') }}" enctype="multipart/form-data" method="POST" class="flex flex-col gap-4">
+                        @csrf
+                        
+                        <div class="flex flex-col w-full gap-4">
+                            
+                            <!-- Nama -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
+                                <label for="nama" class="text-sm font-semibold text-gray-800">Nama</label>
+                                <input type="text" name="nama" id="nama" required placeholder="Masukkan Nama Lengkap" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            </div>
 
-                                    @error('image')
-                                        <span class="text-sm text-red-500">{{ $message }}</span>
-                                    @enderror
-
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Format: JPG, JPEG, PNG, atau WEBP. Ukuran: 2900x900. Maksimal 2 MB.
-                                    </p>
+                            <!-- Image -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-start gap-1 md:gap-2">
+                                <label for="image" class="text-sm font-semibold text-gray-800 pt-2">Image (Opsional)</label>
+                                <div class="md:col-span-3">
+                                    <input type="file" name="image" id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-50 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                    @error('image') <span class="text-sm text-red-500">{{ $message }}</span> @enderror
+                                    <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, WEBP. Maks 2MB.</p>
                                 </div>
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
-                                Tanggal
-                            </label>
-    
-                           <input type="date" name="tanggal_publish" required id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
-                    </div>
-    
-                    <div class="flex w-full h-full justify-end items-end">
-                        <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
-                            Tambah
-                        </button>
-                    </div>
-                </form>
-            </div>
-            
-        </article>
-        
-    @endif --}}
-    {{-- overlay Add Banner --}}
+                            </div>
 
-    {{-- overlay Edit Banner --}}
-    {{-- @if ($overlayEditBanner)
+                            <!-- Jabatan (Select) -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
+                                <label for="jabatan" class="text-sm font-semibold text-gray-800">Jabatan</label>
+                                <select name="jabatan" id="jabatan" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                    <option value="" disabled selected>-- Pilih Jabatan --</option>
+                                    <!-- Jika ketua sudah ada, option didisable -->
+                                    <option value="ketua" {{ $hasKetua ? 'disabled' : '' }} class="{{ $hasKetua ? 'bg-gray-200 text-gray-400' : '' }}">
+                                        Ketua {{ $hasKetua ? '(Sudah Terisi)' : '' }}
+                                    </option>
+                                    <option value="wakil ketua">Wakil Ketua</option>
+                                    <option value="sekertaris">Sekertaris</option>
+                                    <option value="wakil sekertaris">Wakil Sekertaris</option>
+                                    <option value="bendahara">Bendahara</option>
+                                    <option value="wakil bendahara">Wakil Bendahara</option>
+                                    <option value="anggota">Anggota</option>
+                                </select>
+                            </div>
+
+                            <!-- Tempat Lahir -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
+                                <label for="tempat_lahir" class="text-sm font-semibold text-gray-800">Tempat Lahir</label>
+                                <input type="text" name="tempat_lahir" id="tempat_lahir" required placeholder="Masukkan Tempat Lahir" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            </div>
+
+                            <!-- Alamat -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-start gap-1 md:gap-2">
+                                <label for="alamat" class="text-sm font-semibold text-gray-800 pt-2">Alamat</label>
+                                <textarea name="alamat" id="alamat" rows="2" required placeholder="Masukkan Alamat Lengkap" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 resize-none"></textarea>
+                            </div>
+
+                            <!-- No Telp -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
+                                <label for="no_telp" class="text-sm font-semibold text-gray-800">No. Telp</label>
+                                <input type="text" name="no_telp" id="no_telp" required placeholder="08xxxxxxxxxx" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            </div>
+
+                            <!-- Email -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
+                                <label for="email" class="text-sm font-semibold text-gray-800">Email</label>
+                                <input type="email" name="email" id="email" required placeholder="email@contoh.com" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            </div>
+
+                        </div>
+        
+                        <!-- Footer / Submit -->
+                        <div class="flex w-full justify-end mt-4 pt-4 border-t border-gray-200">
+                            <button type="submit" class="px-6 py-2 rounded-md bg-green-500 text-white font-semibold hover:bg-green-600 transition-colors shadow-md cursor-pointer">
+                                Simpan Data
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </article>
+    @endif
+    {{-- overlay Add Pengurus --}}
+
+    {{-- overlay Edit Pengurus --}}
+    @if ($overlayEditPengurus)
         <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
             <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
                 
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Edit Banner</h1>
+                        <h1 class="font-semibold text-base text-black capitalize">Edit Pengurus</h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
-                        <button type="button" wire:click="btnCloseEditBanner" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
+                        <button type="button" wire:click="btnCloseEditPengurus" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
                             <x-css-close class="w-3 h-3" />
                         </button>
                     </div>
                 </div>
 
-                <form wire:submit.prevent="updateBanner" class="flex flex-col gap-4">
+                <form wire:submit.prevent="updatePengurus" class="flex flex-col gap-4">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
@@ -567,8 +570,8 @@ new class extends Component
             
         </article>
         
-    @endif --}}
-    {{-- overlay Edit Banner --}}
+    @endif
+    {{-- overlay Edit Pengurus --}}
 
     {{-- overlay Add Banner --}}
     {{-- @if ($overlayAddBanner)

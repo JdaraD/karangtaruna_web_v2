@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\anggotaController;
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\identityController;
 use App\Http\Controllers\admin\kontakAdminController;
@@ -78,3 +79,4 @@ Route::post('/admin/value', [valueController::class, 'store'])->name('admin.valu
 Route::post('/admin/legal', [legalController::class, 'store'])->name('admin.legal.store');
 Route::post('/admin/pasal', [pasalController::class, 'store'])->name('admin.pasal.store');
 Route::post('/admin/struktur', [StrukturOrgController::class, 'store'])->name('admin.struktur.store');
+Route::post('/admin/anggota', [anggotaController::class, 'store'])->name('admin.anggota.store');
