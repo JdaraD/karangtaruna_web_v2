@@ -35,7 +35,7 @@ class anggotaController extends Controller
     {
         $request->validate([
             'nama' => 'required',
-            'image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
+            'image' => 'image|mimes:png,jpg,jpeg,webp|max:2048',
             'jabatan' => 'required',
             'tempat_lahir' => 'required',
             'alamat' => 'required',
@@ -44,8 +44,6 @@ class anggotaController extends Controller
         ]);
 
         try {
-            $path = null;
-
             // Proses gambar hanya jika ada file yang diupload
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
@@ -92,8 +90,7 @@ class anggotaController extends Controller
 
             return redirect()->route('admin.struktur')->with('addSuccess', 'Data berhasil ditambah!');
         } catch (\Throwable $th) {
-            // return redirect()->route('admin.struktur')->with('addGagal', 'Data gagal ditambah!');
-            dd($th->getMessage());
+            return redirect()->route('admin.struktur')->with('addGagal', 'Data gagal ditambah!');
         }
     }
 

@@ -14,7 +14,12 @@ new class extends Component
 {
     use WithFileUploads;
 
-    public $name, $image, $currentImage, $strukturId, $struktur;
+    // Variabel Mode (normal, edit, delete)
+    public $isSelectMode = false;
+    public $actionType = ''; // 'edit' atau 'delete'
+    public $selectedAnggotaId = null;
+
+    public $name, $nama, $image, $currentImage, $strukturId, $struktur, $anggota, $anggotaId, $jabatan, $tempat_lahir, $alamat, $no_telp, $email;
 
     public $overlayAddStruktur = false;
     public $overlayEditStruktur = false;
@@ -26,6 +31,21 @@ new class extends Component
     public $editSuccess;
     public $editGagal;
 
+    // --- FUNGSI TOGGLE MODE ---
+    public function setSelectMode($type)
+    {
+        $this->isSelectMode = true;
+        $this->actionType = $type;
+        $this->selectedAnggotaId = null;
+    }
+
+    public function cancelSelectMode()
+    {
+        $this->isSelectMode = false;
+        $this->actionType = '';
+        $this->selectedAnggotaId = null;
+    }
+
     // load data
     public function loadStruktur()
     {
@@ -33,12 +53,18 @@ new class extends Component
             ->take(1)
             ->get();
     }
+
+    public function loadAnggota()
+    {
+        $this->anggota = anggota::get();
+    }
     // load data
 
     // function mount
     public function mount()
     {
         $this->loadStruktur();
+        $this->loadAnggota();
     }
     // function mount
 
@@ -82,6 +108,30 @@ new class extends Component
     public function btnClosePengurus()
     {
         $this->overlayAddPengurus = false;
+    }
+
+    public function btnOpenEditAnggota()
+    {
+        if (!$this->selectedAnggotaId) return;
+
+        $anggota = Anggota::findOrFail($this->selectedAnggotaId);
+        $this->strukturId = $anggota->id;
+        $this->nama = $anggota->nama;
+        $this->jabatan = $anggota->jabatan;
+        $this->tempat_lahir = $anggota->tempat_lahir;
+        $this->alamat = $anggota->alamat;
+        $this->no_telp = $anggota->no_telp;
+        $this->email = $anggota->email;
+        $this->currentImage = $anggota->image;
+        $this->image = null;
+
+        $this->overlayEditPengurus = true;
+        $this->cancelSelectMode(); // Reset select mode setelah modal terbuka
+    }
+
+    public function btnCloseEditPengurus()
+    {
+        $this->overlayEditPengurus = false;
     }
     // function Button
 
@@ -145,6 +195,65 @@ new class extends Component
             $this->editGagal = 'Gagal memperbarui struktur organisasi!';
         }
     }
+
+    public function updatePengurus()
+    {
+        $rules = [
+            'nama'         => 'required|string|max:255',
+            'jabatan'      => 'required|string|max:255',
+            'tempat_lahir' => 'required|string|max:255',
+            'alamat'       => 'required|string|max:255',
+            'no_telp'      => 'required|string|max:20',
+            'email'        => 'required|email|max:255',
+        ];
+
+        if ($this->image instanceof UploadedFile) {
+            $rules['image'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
+        }
+
+        $this->validate($rules);
+
+        try {
+            $anggota = Anggota::findOrFail($this->strukturId);
+
+            $dataToUpdate = [
+                'nama'         => $this->nama,
+                'jabatan'      => $this->jabatan,
+                'tempat_lahir' => $this->tempat_lahir,
+                'alamat'       => $this->alamat,
+                'no_telp'      => $this->no_telp,
+                'email'        => $this->email,
+            ];
+
+            if ($this->image instanceof UploadedFile) {
+                $filename = time() . '_' . uniqid() . '.webp';
+
+                $manager = ImageManager::usingDriver(Driver::class);
+                $img = $manager->decode(file_get_contents($this->image->getRealPath()));
+                $img->scaleDown(height: 216); // Mengikuti scale down proporsional tinggi Anda sebelumnya
+                $encoded = $img->encode(new WebpEncoder(quality: 80));
+
+                $path = "uploads/anggota/{$filename}";
+                Storage::disk('public')->put($path, (string) $encoded);
+
+                if ($anggota->image && Storage::disk('public')->exists($anggota->image)) {
+                    Storage::disk('public')->delete($anggota->image);
+                }
+
+                $dataToUpdate['image'] = $path;
+            }
+
+            $anggota->update($dataToUpdate);
+
+            $this->btnCloseEditPengurus();
+            
+            $this->editSuccess = 'Data Berhasil Diedit!';
+            $this->editGagal = '';
+        } catch (\Throwable $th) {
+            $this->editSuccess = '';
+            $this->editGagal = 'Gagal memperbarui data anggota!';
+        }
+    }
     // update function
 
     // delete function
@@ -170,6 +279,28 @@ new class extends Component
             $this->deleteGagal = 'Gagal menghapus struktur organisasi!';
         }
     }
+
+    public function deleteAnggota()
+    {
+        if (!$this->selectedAnggotaId) return;
+
+        try {
+            $anggota = Anggota::findOrFail($this->selectedAnggotaId);
+
+            if ($anggota->image && Storage::disk('public')->exists($anggota->image)) {
+                Storage::disk('public')->delete($anggota->image);
+            }
+
+            $anggota->delete();
+            $this->cancelSelectMode();
+
+            $this->deleteSuccess = 'Data Berhasil Dihapus!';
+            $this->deleteGagal = '';
+        } catch (\Throwable $th) {
+            $this->deleteSuccess = '';
+            $this->deleteGagal = 'Gagal menghapus data anggota!';
+        }
+    }
     // delete function
     public function render()
     {
@@ -178,7 +309,7 @@ new class extends Component
 
         // 2. Kirim data $hasKetua ke view
         // Ganti 'livewire.nama-view-anda' dengan nama file view Livewire Anda yang sebenarnya
-    return $this->view()
+        return $this->view()
             ->with('hasKetua', $hasKetua)
             ->layout('layouts.admin', [
                 'title' => 'struktur'
@@ -232,46 +363,86 @@ new class extends Component
     </article>
 
     <!-- 2. Bagian Informasi Pengurus & Kartu Ketua -->
-    <article class="flex flex-wrap w-full gap-4 items-center">
+    <article wire:poll.1s class="flex flex-wrap w-full gap-4 items-center">
         <div class="flex flex-col justify-stretch items-center w-full gap-4 p-4 lg:h-76 h-full bg-white rounded-md shadow-md">
+            
+            <!-- Header dengan kontrol Select Mode -->
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <h1 class="font-semibold text-base text-black capitalize">Daftar Anggota / Pengurus Lainnya</h1>
+                
                 <div class="flex w-auto gap-1 justify-end items-center">
-                    <button type="button" wire:click="btnOpenAddPengurus" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-plus class="h-6 w-6 text-white"/>
-                    </button>
-                    <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-pencil class="h-4 w-4 text-white"/>
-                    </div>
-                    <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
-                        <x-bi-trash class="h-4 w-4 text-white"/>
-                    </div>
+                    @if(!$isSelectMode)
+                        <!-- Tombol Tambah -->
+                        <button type="button" wire:click="btnOpenAddPengurus" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                            <x-bi-plus class="h-6 w-6 text-white"/>
+                        </button>
+                        
+                        <!-- Tombol Mode Edit -->
+                        <button type="button" wire:click="setSelectMode('edit')" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                            <x-bi-pencil class="h-4 w-4 text-white"/>
+                        </button>
+                        
+                        <!-- Tombol Mode Hapus -->
+                        <button type="button" wire:click="setSelectMode('delete')" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer">
+                            <x-bi-trash class="h-4 w-4 text-white"/>
+                        </button>
+                    @else
+                        <!-- Tombol Batal -->
+                        <button type="button" wire:click="cancelSelectMode" class="px-2 py-1 text-xs text-white bg-gray-500 hover:bg-gray-700 rounded-md shadow-md cursor-pointer">
+                            Batal
+                        </button>
+                        
+                        <!-- Tombol Pilih & Edit -->
+                        @if($actionType === 'edit')
+                            <button type="button" wire:click="btnOpenEditAnggota" class="px-2 py-1 text-xs text-white bg-yellow-500 hover:bg-yellow-700 rounded-md shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" @if(!$selectedAnggotaId) disabled @endif>
+                                Pilih & Edit
+                            </button>
+                        @endif
+
+                        <!-- Tombol Pilih & Hapus Langsung -->
+                        @if($actionType === 'delete')
+                            <button type="button" wire:click="deleteAnggota" class="px-2 py-1 text-xs text-white bg-red-500 hover:bg-red-700 rounded-md shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" @if(!$selectedAnggotaId) disabled @endif>
+                                Pilih & Hapus
+                            </button>
+                        @endif
+                    @endif
                 </div>
             </div>
             
+            <!-- List Card Grid / Flex -->
             <div class="flex w-full h-full overflow-hidden">
                 <div class="flex xl:w-240 lg:w-183.75 md:w-screen w-74 h-full justify-start items-center gap-4 scrollbar-thin overflow-x-auto p-2 rounded-md">
-                    @for ($i = 1; $i <= 8; $i++)
+                    @foreach ($anggota as $an)
                     <div class="relative flex flex-none flex-col lg:w-38 md:w-32 w-22 lg:h-47 md:h-42 h-42 rounded-md shadow-md hover:scale-105 duration-150 transition-transform ease-in-out bg-white border border-gray-200">
+                        
+                        <!-- Radio Button Overlay saat Select Mode aktif -->
+                        @if($isSelectMode)
+                            <div class="absolute top-2 right-2 z-20 bg-white/80 p-1 rounded-full shadow">
+                                <input type="radio" wire:model.live="selectedAnggotaId" value="{{ $an->id }}" class="w-4 h-4 cursor-pointer accent-yellow-600">
+                            </div>
+                        @endif
+
                         <div class="w-full h-[90%] flex items-center justify-center p-2">
-                            <img src="{{ asset('img/foto.jpg') }}" alt="Pengurus" class="w-full h-full object-contain rounded-md">
+                            <img src="{{ asset('storage/' . $an->image) }}" alt="Pengurus" class="w-full h-full object-contain rounded-md">
                         </div>
                         <div class="w-full h-[10%] flex flex-col justify-center items-center bg-gray-200 rounded-b-md">
-                            <p class="text-black font-semibold text-sm normal-case">Sekretaris</p>
+                            <p class="text-black font-semibold text-sm normal-case">{{ $an->jabatan }}</p>
                         </div>
-                        <div class="absolute top-0 left-0 w-full h-full bg-gray-400 bg-opacity-90 opacity-0 hover:opacity-90 duration-150 transition-opacity ease-in-out rounded-md z-10">
-                            <div class="flex flex-col w-full h-full justify-center items-center gap-2 p-2 whitespace-normal">
-                                <p class="font-semibold lg:text-base text-xs text-black normal-case justify-center">Nama Pengurus</p>
-                                <p class="text-black font-normal text-xs text-center normal-case">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                            </div>
-                        </div>
-                    </div>
-                    @endfor
-                </div>
 
+                        @if(!$isSelectMode)
+                            <div class="absolute top-0 left-0 w-full h-full bg-gray-400 bg-opacity-90 opacity-0 hover:opacity-90 duration-150 transition-opacity ease-in-out rounded-md z-10">
+                                <div class="flex flex-col w-full h-full justify-center items-center gap-2 p-2 whitespace-normal">
+                                    <p class="font-semibold lg:text-base text-xs text-black normal-case justify-center">{{ $an->nama }}</p>
+                                    <p class="text-black font-normal text-xs text-center normal-case">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                </div>
+                            </div>
+                        @endif
+
+                    </div>
+                    @endforeach
+                </div>
             </div>
         </div>
-
     </article>
 
     {{-- overlay Add Struktur --}}
@@ -501,75 +672,91 @@ new class extends Component
 
     {{-- overlay Edit Pengurus --}}
     @if ($overlayEditPengurus)
-        <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
-            <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
+        <article class="fixed flex top-0 left-0 items-center justify-center w-full h-full bg-gray-900/60 z-50 p-4">
+            <div class="flex flex-col w-full max-w-2xl max-h-[90vh] bg-white rounded-md shadow-xl overflow-hidden">
                 
-                <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
-                    <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Edit Pengurus</h1>
-                    </div>
-                    <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
-                        <button type="button" wire:click="btnCloseEditPengurus" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
-                            <x-css-close class="w-3 h-3" />
-                        </button>
-                    </div>
+                <div class="flex w-full gap-1 justify-between items-center bg-gray-100 border-b border-gray-200 p-4">
+                    <h1 class="font-semibold text-lg text-black capitalize">Edit Pengurus</h1>
+                    <button type="button" wire:click="btnCloseEditPengurus" class="rounded-full p-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer">
+                        <x-css-close class="w-4 h-4" />
+                    </button>
                 </div>
 
-                <form wire:submit.prevent="updatePengurus" class="flex flex-col gap-4">
-                    @csrf
-                    
-                    <div class="flex flex-col w-full gap-5 pt-2">
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="name" class="text-sm font-semibold text-gray-800">
-                                Nama
-                            </label>
-    
-                            <input type="text" name="name" wire:model="name" id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
-                                Image
-                            </label>
-    
-                            <div class="md:col-span-3">
-                                <input type="file" name="image" wire:model="image" id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-
-                                @error('image')
-                                    <span class="text-sm text-red-500">{{ $message }}</span>
-                                @enderror
-
-                                @if ($currentImage)
-                                    <img src="{{ asset('storage/' . $currentImage) }}" class="w-28 h-20 object-cover rounded-md">
-                                @endif
-
-                                <p class="mt-1 text-xs text-gray-500">
-                                    Format: JPG, JPEG, PNG, atau WEBP. Ukuran: 2900x900. Maksimal 2 MB.
-                                </p>
+                <div class="p-4 overflow-y-auto custom-scrollbar">
+                    <form wire:submit.prevent="updatePengurus" class="flex flex-col gap-4">
+                        
+                        <div class="flex flex-col w-full gap-4">
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
+                                <label class="text-sm font-semibold text-gray-800">Nama</label>
+                                <input type="text" wire:model="nama" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                             </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-start gap-1 md:gap-2">
+                                <label class="text-sm font-semibold text-gray-800 pt-2">Image</label>
+                                <div class="md:col-span-3">
+                                    <input type="file" wire:model="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-50 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600">
+                                    @error('image') <span class="text-sm text-red-500">{{ $message }}</span> @enderror
+                                    
+                                    <!-- Preview Image Lama & Baru -->
+                                    <div class="mt-2 flex gap-2 items-center">
+                                        @if ($image)
+                                            <div class="text-xs text-center"><p>Baru</p><img src="{{ $image->temporaryUrl() }}" class="w-20 h-20 object-cover rounded-md border border-green-500"></div>
+                                        @elseif ($currentImage)
+                                            <div class="text-xs text-center"><p>Saat Ini</p><img src="{{ asset('storage/' . $currentImage) }}" class="w-20 h-20 object-cover rounded-md"></div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Select Jabatan dengan Logika Ketua -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
+                                <label class="text-sm font-semibold text-gray-800">Jabatan</label>
+                                <select wire:model="jabatan" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                    <option value="" disabled>-- Pilih Jabatan --</option>
+                                    <!-- Jika ada ketua, dan user yg sedang diedit BUKAN ketua, disable option ketua -->
+                                    <option value="ketua" {{ ($hasKetua && $jabatan !== 'ketua') ? 'disabled' : '' }}>Ketua {{ ($hasKetua && $jabatan !== 'ketua') ? '(Sudah Terisi)' : '' }}</option>
+                                    <option value="wakil ketua">Wakil Ketua</option>
+                                    <option value="sekertaris">Sekertaris</option>
+                                    <option value="wakil sekertaris">Wakil Sekertaris</option>
+                                    <option value="bendahara">Bendahara</option>
+                                    <option value="wakil bendahara">Wakil Bendahara</option>
+                                    <option value="anggota">Anggota</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
+                                <label class="text-sm font-semibold text-gray-800">Tempat Lahir</label>
+                                <input type="text" wire:model="tempat_lahir" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-start gap-1 md:gap-2">
+                                <label class="text-sm font-semibold text-gray-800 pt-2">Alamat</label>
+                                <textarea wire:model="alamat" rows="2" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 resize-none"></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
+                                <label class="text-sm font-semibold text-gray-800">No. Telp</label>
+                                <input type="text" wire:model="no_telp" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
+                                <label class="text-sm font-semibold text-gray-800">Email</label>
+                                <input type="email" wire:model="email" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            </div>
+
                         </div>
-    
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
-                                Tanggal
-                            </label>
-    
-                           <input type="date" wire:model="tanggal_publish" name="tanggal_publish" id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                        </div>
-    
-                    </div>
-    
-                    <div class="flex w-full h-full justify-end items-end">
-                        <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
-                            Edit
-                        </button>
-                    </div>
-                </form>
-            </div>
-            
-        </article>
         
+                        <div class="flex w-full justify-end mt-4 pt-4 border-t border-gray-200">
+                            <button type="submit" class="px-6 py-2 rounded-md bg-yellow-500 text-white font-semibold hover:bg-yellow-600 transition-colors shadow-md cursor-pointer">
+                                Edit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+        </article>
     @endif
     {{-- overlay Edit Pengurus --}}
 

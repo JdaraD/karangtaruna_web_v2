@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->boolean('is_active')->default(1);
             $table->string('nama');
-            $table->string('image')->nullable();
+            $table->string('image');
             $table->string('jabatan');
             $table->string('tempat_lahir');
             $table->string('alamat');
