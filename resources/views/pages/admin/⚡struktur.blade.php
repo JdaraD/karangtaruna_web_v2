@@ -433,7 +433,12 @@ new class extends Component
                             <div class="absolute top-0 left-0 w-full h-full bg-gray-400 bg-opacity-90 opacity-0 hover:opacity-90 duration-150 transition-opacity ease-in-out rounded-md z-10">
                                 <div class="flex flex-col w-full h-full justify-center items-center gap-2 p-2 whitespace-normal">
                                     <p class="font-semibold lg:text-base text-xs text-black normal-case justify-center">{{ $an->nama }}</p>
-                                    <p class="text-black font-normal text-xs text-center normal-case">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                    <div class="flex flex-col gap-0.5 justify-center items-start">
+                                        <p class="text-black font-normal text-[10px] text-center normal-case">Gmail: {{ $an->email }}</p>
+                                        <p class="text-black font-normal text-[10px] text-center normal-case">No. HP: {{ $an->no_telp }}</p>
+                                        <p class="text-black font-normal text-[10px] text-center normal-case">Tanggal Lahir: {{ $an->tempat_lahir }}</p>
+                                        <p class="text-black font-normal text-[10px] text-center normal-case">Alamat: {{ $an->alamat }}</p>
+                                    </div>
                                 </div>
                             </div>
                         @endif
@@ -633,8 +638,8 @@ new class extends Component
 
                             <!-- Tempat Lahir -->
                             <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
-                                <label for="tempat_lahir" class="text-sm font-semibold text-gray-800">Tempat Lahir</label>
-                                <input type="text" name="tempat_lahir" id="tempat_lahir" required placeholder="Masukkan Tempat Lahir" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                <label for="tempat_lahir" class="text-sm font-semibold text-gray-800">Tanggal Lahir</label>
+                                <input type="text" name="tempat_lahir" id="tempat_lahir" required placeholder="Masukkan Tanggal Lahir (10-10-2000)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                             </div>
 
                             <!-- Alamat -->
@@ -726,7 +731,7 @@ new class extends Component
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
-                                <label class="text-sm font-semibold text-gray-800">Tempat Lahir</label>
+                                <label class="text-sm font-semibold text-gray-800">Tanggal Lahir</label>
                                 <input type="text" wire:model="tempat_lahir" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                             </div>
 
