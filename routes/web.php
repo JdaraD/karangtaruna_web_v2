@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\anggotaController;
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\identityController;
+use App\Http\Controllers\admin\kategoriUsahaController;
 use App\Http\Controllers\admin\kontakAdminController;
 use App\Http\Controllers\admin\kontakBantuanController;
 use App\Http\Controllers\admin\legalController;
@@ -80,3 +81,4 @@ Route::post('/admin/legal', [legalController::class, 'store'])->name('admin.lega
 Route::post('/admin/pasal', [pasalController::class, 'store'])->name('admin.pasal.store');
 Route::post('/admin/struktur', [StrukturOrgController::class, 'store'])->name('admin.struktur.store');
 Route::post('/admin/anggota', [anggotaController::class, 'store'])->name('admin.anggota.store');
+Route::post('/admin/kategoriUsaha', [kategoriUsahaController::class, 'store'])->name('admin.kategoriUsaha.store');
