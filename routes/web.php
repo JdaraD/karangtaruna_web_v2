@@ -10,6 +10,7 @@ use App\Http\Controllers\admin\legalController;
 use App\Http\Controllers\admin\misiController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\pasalController;
+use App\Http\Controllers\admin\productController;
 use App\Http\Controllers\admin\runningTextController;
 use App\Http\Controllers\admin\StrukturOrgController;
 use App\Http\Controllers\admin\tentangController;
@@ -82,3 +83,4 @@ Route::post('/admin/pasal', [pasalController::class, 'store'])->name('admin.pasa
 Route::post('/admin/struktur', [StrukturOrgController::class, 'store'])->name('admin.struktur.store');
 Route::post('/admin/anggota', [anggotaController::class, 'store'])->name('admin.anggota.store');
 Route::post('/admin/kategoriUsaha', [kategoriUsahaController::class, 'store'])->name('admin.kategoriUsaha.store');
+Route::post('/admin/product', [productController::class, 'store'])->name('admin.product.store');

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->text('deskripsi');
             $table->string('gambar');
             $table->foreignId('kategori_usaha_id')->constrained('kategori_usahas')->cascadeOnDelete();
+            $table->integer('harga')->default(0);
+            $table->string('link-pembelian')->nullable();
             $table->timestamps();
         });
     }

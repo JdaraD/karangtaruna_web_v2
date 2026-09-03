@@ -15,6 +15,8 @@ class product extends Model
         'deskripsi',
         'gambar',
         'kategori_usaha_id',
+        'harga',
+        'link-pembelian'
     ];
 
 
