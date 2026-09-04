@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\albumVideoController;
 use App\Http\Controllers\admin\anggotaController;
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\identityController;
@@ -88,3 +89,4 @@ Route::post('/admin/kategoriUsaha', [kategoriUsahaController::class, 'store'])->
 Route::post('/admin/product', [productController::class, 'store'])->name('admin.product.store');
 Route::post('/admin/wilayah-kolaborasi', [wilayahKolaborasiController::class, 'store'])->name('admin.wilayah-kolaborasi.store');
 Route::post('/admin/kolaborasi', [kolaborasiController::class, 'store'])->name('admin.kolaborasi.store');
+Route::post('/admin/album-video', [albumVideoController::class, 'store'])->name('admin.album-video.store');  
