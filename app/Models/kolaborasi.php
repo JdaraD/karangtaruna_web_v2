@@ -18,4 +18,9 @@ class kolaborasi extends Model
         'tanggal_mulai',
         'tanggal_selesai',
     ];
+
+    public function wilayahKolaborasi()
+    {
+        return $this->belongsTo(wilayahKolaborasi::class, 'wilayah_kolaborasi_id');
+    }
 }

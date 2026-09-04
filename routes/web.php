@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\anggotaController;
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\identityController;
 use App\Http\Controllers\admin\kategoriUsahaController;
+use App\Http\Controllers\admin\kolaborasiController;
 use App\Http\Controllers\admin\kontakAdminController;
 use App\Http\Controllers\admin\kontakBantuanController;
 use App\Http\Controllers\admin\legalController;
@@ -86,3 +87,4 @@ Route::post('/admin/anggota', [anggotaController::class, 'store'])->name('admin.
 Route::post('/admin/kategoriUsaha', [kategoriUsahaController::class, 'store'])->name('admin.kategoriUsaha.store');
 Route::post('/admin/product', [productController::class, 'store'])->name('admin.product.store');
 Route::post('/admin/wilayah-kolaborasi', [wilayahKolaborasiController::class, 'store'])->name('admin.wilayah-kolaborasi.store');
+Route::post('/admin/kolaborasi', [kolaborasiController::class, 'store'])->name('admin.kolaborasi.store');

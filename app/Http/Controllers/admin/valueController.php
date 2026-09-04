@@ -43,7 +43,7 @@ class valueController extends Controller
 
             return redirect()->route('admin.about-us')->with('addSuccess', 'Data berhasil ditambah!');
             } catch (\Throwable $th) {
-            return redirect()->route('admin.about-us')->with('addGagal', 'Data berhasil ditambah!');
+            return redirect()->route('admin.about-us')->with('addGagal', 'Data gagal ditambah!');
         }
     }
 
