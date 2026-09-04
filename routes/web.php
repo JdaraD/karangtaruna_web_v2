@@ -16,6 +16,7 @@ use App\Http\Controllers\admin\StrukturOrgController;
 use App\Http\Controllers\admin\tentangController;
 use App\Http\Controllers\admin\valueController;
 use App\Http\Controllers\admin\visiController;
+use App\Http\Controllers\admin\wilayahKolaborasiController;
 use App\Http\Controllers\SliderController;
 use Illuminate\Support\Facades\Route;
 
@@ -84,3 +85,4 @@ Route::post('/admin/struktur', [StrukturOrgController::class, 'store'])->name('a
 Route::post('/admin/anggota', [anggotaController::class, 'store'])->name('admin.anggota.store');
 Route::post('/admin/kategoriUsaha', [kategoriUsahaController::class, 'store'])->name('admin.kategoriUsaha.store');
 Route::post('/admin/product', [productController::class, 'store'])->name('admin.product.store');
+Route::post('/admin/wilayah-kolaborasi', [wilayahKolaborasiController::class, 'store'])->name('admin.wilayah-kolaborasi.store');
