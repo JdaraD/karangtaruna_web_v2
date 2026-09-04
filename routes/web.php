@@ -17,6 +17,7 @@ use App\Http\Controllers\admin\runningTextController;
 use App\Http\Controllers\admin\StrukturOrgController;
 use App\Http\Controllers\admin\tentangController;
 use App\Http\Controllers\admin\valueController;
+use App\Http\Controllers\admin\videoController;
 use App\Http\Controllers\admin\visiController;
 use App\Http\Controllers\admin\wilayahKolaborasiController;
 use App\Http\Controllers\SliderController;
@@ -89,4 +90,5 @@ Route::post('/admin/kategoriUsaha', [kategoriUsahaController::class, 'store'])->
 Route::post('/admin/product', [productController::class, 'store'])->name('admin.product.store');
 Route::post('/admin/wilayah-kolaborasi', [wilayahKolaborasiController::class, 'store'])->name('admin.wilayah-kolaborasi.store');
 Route::post('/admin/kolaborasi', [kolaborasiController::class, 'store'])->name('admin.kolaborasi.store');
-Route::post('/admin/album-video', [albumVideoController::class, 'store'])->name('admin.album-video.store');  
+Route::post('/admin/album-video', [albumVideoController::class, 'store'])->name('admin.album-video.store'); 
+Route::post('/admin/video', [videoController::class, 'store'])->name('admin.video.store'); 
