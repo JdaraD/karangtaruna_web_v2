@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Component;
-use app\models\kegiatan;
+use App\Models\kegiatan;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
@@ -12,7 +12,7 @@ use Intervention\Image\Encoders\WebpEncoder;
 new class extends Component
 {
 
-    public $kegiatan;
+    public $kegiatan, $judul, $gambar, $deskripsi, $tanggal, $kegiatanId, $currentImage;
 
     public $overlayAddKegiatan = false;
     public $overlayEditKegiatan = false;
@@ -23,13 +23,54 @@ new class extends Component
     public $deleteGagal;
 
     // load data
-
+    public function loadKegiatan()
+    {
+        $this->kegiatan = kegiatan::all();
+    }
     // load data
 
     // function mount
+    public function mount()
+    {
+        $this->loadKegiatan();
+    }
     // function mount
 
     // function Button
+    public function btnOpenAddKegiatan()
+    {
+        $this->overlayAddKegiatan = true;
+    }
+
+    public function btnCloseAddKegiatan()
+    {
+        $this->overlayAddKegiatan = false;
+    }
+
+    public function btnOpenEditKegiatan($id)
+    {
+        $kegiatan = kegiatan::findOrFail($id);
+        $this->kegitanId = $kegiatan->id;
+        $this->judul = $kegiatan->judul;
+        $this->currentImage = $kegiatan->gambar;
+        $this->deskripsi = $kegiatan->deskripsi;
+        $this->tanggal = $kegiatan->tanggal;
+
+        $this->overlayEditKegiatan = true;
+    }
+
+    public function btnCloseEditKegitan()
+    {
+        $this->overlayEditKegiatan = false;
+        $this->reset([
+            'kegiatanId',
+            'judul',
+            'gambar',
+            'currentImage',
+            'deskripsi',
+            'tanggal'
+        ]);
+    }
     // function Button
 
     // add function
@@ -113,7 +154,7 @@ new class extends Component
                     </div>
                 </div>
 
-                <form action="{{ route('admin.Kegiatan.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
+                <form action="{{ route('admin.kegiatan.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">

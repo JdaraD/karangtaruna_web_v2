@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\eventController;
 use App\Http\Controllers\admin\identityController;
 use App\Http\Controllers\admin\kategoriUsahaController;
+use App\Http\Controllers\admin\kegiatanController;
 use App\Http\Controllers\admin\kolaborasiController;
 use App\Http\Controllers\admin\kontakAdminController;
 use App\Http\Controllers\admin\kontakBantuanController;
@@ -94,3 +95,4 @@ Route::post('/admin/kolaborasi', [kolaborasiController::class, 'store'])->name('
 Route::post('/admin/album-video', [albumVideoController::class, 'store'])->name('admin.album-video.store'); 
 Route::post('/admin/video', [videoController::class, 'store'])->name('admin.video.store'); 
 Route::post('/admin/event', [eventController::class, 'store'])->name('admin.events.store');
+Route::post('/admin/kegiatan', [kegiatanController::class, 'store'])->name('admin.kegiatan.store');
