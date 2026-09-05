@@ -129,8 +129,8 @@ new class extends Component
             $this->editSuccess = 'Data Berhasil Diedit!';
             $this->editGagal = '';
         } catch (\Throwable $th) {
+            $this->editGagal = 'Data Gagal Diedit!';
             $this->editSuccess = '';
-            $this->editGagal = 'Gagal memperbarui event!';
         }
     }
     // update function
@@ -153,8 +153,8 @@ new class extends Component
             $this->deleteSuccess = 'Data Berhasil Dihapus!';
             $this->deleteGagal = '';
         } catch (\Throwable $th) {
+            $this->deleteGagal = 'Data Gagal Dihapus!';
             $this->deleteSuccess = '';
-            $this->deleteGagal = 'Gagal menghapus event!';
         }
     }
     // delete function
