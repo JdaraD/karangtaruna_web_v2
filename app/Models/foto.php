@@ -13,13 +13,13 @@ class foto extends Model
 
     protected $fillable = [
         'is_active',
-        'album_foto_id',
+        'judul_id',
         'foto',
     ];
 
     // Banyak foto milik satu album
     public function albumFoto()
     {
-        return $this->belongsTo(AlbumFoto::class, 'album_foto_id');
+        return $this->belongsTo(AlbumFoto::class, 'judul_id');
     }
 }

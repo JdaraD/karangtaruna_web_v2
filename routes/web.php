@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\albumVideoController;
 use App\Http\Controllers\admin\anggotaController;
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\eventController;
+use App\Http\Controllers\admin\fotoController;
 use App\Http\Controllers\admin\identityController;
 use App\Http\Controllers\admin\kategoriUsahaController;
 use App\Http\Controllers\admin\kegiatanController;
@@ -98,3 +99,4 @@ Route::post('/admin/video', [videoController::class, 'store'])->name('admin.vide
 Route::post('/admin/event', [eventController::class, 'store'])->name('admin.events.store');
 Route::post('/admin/kegiatan', [kegiatanController::class, 'store'])->name('admin.kegiatan.store');
 Route::post('/admin/album-foto', [albumFotoController::class, 'store'])->name('admin.album-foto.store');
+Route::post('/admin/foto', [fotoController::class, 'store'])->name('admin.foto.store');

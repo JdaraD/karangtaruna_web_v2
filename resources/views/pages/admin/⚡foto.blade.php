@@ -2,13 +2,24 @@
 
 use Livewire\Component;
 use App\Models\albumFoto;
+use App\Models\foto;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\WebpEncoder;
 
 new class extends Component
 {
-    public $albums, $judul, $albumId;
+    use WithFileUploads;
+
+    public $albums, $judul, $albumId, $fotos, $foto, $judul_id, $fotoId, $currentImage;
 
     public $overlayAddAlbumFoto = false;
     public $overlayEditAlbumFoto = false;
+    public $overlayAddFoto = false;
+    public $overlayEditFoto = false;
 
     public $editSuccess;
     public $editGagal;
@@ -20,12 +31,18 @@ new class extends Component
     {
         $this->albums = albumFoto::all();
     }
+
+    public function loadFoto()
+    {
+        $this->fotos = foto::all();
+    }
     // load data
 
     // function mount
     public function mount()
     {
         $this->loadAlbumFoto();
+        $this->loadFoto();
     }
     // function mount
 
@@ -53,6 +70,34 @@ new class extends Component
     {
         $this->overlayEditAlbumFoto = false;
         $this->reset(['albumId','judul']);
+    }
+
+    public function btnOpenAddFoto()
+    {
+        $this->overlayAddFoto = true;
+    }
+
+    public function btnCloseAddFoto()
+    {
+        $this->overlayAddFoto = false;
+    }
+
+    public function btnOpenEditFoto($id)
+    {
+        $item = Foto::findOrFail($id);
+        
+        $this->fotoId = $item->id;
+        $this->judul_id = $item->judul_id; 
+        $this->currentImage = $item->foto;
+        $this->foto = null;
+
+        $this->overlayEditFoto = true;
+    }
+
+    public function btnCloseEditFoto()
+    {
+        $this->overlayEditFoto = false;
+        $this->reset(['fotoId', 'judul_id', 'currentImage','foto']);
     }
     // function Button
 
@@ -83,6 +128,58 @@ new class extends Component
             $this->editSuccess = '';
         }
     }
+
+    public function updateFoto()
+    {
+        $rules = [
+            // PERBAIKAN: Ubah validasi ke tabel album_fotos
+            'judul_id' => 'required|exists:album_fotos,id',
+        ];
+
+        if ($this->foto instanceof UploadedFile) {
+            $rules['foto'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
+        }
+
+        $this->validate($rules);
+
+        try {
+            $item = Foto::findOrFail($this->fotoId);
+
+            $dataToUpdate = [
+                // PERBAIKAN: Simpan berdasarkan judul_id
+                'judul_id' => $this->judul_id,
+            ];
+
+            if ($this->foto instanceof UploadedFile) {
+                $filename = time() . '_' . uniqid() . '.webp';
+
+                $manager = ImageManager::usingDriver(Driver::class);
+                $img = $manager->decode(file_get_contents($this->foto->getRealPath()));
+                $img->scaleDown(width: 1200);
+                $encoded = $img->encode(new WebpEncoder(quality: 80));
+
+                $path = "uploads/fotos/{$filename}";
+                Storage::disk('public')->put($path, (string) $encoded);
+
+                if ($item->foto && Storage::disk('public')->exists($item->foto)) {
+                    Storage::disk('public')->delete($item->foto);
+                }
+
+                $dataToUpdate['foto'] = $path;
+            }
+
+            $item->update($dataToUpdate);
+
+            $this->loadFoto(); // Pastikan data direfresh
+            $this->btnCloseEditFoto();
+            
+            $this->editSuccess = 'Data Berhasil Diedit';
+            $this->editGagal = '';
+        } catch (\Throwable $th) {
+            $this->editGagal = 'Data Gagal Diedit';
+            $this->editSuccess = '';
+        }
+    }
     // update function
 
     // delete function
@@ -98,6 +195,26 @@ new class extends Component
             $this->deleteGagal = '';
         } catch (\Throwable $th) {
             $this->deleteGagal = 'Data gagal dihapus!';
+            $this->deleteSuccess = '';
+        }
+    }
+
+    public function btnDeleteFoto($id)
+    {
+        try {
+            $item = Foto::findOrFail($id);
+
+            if ($item->foto && Storage::disk('public')->exists($item->foto)) {
+                Storage::disk('public')->delete($item->foto);
+            }
+
+            $item->delete();
+
+            $this->loadFoto();
+            $this->deleteSuccess = 'Data Berhasil Dihapus!';
+            $this->deleteGagal = '';
+        } catch (\Throwable $th) {
+            $this->deleteGagal = 'Data Gagal Dihapus!';
             $this->deleteSuccess = '';
         }
     }
@@ -157,38 +274,44 @@ new class extends Component
                     <h1 class="font-semibold text-base text-black capitalize">Foto</h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
-                    <div class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
+                    <button type="button" wire:click="btnOpenAddFoto" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah">
                         <x-bi-plus class="h-6 w-6 text-white"/>
-                    </div>
+                    </button>
                 </div>
             </div>
-            <div class="flex w-full h-auto gap-1 items-center">
-                @for ($i = 1; $i <= 3; $i++)
-                    <div class="flex w-auto h-auto gap-1 items-center bg-gray-100 hover:bg-gray-200 rounded-md p-2 cursor-pointer">
-                        <h1 class="font-semibold text-base text-black capitalize">CFD</h1>
+
+            <!-- Filter Album (Opsional jika ingin dipakai) -->
+            <div class="flex w-full h-auto gap-1 items-center overflow-x-auto scrollbar-none">
+                @foreach ($albums as $al)
+                    <div class="flex w-auto h-auto gap-1 items-center bg-gray-100 hover:bg-gray-200 rounded-md p-2 cursor-pointer flex-none">
+                        <h1 class="font-semibold text-sm text-black capitalize">{{ $al->judul }}</h1>
                     </div>
-                @endfor
+                @endforeach
             </div>
 
-            <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 w-full 3xl:h-210 lg:h-68 md:h-66 h-64 gap-2 p-2 overflow-y-auto scrollbar-none">
-                @for ($i = 1; $i <= 12; $i++)
-                    <div class="flex flex-col w-full h-auto gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
+            <!-- Grid Card -->
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 w-full gap-2 p-2 overflow-y-auto scrollbar-none">
+                @foreach ($fotos as $ft)
+                    <div wire:key="foto-{{ $ft->id }}" class="flex flex-col w-full h-auto gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
                         <div class="flex w-full h-[80%]">
-                            <img src="{{ asset('img/foto.jpg') }}" alt="" class="w-full h-46 object-cover rounded-md">
+                            <img src="{{ asset('storage/' . $ft->foto) }}" alt="Foto" class="w-full h-46 object-cover rounded-md bg-white">
                         </div>
                         <div class="flex w-full h-full gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                            <p class="text-base font-semibold capitalize">Kegiatan CFD</p>
+                            <!-- Perbaikan cara memanggil relasi: $ft->albumFoto->judul -->
+                            <p class="text-base font-semibold capitalize text-white truncate max-w-[60%]">{{ $ft->albumFoto->judul ?? 'Tanpa Album' }}</p>
                             <div class="flex gap-1">
-                                <div class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
-                                    <x-css-eye class="h-4 w-4 text-white"/>
-                                </div>
-                                <div class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                <!-- Perbaikan tombol Edit (Menghubungkan ke fungsi Livewire) -->
+                                <button type="button" wire:click="btnOpenEditFoto({{ $ft->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Edit">
+                                    <x-bi-pencil class="h-4 w-4 text-white"/>
+                                </button>
+                                <!-- Perbaikan tombol Hapus (Menghubungkan ke fungsi Livewire) -->
+                                <button type="button" wire:click="btnDeleteFoto({{ $ft->id }})" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
                                     <x-bi-trash class="h-4 w-4 text-white"/>
-                                </div>
+                                </button>
                             </div>
                         </div>
                     </div>
-                @endfor
+                @endforeach
             </div>
         </div>
     </article>
@@ -281,72 +404,36 @@ new class extends Component
     @endif
     {{-- overlay Edit Album Foto --}}
 
-    {{-- overlay Add Kolaborasi --}}
-    {{-- @if ($overlayAddKolaborasi)
+    {{-- overlay Add Foto --}}
+    @if ($overlayAddFoto)
         <article class="fixed flex top-0 left-0 items-center justify-center w-full h-full bg-gray-900/60 z-50 p-4">
-            <div class="flex flex-col w-full max-w-2xl max-h-[90vh] bg-white rounded-md shadow-xl overflow-hidden">
-                
+            <div class="flex flex-col w-full max-w-2xl bg-white rounded-md shadow-xl overflow-hidden">
                 <div class="flex w-full gap-1 justify-between items-center bg-gray-100 border-b border-gray-200 p-4">
-                    <h1 class="font-semibold text-lg text-black capitalize">Tambah Kolaborasi</h1>
-                    <button wire:click="btnCloseKolaborasi" class="rounded-full p-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer">
-                        <x-css-close class="w-4 h-4" />
-                    </button>
+                    <h1 class="font-semibold text-lg text-black capitalize">Tambah Foto</h1>
+                    <button type="button" wire:click="btnCloseFoto" class="rounded-full p-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer"><x-css-close class="w-4 h-4" /></button>
                 </div>
 
-                <div class="p-4 overflow-y-auto custom-scrollbar">
-                    <form action="{{ route('admin.kolaborasi.store') }}" enctype="multipart/form-data" method="POST" class="flex flex-col gap-4">
+                <div class="p-4 overflow-y-auto max-h-[80vh]">
+                    <form action="{{ route('admin.foto.store') }}" enctype="multipart/form-data" method="POST" class="flex flex-col gap-4">
                         @csrf
                         <div class="flex flex-col w-full gap-4">
-
-                            <!-- NAMA KOLABORASI -->
                             <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
-                                <label class="text-sm font-semibold text-gray-800">Nama</label>
-                                <input type="text" name="nama_kolaborasi" required placeholder="Masukkan Nama Kolaborasi" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500">
-                            </div>
-
-                            <!-- SELECT WILAYAH KOLABORASI (DI PERBAIKI) -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
-                                <label class="text-sm font-semibold text-gray-800">Wilayah</label>
-                                <select name="wilayah_kolaborasi_id" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500">
-                                    <option value="" disabled selected>--Pilih Wilayah--</option>
-                                    <!-- Foreach ada di dalam Select -->
-                                    @foreach ($AlbumFoto as $wk)
-                                        <option value="{{ $wk->id }}" class="text-black">{{ $wk->nama_wilayah }}</option>
+                                <label class="text-sm font-semibold text-gray-800">Album Foto</label>
+                                <select name="judul_id" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500">
+                                    <option value="" disabled selected>-- Pilih Album --</option>
+                                    @foreach ($albums as $album)
+                                        <option value="{{ $album->id }}">{{ $album->judul }}</option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            <!-- MULTIPLE IMAGE (TAMBAHKAN [] DAN multiple) -->
                             <div class="grid grid-cols-1 md:grid-cols-4 md:items-start gap-1 md:gap-2">
                                 <label class="text-sm font-semibold text-gray-800 pt-2">Gambar</label>
                                 <div class="md:col-span-3">
-                                    <input type="file" name="image[]" multiple required accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-50 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600">
+                                    <input type="file" name="foto[]" multiple required accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-50 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600">
                                     <p class="mt-1 text-xs text-gray-500">Bisa pilih lebih dari 1 gambar sekaligus. Format: JPG/PNG/WEBP. Maks 2MB/file.</p>
                                 </div>
                             </div>
-
-                            <!-- DESKRIPSI -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-start gap-1 md:gap-2">
-                                <label class="text-sm font-semibold text-gray-800 pt-2">Deskripsi</label>
-                                <textarea rows="3" name="deskripsi_kolaborasi" required placeholder="Masukkan Deskripsi" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 resize-none"></textarea>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                                <label for="tanggal_mulai" class="text-sm font-semibold text-gray-800 pt-2">
-                                    Tanggal Mulai
-                                </label>
-        
-                                <input type="date" name="tanggal_mulai" required id="tanggal_mulai" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
-                                <label for="tanggal_selesai" class="text-sm font-semibold text-gray-800 pt-2">
-                                    Tanggal Selesai
-                                </label>
-        
-                                <input type="date" name="tanggal_selesai" required id="tanggal_selesai" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                            </div>
-
                         </div>
                         <div class="flex w-full justify-end mt-4 pt-4 border-t border-gray-200">
                             <button type="submit" class="px-6 py-2 rounded-md bg-green-500 hover:bg-green-700 text-white shadow-md cursor-pointer font-semibold">Simpan</button>
@@ -355,98 +442,57 @@ new class extends Component
                 </div>
             </div>
         </article>
-    @endif --}}
-    {{-- overlay Add Kolaborasi --}}
+    @endif
+    {{-- overlay Add Foto --}}
 
-    {{-- overlay Edit Kolaborasi --}}
-    {{-- @if ($overlayEditKolaborasi)
+    {{-- overlay Edit Foto --}}
+    @if ($overlayEditFoto)
         <article class="fixed flex top-0 left-0 items-center justify-center w-full h-full bg-gray-900/60 z-50 p-4">
-            <div class="flex flex-col w-full max-w-2xl max-h-[90vh] bg-white rounded-md shadow-xl overflow-hidden">
-                
+            <div class="flex flex-col w-full max-w-2xl bg-white rounded-md shadow-xl overflow-hidden">
                 <div class="flex w-full gap-1 justify-between items-center bg-gray-100 border-b border-gray-200 p-4">
-                    <h1 class="font-semibold text-lg text-black capitalize">Edit Kolaborasi</h1>
-                    <button type="button" wire:click="btnCloseEditKolaborasi" class="rounded-full p-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer">
-                        <x-css-close class="w-4 h-4" />
-                    </button>
+                    <h1 class="font-semibold text-lg text-black capitalize">Edit Foto</h1>
+                    <button type="button" wire:click="btnCloseEditFoto" class="rounded-full p-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer"><x-css-close class="w-4 h-4" /></button>
                 </div>
 
-                <div class="p-4 overflow-y-auto custom-scrollbar">
-                    <form wire:submit.prevent="updateKolaborasi" class="flex flex-col gap-4">
-                        
+                <div class="p-4 overflow-y-auto max-h-[80vh]">
+                    <form wire:submit.prevent="updateFoto" class="flex flex-col gap-4">
                         <div class="flex flex-col w-full gap-4">
-
-                            <!-- NAMA KOLABORASI -->
                             <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
-                                <label class="text-sm font-semibold text-gray-800">Nama</label>
-                                <input type="text" wire:model="nama_kolaborasi" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500">
-                            </div>
-
-                            <!-- WILAYAH -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
-                                <label class="text-sm font-semibold text-gray-800">Wilayah</label>
-                                <select wire:model="wilayah_kolaborasi_id" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500">
-                                    <option value="" disabled>--Pilih Wilayah--</option>
-                                    @foreach ($AlbumFoto as $wk)
-                                        <option value="{{ $wk->id }}">{{ $wk->nama_wilayah }}</option>
+                                <label class="text-sm font-semibold text-gray-800">Album Foto</label>
+                                <!-- Perbaikan variabel $albums (huruf kecil) -->
+                                <select wire:model="judul_id" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500">
+                                    <option value="" disabled>-- Pilih Album Foto --</option>
+                                    @foreach ($albums as $album)
+                                        <option value="{{ $album->id }}">{{ $album->judul }}</option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            <!-- MULTIPLE GAMBAR (EDIT) -->
                             <div class="grid grid-cols-1 md:grid-cols-4 md:items-start gap-1 md:gap-2">
                                 <label class="text-sm font-semibold text-gray-800 pt-2">Gambar</label>
                                 <div class="md:col-span-3">
-                                    <input type="file" wire:model="image" multiple accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-50 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600">
+                                    <input type="file" wire:model="foto" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-50 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600">
                                     <p class="mt-1 text-xs text-gray-500">Biarkan kosong jika tidak ingin mengubah gambar.</p>
                                     
-                                    <!-- Preview Gambar Lama -->
-                                    @if(empty($image) && is_array($currentImage))
-                                        <div class="mt-2 flex gap-2 overflow-x-auto p-1 bg-gray-100 rounded-md">
-                                            @foreach($currentImage as $img)
-                                                <img src="{{ asset('storage/' . $img) }}" class="w-16 h-16 object-cover rounded-md border border-gray-300 shrink-0">
-                                            @endforeach
-                                        </div>
-                                    @endif
-
-                                    <!-- Preview Gambar Baru yang dipilih -->
-                                    @if(!empty($image))
-                                        <div class="mt-2 flex gap-2 overflow-x-auto p-1 bg-green-50 rounded-md">
-                                            @foreach($image as $newImg)
-                                                <img src="{{ $newImg->temporaryUrl() }}" class="w-16 h-16 object-cover rounded-md border border-green-500 shrink-0">
-                                            @endforeach
-                                        </div>
-                                    @endif
+                                    <div class="mt-2 flex gap-2">
+                                        @if ($foto)
+                                            <img src="{{ $foto->temporaryUrl() }}" class="w-20 h-20 object-cover rounded-md border border-green-500">
+                                        @elseif ($currentImage)
+                                            <img src="{{ asset('storage/' . $currentImage) }}" class="w-20 h-20 object-cover rounded-md border border-gray-300">
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
-
-                            <!-- DESKRIPSI -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-start gap-1 md:gap-2">
-                                <label class="text-sm font-semibold text-gray-800 pt-2">Deskripsi</label>
-                                <textarea rows="3" wire:model="deskripsi_kolaborasi" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 resize-none"></textarea>
-                            </div>
-
-                            <!-- TANGGAL MULAI (Tambahkan ini) -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
-                                <label class="text-sm font-semibold text-gray-800">Tanggal Mulai</label>
-                                <input type="date" wire:model="tanggal_mulai" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500">
-                            </div>
-
-                            <!-- TANGGAL SELESAI (Tambahkan ini) -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 md:items-center gap-1 md:gap-2">
-                                <label class="text-sm font-semibold text-gray-800">Tanggal Selesai</label>
-                                <input type="date" wire:model="tanggal_selesai" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500">
-                            </div>
-
                         </div>
                         <div class="flex w-full justify-end mt-4 pt-4 border-t border-gray-200">
-                            <button type="submit" class="px-6 py-2 rounded-md bg-yellow-500 hover:bg-yellow-600 text-white shadow-md cursor-pointer font-semibold">Edit</button>
+                            <button type="submit" class="px-6 py-2 rounded-md bg-green-500 hover:bg-green-600 text-white shadow-md cursor-pointer font-semibold">Edit</button>
                         </div>
                     </form>
                 </div>
             </div>
         </article>
-    @endif --}}
-    {{-- overlay Edit Kolaborasi --}}
+    @endif
+    {{-- overlay Edit Foto --}}
 
     {{-- notifikasi Add --}}
     @if (session('addSuccess'))
