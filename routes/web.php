@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\albumFotoController;
 use App\Http\Controllers\admin\albumVideoController;
 use App\Http\Controllers\admin\anggotaController;
 use App\Http\Controllers\admin\BannerController;
@@ -96,3 +97,4 @@ Route::post('/admin/album-video', [albumVideoController::class, 'store'])->name(
 Route::post('/admin/video', [videoController::class, 'store'])->name('admin.video.store'); 
 Route::post('/admin/event', [eventController::class, 'store'])->name('admin.events.store');
 Route::post('/admin/kegiatan', [kegiatanController::class, 'store'])->name('admin.kegiatan.store');
+Route::post('/admin/album-foto', [albumFotoController::class, 'store'])->name('admin.album-foto.store');
