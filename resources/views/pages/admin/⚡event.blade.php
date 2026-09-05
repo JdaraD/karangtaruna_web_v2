@@ -2,9 +2,17 @@
 
 use Livewire\Component;
 use App\Models\event;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\WebpEncoder;
 
 new class extends Component
 {
+    use WithFileUploads;
+
     public $judul, $deskripsi, $tanggal, $gambar, $currentImage, $eventId, $events;
 
     public $overlayAddEvent = false;
@@ -70,9 +78,85 @@ new class extends Component
     // add function
 
     // update function
+    public function updateEvent()
+    {
+        $rules = [
+            'judul'     => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'tanggal'   => 'required|date',
+        ];
+
+        if ($this->gambar instanceof UploadedFile) {
+            $rules['gambar'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
+        }
+
+        $this->validate($rules);
+
+        try {
+            $event = Event::findOrFail($this->eventId);
+
+            $dataToUpdate = [
+                'judul'     => $this->judul,
+                'deskripsi' => $this->deskripsi,
+                'tanggal'   => $this->tanggal,
+            ];
+
+            // Jika ada unggahan gambar baru
+            if ($this->gambar instanceof UploadedFile) {
+                $filename = time() . '_' . uniqid() . '.webp';
+
+                $manager = ImageManager::usingDriver(Driver::class);
+                $img = $manager->decode(file_get_contents($this->gambar->getRealPath()));
+                $img->scaleDown(height: 320);
+                $encoded = $img->encode(new WebpEncoder(quality: 80));
+
+                $path = "uploads/events/{$filename}";
+                Storage::disk('public')->put($path, (string) $encoded);
+
+                // Hapus gambar lama
+                if ($event->gambar && Storage::disk('public')->exists($event->gambar)) {
+                    Storage::disk('public')->delete($event->gambar);
+                }
+
+                $dataToUpdate['gambar'] = $path;
+            }
+
+            $event->update($dataToUpdate);
+
+            $this->btnCloseEditEvent();
+            $this->loadEvent(); 
+            
+            $this->editSuccess = 'Data Berhasil Diedit!';
+            $this->editGagal = '';
+        } catch (\Throwable $th) {
+            $this->editSuccess = '';
+            $this->editGagal = 'Gagal memperbarui event!';
+        }
+    }
     // update function
 
     // delete function
+    public function btnDeleteEvent($id)
+    {
+        try {
+            $event = Event::findOrFail($id);
+
+            // Hapus file gambar
+            if ($event->gambar && Storage::disk('public')->exists($event->gambar)) {
+                Storage::disk('public')->delete($event->gambar);
+            }
+
+            $event->delete();
+
+            $this->loadEvent();
+
+            $this->deleteSuccess = 'Data Berhasil Dihapus!';
+            $this->deleteGagal = '';
+        } catch (\Throwable $th) {
+            $this->deleteSuccess = '';
+            $this->deleteGagal = 'Gagal menghapus event!';
+        }
+    }
     // delete function
     
     public function render()
@@ -109,11 +193,11 @@ new class extends Component
                 @foreach ($events as $event)
                     <div class="flex w-full h-36.75 gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
                         <div class="flex w-[46%] h-full">
-                            <img src="{{ asset('img/foto.jpg') }}" alt="" class="w-full h-32 object-cover rounded-md">
+                            <img src="{{ asset('storage/'. $event->gambar) }}" alt="" class="w-full h-32 object-cover rounded-md">
                         </div>
                         <div class="flex w-full h-full flex-col gap-1">
                             <div class="flex gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                                <p class="text-base font-semibold capitalize">Kegiatan CFD</p>
+                                <p class="text-base font-semibold capitalize">{{ $event->judul }}</p>
                                 <div class="flex gap-1">
                                     <button type="button" wire:click="btnEditEvent({{ $event->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                         <x-bi-pencil class="h-4 w-4 text-white"/>
@@ -123,7 +207,7 @@ new class extends Component
                                     </button>
                                 </div>
                             </div>
-                            <p class="text-base font-semibold text-justify line-clamp-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora eligendi quibusdam qui iste quisquam facilis commodi, eius eum sed iure, atque vero fugiat dolorem officiis aut aliquam sint natus nostrum.</p>
+                            <p class="text-base font-semibold text-justify line-clamp-4">{{ $event->deskripsi }}</p>
                         </div>
                     </div>
                 @endforeach
@@ -231,11 +315,11 @@ new class extends Component
                     <div class="flex flex-col w-full gap-5 pt-2">
     
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="name" class="text-sm font-semibold text-gray-800">
-                                Nama
+                            <label for="judul" class="text-sm font-semibold text-gray-800">
+                                Judul
                             </label>
     
-                            <input type="text" wire:model="name" name="name" required id="name" placeholder="Masukkan Nama Event" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" wire:model="judul" name="judul" required id="judul" placeholder="Masukkan Judul Event" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                         <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
@@ -244,7 +328,7 @@ new class extends Component
                             </label>
     
                                <div class="md:col-span-3">
-                                    <input type="file" name="gambar" wire:model="gambar" required id="gambar" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                    <input type="file" name="gambar" wire:model="gambar" id="gambar" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
 
                                     @error('gambar')
                                         <span class="text-sm text-red-500">{{ $message }}</span>
