@@ -77,7 +77,7 @@ new class extends Component
             </div>
             <div class="flex mt-1">
                 <button type="button" class="bg-[#00c853] hover:bg-green-600 text-white font-medium py-1.5 px-4 rounded-md text-sm transition-colors duration-200">
-                    Simpan Tema Frontend
+                    Simpan Tema website
                 </button>
             </div>
         </form>
@@ -117,7 +117,7 @@ new class extends Component
             </div>
             <div class="flex mt-1">
                 <button type="button" class="bg-[#00c853] hover:bg-green-600 text-white font-medium py-1.5 px-4 rounded-md text-sm transition-colors duration-200">
-                    Simpan Tema Backend
+                    Simpan Tema admin panel
                 </button>
             </div>
         </form>
