@@ -4,6 +4,8 @@ use App\Http\Controllers\admin\albumFotoController;
 use App\Http\Controllers\admin\albumVideoController;
 use App\Http\Controllers\admin\anggotaController;
 use App\Http\Controllers\admin\BannerController;
+use App\Http\Controllers\admin\colorAdminController;
+use App\Http\Controllers\admin\colorWebController;
 use App\Http\Controllers\admin\eventController;
 use App\Http\Controllers\admin\fotoController;
 use App\Http\Controllers\admin\identityController;
@@ -103,3 +105,5 @@ Route::post('/admin/event', [eventController::class, 'store'])->name('admin.even
 Route::post('/admin/kegiatan', [kegiatanController::class, 'store'])->name('admin.kegiatan.store');
 Route::post('/admin/album-foto', [albumFotoController::class, 'store'])->name('admin.album-foto.store');
 Route::post('/admin/foto', [fotoController::class, 'store'])->name('admin.foto.store');
+Route::post('/admin/color-web', [colorWebController::class, 'store'])->name('admin.colorWeb.store');
+Route::post('/admin/color-admin', [colorAdminController::class, 'store'])->name('admin.colorAdmin.store');

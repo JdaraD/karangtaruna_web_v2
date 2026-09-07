@@ -1,13 +1,33 @@
 <?php
 
 use Livewire\Component;
+use App\Models\colorWeb;
+use App\Models\colorAdmin;
 
 new class extends Component
 {
+    public $warna_header, $warna_sidebar, $warna_runningText, $warna_footer, $warna_main;
+    public $colorWebs, $colorAdmins;
+
+
     // load data
+    public function loadColorWeb()
+    {
+        $this->colorWebs = colorWeb::first();
+    }
+
+    public function loadColorAdmin()
+    {
+        $this->colorAdmins = colorAdmin::first();
+    }
     // load data
 
     // function mount
+    public function mount()
+    {
+        $this->loadColorWeb();
+        $this->loadColorAdmin();
+    }
     // function mount
 
     // function Button
@@ -36,10 +56,6 @@ new class extends Component
 
     <!-- Header Section -->
     <article class="flex flex-none gap-2 items-center text-white">
-        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
         <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base">Settings</h1>
     </article>
 
@@ -48,36 +64,37 @@ new class extends Component
         <div class="bg-[#f4f5f7] p-3 rounded-md flex justify-between items-center">
             <h2 class="font-semibold text-sm">Pengaturan Warna Frontend</h2>
         </div>
-        <form class="flex flex-col gap-5 px-2">
+        <form action="{{ route('admin.colorWeb.store') }}" method="POST" class="flex flex-col gap-5 px-2">
+            @csrf
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
                 <!-- Input Color: Header Frontend -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-sm font-medium text-gray-700">Warna Header</label>
-                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853] focus-within:border-transparent transition-all">
-                        <input type="color" value="#ffffff" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
-                        <input type="text" value="#ffffff" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
+                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853]">
+                        <input type="color" value="{{ $colorWebs->warna_header ?? '#ffffff' }}" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
+                        <input type="text" name="warna_header" value="{{ $colorWebs->warna_header ?? '#ffffff' }}" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
                     </div>
                 </div>
                 <!-- Input Color: Running Text Frontend -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-sm font-medium text-gray-700">Warna Running Text</label>
-                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853] focus-within:border-transparent transition-all">
-                        <input type="color" value="#0f172a" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
-                        <input type="text" value="#0f172a" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
+                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853]">
+                        <input type="color" value="{{ $colorWebs->warna_runningText ?? '#0f172a' }}" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
+                        <input type="text" name="warna_runningText" value="{{ $colorWebs->warna_runningText ?? '#0f172a' }}" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
                     </div>
                 </div>
                 <!-- Input Color: Footer Frontend -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-sm font-medium text-gray-700">Warna Footer</label>
-                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853] focus-within:border-transparent transition-all">
-                        <input type="color" value="#1e293b" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
-                        <input type="text" value="#1e293b" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
+                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853]">
+                        <input type="color" value="{{ $colorWebs->warna_footer ?? '#1e293b' }}" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
+                        <input type="text" name="warna_footer" value="{{ $colorWebs->warna_footer ?? '#1e293b' }}" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
                     </div>
                 </div>
             </div>
             <div class="flex mt-1">
-                <button type="button" class="bg-[#00c853] hover:bg-green-600 text-white font-medium py-1.5 px-4 rounded-md text-sm transition-colors duration-200">
-                    Simpan Tema website
+                <button type="submit" class="bg-[#00c853] hover:bg-green-600 text-white font-medium py-1.5 px-4 rounded-md text-sm transition-colors duration-200">
+                    Simpan Tema Website
                 </button>
             </div>
         </form>
@@ -88,39 +105,53 @@ new class extends Component
         <div class="bg-[#f4f5f7] p-3 rounded-md flex justify-between items-center">
             <h2 class="font-semibold text-sm">Pengaturan Warna Backend</h2>
         </div>
-        <form class="flex flex-col gap-5 px-2">
+        <form action="{{ route('admin.colorAdmin.store') }}" method="POST" class="flex flex-col gap-5 px-2">
+            @csrf
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
                 <!-- Input Color: Header Backend -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-sm font-medium text-gray-700">Warna Header</label>
-                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853] focus-within:border-transparent transition-all">
-                        <input type="color" value="#0b132b" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
-                        <input type="text" value="#0b132b" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
+                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853]">
+                        <input type="color" value="{{ $colorAdmins->warna_header ?? '#0b132b' }}" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
+                        <input type="text" name="warna_header" value="{{ $colorAdmins->warna_header ?? '#0b132b' }}" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
                     </div>
                 </div>
                 <!-- Input Color: Sidebar Backend -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-sm font-medium text-gray-700">Warna Sidebar</label>
-                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853] focus-within:border-transparent transition-all">
-                        <input type="color" value="#1c2541" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
-                        <input type="text" value="#1c2541" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
+                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853]">
+                        <input type="color" value="{{ $colorAdmins->warna_sidebar ?? '#1c2541' }}" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
+                        <input type="text" name="warna_sidebar" value="{{ $colorAdmins->warna_sidebar ?? '#1c2541' }}" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
                     </div>
                 </div>
                 <!-- Input Color: Main Background Backend -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-sm font-medium text-gray-700">Warna Main (Area Utama)</label>
-                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853] focus-within:border-transparent transition-all">
-                        <input type="color" value="#f8fafc" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
-                        <input type="text" value="#f8fafc" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
+                    <div class="flex items-center gap-2 border border-gray-300 rounded-md p-1.5 focus-within:ring-2 focus-within:ring-[#00c853]">
+                        <input type="color" value="{{ $colorAdmins->warna_main ?? '#f8fafc' }}" class="h-8 w-12 cursor-pointer border-0 p-0 rounded-sm bg-transparent">
+                        <input type="text" name="warna_main" value="{{ $colorAdmins->warna_main ?? '#f8fafc' }}" class="w-full text-sm text-gray-700 focus:outline-none uppercase font-mono" placeholder="#HEXCODE">
                     </div>
                 </div>
             </div>
             <div class="flex mt-1">
-                <button type="button" class="bg-[#00c853] hover:bg-green-600 text-white font-medium py-1.5 px-4 rounded-md text-sm transition-colors duration-200">
-                    Simpan Tema admin panel
+                <button type="submit" class="bg-[#00c853] hover:bg-green-600 text-white font-medium py-1.5 px-4 rounded-md text-sm transition-colors duration-200">
+                    Simpan Tema Admin Panel
                 </button>
             </div>
         </form>
     </div>
+
+    {{-- Notifikasi --}}
+    @if (session('success'))
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="absolute top-2 right-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+
+    @if (session('gagal'))
+        <div class="absolute top-2 right-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ session('gagal') }}</span>
+        </div>
+    @endif
 
 </section>
