@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('settings', function (Blueprint $table) {
+        Schema::create('color_webs', function (Blueprint $table) {
             $table->id();
             $table->boolean('is_active')->default(1);
             $table->string('warna_header');
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('settings');
+        Schema::dropIfExists('color_webs');
     }
 };

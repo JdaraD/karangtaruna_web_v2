@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class setting extends Model
+class colorAdmin extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'is_active',
         'warna_header',
-        'warna_runningText',
-        'warna_footer'
+        'warna_sidebar',
+        'warna_main'
     ];
 }
