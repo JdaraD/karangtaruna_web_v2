@@ -74,6 +74,7 @@ Route::livewire('/admin.kontak', 'pages::admin.kontak')->name('admin.kontak');
 Route::livewire('/admin.running-text', 'pages::admin.running-text')->name('admin.running-text');
 Route::livewire('/admin.manajement-account', 'pages::admin.management-account')->name('admin.manajemen-acccount');
 Route::livewire('/admin.settings', 'pages::admin.settings')->name('admin.settings');
+Route::livewire('/admin.mail', 'pages::admin.mail')->name('admin.mail');
 
 
 // controller backend
