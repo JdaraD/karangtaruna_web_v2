@@ -1,9 +1,59 @@
 <?php
 
 use Livewire\Component;
+use App\Models\user;
 
 new class extends Component
 {
+
+    public $name;
+    public $email;
+    public $password;
+    public $password_confirmation;
+    public $terms;
+
+    protected $rules = [
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+        'terms' => 'accepted',
+    ];
+
+    // load data
+    // load data
+
+    // function mount
+    // function mount
+
+    // function Button
+    public function register()
+    {
+        // 1. Eksekusi rules validasi
+        $this->validate();
+        try {
+            // 2. Buat user
+            user::create([
+                'name' => $this->name,
+                'email' => $this->email,
+                'password' => $this->password,
+            ]);
+    
+            // 3. Redirect ke login dengan notifikasi
+            return redirect()->route('registrasi')->with('success', 'Akun Berhasil Dibuat. Silakan Login');
+        } catch (\Throwable $th) {
+            return redirect()->route('registrasi')->with('gagal', 'Akun Gagal Dibuat. Silakan Registrasi Ulang' );
+        }
+    }
+    // function Button
+
+    // add function
+    // add function
+
+    // update function
+    // update function
+
+    // delete function
+    // delete function
     
     public function render()
     {
@@ -141,11 +191,25 @@ new class extends Component
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
-                            Mendaftarkan...
                         </span>
                     </button>
                 </div>
             </form>
         </div>
     </div>
+
+    {{-- Notifikasi --}}
+    @if (session('success'))
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="absolute top-2 right-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+
+    @if (session('gagal'))
+        <div class="absolute top-2 right-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ session('gagal') }}</span>
+        </div>
+    @endif
+    {{-- Notifikasi --}}
+
 </section>
