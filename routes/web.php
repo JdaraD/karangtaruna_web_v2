@@ -20,6 +20,7 @@ use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\pasalController;
 use App\Http\Controllers\admin\productController;
 use App\Http\Controllers\admin\runningTextController;
+use App\Http\Controllers\admin\sponsorController;
 use App\Http\Controllers\admin\StrukturOrgController;
 use App\Http\Controllers\admin\tentangController;
 use App\Http\Controllers\admin\valueController;
@@ -79,6 +80,7 @@ Route::livewire('/admin.running-text', 'pages::admin.running-text')->name('admin
 Route::livewire('/admin.manajement-account', 'pages::admin.management-account')->name('admin.manajemen-acccount');
 Route::livewire('/admin.settings', 'pages::admin.settings')->name('admin.settings');
 Route::livewire('/admin.mail', 'pages::admin.mail')->name('admin.mail');
+Route::livewire('/admin.sponsor', 'pages::admin.sponsor')->name('admin.sponsor');
 
 
 // controller backend
@@ -109,3 +111,4 @@ Route::post('/admin/album-foto', [albumFotoController::class, 'store'])->name('a
 Route::post('/admin/foto', [fotoController::class, 'store'])->name('admin.foto.store');
 Route::post('/admin/color-web', [colorWebController::class, 'store'])->name('admin.colorWeb.store');
 Route::post('/admin/color-admin', [colorAdminController::class, 'store'])->name('admin.colorAdmin.store');
+Route::post('/admin/sponsor', [sponsorController::class, 'store'])->name('admin.sponsor.store');
