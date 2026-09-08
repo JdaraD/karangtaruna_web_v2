@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('deskripsi');
             $table->date('tanggal');
             $table->string('gambar');
+            $table->string('progress');
             $table->timestamps();
         });
     }

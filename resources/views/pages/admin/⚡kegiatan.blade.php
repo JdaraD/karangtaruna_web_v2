@@ -13,7 +13,7 @@ new class extends Component
 {
     use WithFileUploads;
 
-    public $kegiatan, $judul, $gambar, $deskripsi, $tanggal, $kegiatanId, $currentImage;
+    public $kegiatan, $judul, $gambar, $deskripsi, $tanggal, $kegiatanId, $currentImage, $progress;
 
     public $overlayAddKegiatan = false;
     public $overlayEditKegiatan = false;
@@ -55,6 +55,7 @@ new class extends Component
         $this->judul = $kegiatan->judul;
         $this->currentImage = $kegiatan->gambar;
         $this->deskripsi = $kegiatan->deskripsi;
+        $this->progress = $kegiatan->progress;
         $this->tanggal = $kegiatan->tanggal;
         $this->gambar = null;
 
@@ -70,6 +71,7 @@ new class extends Component
             'gambar',
             'currentImage',
             'deskripsi',
+            'progress',
             'tanggal'
         ]);
     }
@@ -84,6 +86,7 @@ new class extends Component
         $rules = [
             'judul'     => 'required|string|max:255',
             'deskripsi' => 'required|string',
+            'progress' => 'required|string',
             'tanggal'   => 'required|date',
         ];
 
@@ -100,6 +103,7 @@ new class extends Component
             $dataToUpdate = [
                 'judul'     => $this->judul,
                 'deskripsi' => $this->deskripsi,
+                'progress' => $this->progress,
                 'tanggal'   => $this->tanggal,
             ];
 
@@ -206,7 +210,8 @@ new class extends Component
                         </div>
                         <div class="flex w-full p-1 justify-between items-center bg-[#618764]/40 rounded-md">
                             <p class="flex text-base font-semibold text-gray-800">{{ $ke->tanggal}}</p>
-                            <div class="flex gap-1">
+                            <div class="flex gap-1 justify-center items-center">
+                                <p class="font-semibold text-sm text-black">Progress : {{$ke->progress}} %</p>
                                 <button type="button" wire:click="btnOpenEditKegiatan({{ $ke->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-7 h-7 rounded-md shadow-md cursor-pointer" title="Edit">
                                     <x-bi-pencil class="h-4 w-4 text-white"/>
                                 </button>
@@ -237,7 +242,7 @@ new class extends Component
                             <label class="text-sm font-semibold text-gray-800">Judul</label>
                             <input type="text" name="judul" required placeholder="Masukkan Judul Kegiatan" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
-
+                        
                         <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
                             <label class="text-sm font-semibold text-gray-800 pt-2">Image</label>
                             <div class="md:col-span-3">
@@ -245,10 +250,15 @@ new class extends Component
                                 <p class="mt-1 text-xs text-gray-500">Format: JPG, JPEG, PNG, WEBP. Tinggi maks disarankan 320px. Maks 2 MB.</p>
                             </div>
                         </div>
-
+                        
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
                             <label class="text-sm font-semibold text-gray-800">Deskripsi</label>
                             <textarea rows="3" name="deskripsi" required placeholder="Masukkan Deskripsi Kegiatan" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 resize-none"></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
+                            <label class="text-sm font-semibold text-gray-800">Progress</label>
+                            <input type="text" name="progress" required placeholder="Masukkan Progress Kegiatan" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200" oninput="this.value = this.value.replace(/[^0-9]/g, '')" inputmode="numeric">
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
@@ -272,7 +282,7 @@ new class extends Component
             <div class="flex flex-col w-full max-w-2xl bg-white rounded-md shadow-xl overflow-hidden">
                 <div class="flex w-full justify-between items-center bg-gray-100 p-4 border-b">
                     <h1 class="font-semibold text-lg text-black capitalize">Edit Kegiatan</h1>
-                    <button type="button" wire:click="btnCloseEdit" class="rounded-full p-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer"><x-css-close class="w-4 h-4" /></button>
+                    <button type="button" wire:click="btnCloseEditKegiatan" class="rounded-full p-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer"><x-css-close class="w-4 h-4" /></button>
                 </div>
 
                 <div class="p-4 overflow-y-auto max-h-[80vh]">
@@ -304,6 +314,11 @@ new class extends Component
                         <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
                             <label class="text-sm font-semibold text-gray-800 pt-2">Deskripsi</label>
                             <textarea rows="3" wire:model="deskripsi" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 resize-none"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
+                            <label class="text-sm font-semibold text-gray-800">Progress</label>
+                            <input type="text" wire:model="progress" required class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200" oninput="this.value = this.value.replace(/[^0-9]/g, '')" inputmode="numeric">
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">

@@ -13,6 +13,7 @@ class kegiatan extends Model
         'judul',
         'deskripsi',
         'tanggal',
+        'progress',
         'gambar',
     ];
 }

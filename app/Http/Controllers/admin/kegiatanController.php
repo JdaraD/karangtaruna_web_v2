@@ -37,6 +37,7 @@ class kegiatanController extends Controller
             'judul'     => 'required|string|max:255',
             'gambar'    => 'required|image|mimes:png,jpg,jpeg,webp|max:2048',
             'deskripsi' => 'required|string',
+            'progress' => 'required|string',
             'tanggal'   => 'required|date',
         ]);
 
@@ -62,6 +63,7 @@ class kegiatanController extends Controller
                 'judul'     => $request->judul,
                 'gambar'    => $path,
                 'deskripsi' => $request->deskripsi,
+                'progress' => $request->progress,
                 'tanggal'   => $request->tanggal,
             ]);
 
