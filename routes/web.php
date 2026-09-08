@@ -27,6 +27,7 @@ use App\Http\Controllers\admin\videoController;
 use App\Http\Controllers\admin\visiController;
 use App\Http\Controllers\admin\wilayahKolaborasiController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\user\mailController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -54,6 +55,7 @@ Route::livewire('/detail-kolaborasi', 'pages::user.detail-kolaborasi')->name('de
 
 
 // controller frontend
+Route::post('/kirim-pesan', [mailController::class, 'store'])->name('mail.store');
 
 
 Route::livewire('/login', 'pages::auth.login')->name('login');

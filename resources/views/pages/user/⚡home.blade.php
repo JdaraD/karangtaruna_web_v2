@@ -121,49 +121,61 @@ new class extends Component
             <div class="flex gap-4 w-[80%] h-full">
                 <diV class="flex flex-col gap-4 w-[50%] h-125">
 
-                    <div class="flex flex-col gap-4 w-full h-[80%] bg-white rounded-lg shadow-md px-4 py-2">
-                        <p class="text-center capitalize font-semibold lg:text-lg md:text-base text-sm">hubungi kami</p>
+                <div class="flex flex-col gap-4 w-full h-[80%] bg-white rounded-lg shadow-md px-4 py-2">
+                    <p class="text-center capitalize font-semibold lg:text-lg md:text-base text-sm">hubungi kami</p>
 
-                        <form action="submit" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full h-[80%]">
-                            <div class="space-y-4 font-[poppins]">
-                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
-                                    <label for="nama" class="font-semibold">Nama :</label>
-                                    <input type="text" wire:model.defer="nama" id="nama" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" />
-                                </div>
-                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
-                                    <label for="alamat" class="font-semibold">Alamat :</label>
-                                    <textarea wire:model.defer="alamat" id="alamat" class="w-full h-22.5 border border-[#9CB080] rounded-lg px-2 py-2 bg-gray-100 resize-none"></textarea>
-                                </div>
-                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
-                                    <label for="email" class="font-semibold">Email :</label>
-                                    <input type="email" wire:model.defer="email" id="email" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" />
-                                </div>
-                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
-                                    <label for="no_telp" class="font-semibold">Nomor Hp:</label>
-                                    <input type="text" wire:model.defer="no_telp" id="no_telp" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" />
-                                </div>
-                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
-                                    <label for="keperluan" class="font-semibold">Keperluan :</label>
-                                    <input type="text" wire:model.defer="keperluan" id="keperluan" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" />
-                                </div>
-                                <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
-                                    <label for="tanggal" class="font-semibold">Tanggal :</label>
-                                    <input type="date" wire:model.defer="tanggal" id="tanggal" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" />
-                                </div>
+                    <!-- Form standar HTML/Laravel -->
+                    <form action="{{ route('mail.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full h-full">
+                        @csrf <!-- Wajib ada untuk keamanan form di Laravel -->
+                        
+                        <div class="space-y-4 font-[poppins]">
+                            <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                <label for="nama" class="font-semibold">Nama :</label>
+                                <input type="text" name="nama" id="nama" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" required />
                             </div>
-    
-                            <div class="flex flex-col gap-4 justify-between">
-                                <div class="flex flex-col gap-2">
-                                    <label for="detail" class="capitalize font-[poppins] font-semibold text-center">Detail Keperluan</label>
-                                    <textarea wire:model.defer="detail_Keperluan" id="detail" class="w-full h-42 border border-[#9CB080] rounded-lg px-2 py-2 bg-gray-100 resize-none"></textarea>
-                                </div>
-                                <div class="flex justify-end items-center">
-                                    <button type="submit" class="bg-[#9CB080] w-30 h-8 rounded-md font-[poppins] font-semibold text-white hover:bg-[#618764] transition cursor-pointer">Kirim</button>
-                                    <span wire:loading wire:target="submit" class="ml-3 text-sm text-gray-600">Mengirim...</span>
-                                </div>
+                            <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                <label for="alamat" class="font-semibold">Alamat :</label>
+                                <textarea name="alamat" id="alamat" class="w-full h-22.5 border border-[#9CB080] rounded-lg px-2 py-2 bg-gray-100 resize-none" required></textarea>
                             </div>
-                        </form>
-                    </div>
+                            <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                <label for="email" class="font-semibold">Email :</label>
+                                <input type="email" name="email" id="email" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" required />
+                            </div>
+                            <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                <label for="no_telp" class="font-semibold">Nomor Hp:</label>
+                                <input type="text" name="no_telp" id="no_telp" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" oninput="this.value = this.value.replace(/[^0-9]/g, '')" inputmode="numeric required />
+                            </div>
+                            <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                <label for="keperluan" class="font-semibold">Keperluan :</label>
+                                <input type="text" name="keperluan" id="keperluan" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" required />
+                            </div>
+                            <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
+                                <label for="tanggal" class="font-semibold">Tanggal :</label>
+                                <input type="date" name="tanggal" id="tanggal" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" required />
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-4 justify-between">
+                            <div class="flex flex-col gap-2">
+                                <label for="detail" class="capitalize font-[poppins] font-semibold text-center">Detail Keperluan</label>
+                                <textarea name="detail_keperluan" id="detail" class="w-full h-42 border border-[#9CB080] rounded-lg px-2 py-2 bg-gray-100 resize-none" required></textarea>
+                            </div>
+                            
+                            <!-- Input File PDF -->
+                            <div class="flex flex-col gap-1">
+                                <label for="file_pdf" class="font-[poppins] font-semibold text-sm">Lampirkan PDF (Opsional)</label>
+                                <input type="file" name="file_pdf" id="file_pdf" accept=".pdf" class="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#9CB080] file:text-white hover:file:bg-[#618764]" />
+                                @error('file_pdf') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="flex justify-end items-center gap-3">
+                                <button type="submit" class="bg-[#9CB080] w-30 h-8 rounded-md font-[poppins] font-semibold text-white hover:bg-[#618764] transition cursor-pointer">
+                                    Kirim
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 
                     <div class="flex flex-col justify-center w-full h-[20%] py-2 bg-white rounded-lg shadow-md">
                         <p class="text-center font-semibold text-black text-base ">Sosial Media</p>
@@ -204,5 +216,26 @@ new class extends Component
         </div>
     </section>
     {{-- sponsorship --}}
+
+    {{-- Notifikasi Sukses --}}
+    @if (session('success'))
+    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="fixed top-20 right-5 z-50 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-lg" role="alert">
+        <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
+    @endif
+
+    {{-- Notifikasi Gagal --}}
+    @if (session('gagal'))
+    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="fixed top-20 right-5 z-50 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded shadow-lg" role="alert">
+        <span class="block sm:inline">{{ session('gagal') }}</span>
+    </div>
+    @endif
+
+    {{-- WAJIB DITAMBAHKAN: Notifikasi Error Validasi --}}
+    @if ($errors->any())
+    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition.duration.500ms class="fixed top-20 right-5 z-50 bg-orange-100 border border-orange-400 text-orange-700 px-4 py-3 rounded shadow-lg" role="alert">
+        <span class="block sm:inline">Format isian salah atau ada yang kosong.</span>
+    </div>
+    @endif
 
 </section>

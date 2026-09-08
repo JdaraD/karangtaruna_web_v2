@@ -170,7 +170,7 @@ new class extends Component
         </div>
     </article>
 
-    <article class="flex flex-none w-full h-100 bg-gray-300 animate-pulse shadow-lg">
+    <article class="flex flex-none w-full h-100 bg-white rounded-md shadow-md">
 
     </article>
 
