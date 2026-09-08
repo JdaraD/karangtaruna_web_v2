@@ -5,11 +5,13 @@ use App\Models\identity;
 use App\Models\product;
 use App\Models\kegiatan;
 use App\Models\kolaborasi;
+use App\Models\Visitor;
+use Carbon\Carbon;
 
 
 new class extends Component
 {
-    public $identity, $product, $kegiatan, $kolaborasi;
+    public $identity, $product, $kegiatan, $kolaborasi, $todayVisitors, $totalVisitors;
 
     // load data
     public function loadIdentity()
@@ -40,6 +42,31 @@ new class extends Component
         $this->countProduct();
         $this->countKegiatan();
         $this->countKolaborasi();
+
+        // Gunakan helper request() untuk mengambil IP di dalam Livewire
+        $ipAddress = request()->ip(); 
+        
+        // UNTUK TESTING LOKAL: Buka komentar di bawah ini agar data bertambah
+        // $ipAddress = rand(1,255) . '.' . rand(1,255) . '.1.1';
+
+        $today = Carbon::now()->toDateString();
+
+        // Cek dan simpan pengunjung menggunakan method bawaan model (query)
+        $hasVisited = Visitor::query()
+            ->where('ip_address', $ipAddress)
+            ->where('visit_date', $today)
+            ->exists();
+
+        if (!$hasVisited) {
+            Visitor::query()->create([
+                'ip_address' => $ipAddress,
+                'visit_date' => $today
+            ]);
+        }
+
+        // Set variabel public agar bisa dibaca oleh view
+        $this->totalVisitors = Visitor::query()->count();
+        $this->todayVisitors = Visitor::query()->where('visit_date', $today)->count();
     }
     // function mount
 
@@ -95,9 +122,29 @@ new class extends Component
     </article>
 
     <article class="flex flex-none gap-4 items-center w-full">
-        <div class="flex justify-center items-center w-[64%] h-80 bg-gray-300 animate-pulse shadow-lg">
-            <p class="text-black">statistik view</p>
+        <div class="flex flex-col w-[64%] lg:max-h-80 bg-white rounded-md shadow-md p-6">
+            
+            <!-- Bagian Teks (Opsional: Tetap dipertahankan agar user bisa melihat angka pasti dengan cepat) -->
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex gap-8">
+                    <div>
+                        <h4 class="text-gray-500 text-sm">Pengunjung Hari Ini</h4>
+                        <p class="text-2xl font-bold text-blue-600">{{ $todayVisitors }}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-gray-500 text-sm">Total Pengunjung</h4>
+                        <p class="text-2xl font-bold text-emerald-600">{{ $totalVisitors }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Area untuk Render Grafik -->
+            <div class="relative w-full h-80" wire:ignore>
+                <canvas id="visitorChart"></canvas>
+            </div>
+
         </div>
+
         <div wire:poll.1s class="flex flex-col justify-stretch items-center lg:w-[36%] w-full gap-2 lg:h-80 h-auto p-4 bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
@@ -128,3 +175,53 @@ new class extends Component
     </article>
 
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('visitorChart').getContext('2d');
+        
+        // Menangkap data dari Blade Laravel dan memasukkannya ke variabel JS
+        // Tambahkan fallback 0 agar JS tidak error jika variabel kosong
+        const todayVisitors = {{ $todayVisitors ?? 0 }};
+        const totalVisitors = {{ $totalVisitors ?? 0 }};
+
+        new Chart(ctx, {
+            type: 'bar', // Ubah ke 'doughnut' atau 'pie' jika ingin diagram lingkaran
+            data: {
+                labels: ['Hari Ini', 'Total Keseluruhan'],
+                datasets: [{
+                    label: 'Jumlah Pengunjung',
+                    data: [todayVisitors, totalVisitors],
+                    backgroundColor: [
+                        'rgba(37, 99, 235, 0.8)', // Warna setara blue-600 Tailwind
+                        'rgba(5, 150, 105, 0.8)'  // Warna setara emerald-600 Tailwind
+                    ],
+                    borderColor: [
+                        'rgb(29, 78, 216)', // blue-700
+                        'rgb(4, 120, 87)'   // emerald-700
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 6 // Membuat ujung grafik sedikit melengkung
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Penting agar grafik mengikuti tinggi container h-64
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0 // Memastikan sumbu Y menampilkan angka bulat, bukan desimal
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Disembunyikan karena label di bawah sudah cukup jelas
+                    }
+                }
+            }
+        });
+    });
+</script>
