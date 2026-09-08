@@ -6,12 +6,13 @@ use App\Models\product;
 use App\Models\kegiatan;
 use App\Models\kolaborasi;
 use App\Models\Visitor;
+use App\Models\tentang;
 use Carbon\Carbon;
 
 
 new class extends Component
 {
-    public $identity, $product, $kegiatan, $kolaborasi, $todayVisitors, $totalVisitors;
+    public $identity, $product, $kegiatan, $kolaborasi, $todayVisitors, $totalVisitors, $tentang;
 
     // load data
     public function loadIdentity()
@@ -33,6 +34,13 @@ new class extends Component
     {
         $this->kolaborasi = kolaborasi::count();
     }
+
+        public function loadTentang()
+    {
+        $this->tentang = tentang::latest()
+            ->take(1)
+            ->get();
+    }
     // load data
 
     // function mount
@@ -42,6 +50,7 @@ new class extends Component
         $this->countProduct();
         $this->countKegiatan();
         $this->countKolaborasi();
+        $this->loadTentang();
 
         // Gunakan helper request() untuk mengambil IP di dalam Livewire
         $ipAddress = request()->ip(); 
@@ -100,32 +109,7 @@ new class extends Component
     </article>
 
     <article class="flex flex-none gap-4 items-center justify-between w-full">
-        <div class="flex justify-between items-center w-full lg:h-34 md:h-30 h-18 px-4 bg-white rounded-md shadow-md">
-            <p class="text-xl font-semibold text-black">Usaha Mandiri : {{ $product }} product</p>
-            <a href="{{ route('admin.usaha') }}" class="flex justify-center items-center">
-                <x-gmdi-business-center class="h-10 w-10 text-black " />
-            </a>
-        </div>
-
-        <div class="flex justify-between items-center w-full lg:h-34 md:h-30 h-18 px-4 bg-white rounded-md shadow-md">
-            <p class="text-xl font-semibold text-black">Kegiatan : {{ $kegiatan }}</p>
-            <a href="{{ route('admin.kegiatan') }}" class="flex justify-center items-center">
-                <x-bi-activity class="h-10 w-10 text-black"/>
-            </a>
-        </div>
-        <div class="flex justify-between items-center w-full lg:h-34 md:h-30 h-18 px-4 bg-white rounded-md shadow-md">
-            <p class="text-xl font-semibold text-black">Kolaborasi : {{ $kolaborasi }}</p>
-            <a href="{{ route('admin.kolaborasi') }}" class="flex justify-center items-center">
-                <x-iconpark-cooperativehandshake-o class="h-10 w-10 text-black"/>
-            </a>
-        </div>
-    </article>
-
-    <article class="flex flex-none gap-4 items-center w-full">
-        <div class="flex flex-col w-[64%] lg:max-h-80 bg-white rounded-md shadow-md p-6">
-            
-            <!-- Bagian Teks (Opsional: Tetap dipertahankan agar user bisa melihat angka pasti dengan cepat) -->
-            <div class="flex justify-between items-center mb-6">
+        <div class="flex justify-between items-center w-full lg:h-24 md:h-18 h-14 px-4 bg-white rounded-md shadow-md">
                 <div class="flex gap-8">
                     <div>
                         <h4 class="text-gray-500 text-sm">Pengunjung Hari Ini</h4>
@@ -136,16 +120,31 @@ new class extends Component
                         <p class="text-2xl font-bold text-emerald-600">{{ $totalVisitors }}</p>
                     </div>
                 </div>
-            </div>
-
-            <!-- Area untuk Render Grafik -->
-            <div class="relative w-full h-80" wire:ignore>
-                <canvas id="visitorChart"></canvas>
-            </div>
-
         </div>
 
-        <div wire:poll.1s class="flex flex-col justify-stretch items-center lg:w-[36%] w-full gap-2 lg:h-80 h-auto p-4 bg-white rounded-md shadow-md">
+        <div class="flex justify-between items-center w-full lg:h-24 md:h-18 h-14 px-4 bg-white rounded-md shadow-md">
+            <p class="lg:text-xl md:text-base text-sm font-semibold text-black">Usaha Mandiri : {{ $product }}</p>
+            <a href="{{ route('admin.usaha') }}" class="flex justify-center items-center">
+                <x-gmdi-business-center class="h-10 w-10 text-black " />
+            </a>
+        </div>
+
+        <div class="flex justify-between items-center w-full lg:h-24 md:h-18 h-14 px-4 bg-white rounded-md shadow-md">
+            <p class="lg:text-xl md:text-base text-sm font-semibold text-black">Kegiatan : {{ $kegiatan }}</p>
+            <a href="{{ route('admin.kegiatan') }}" class="flex justify-center items-center">
+                <x-bi-activity class="h-10 w-10 text-black"/>
+            </a>
+        </div>
+        <div class="flex justify-between items-center w-full lg:h-24 md:h-18 h-14 px-4 bg-white rounded-md shadow-md">
+            <p class="lg:text-xl md:text-base text-sm font-semibold text-black">Kolaborasi : {{ $kolaborasi }}</p>
+            <a href="{{ route('admin.kolaborasi') }}" class="flex justify-center items-center">
+                <x-iconpark-cooperativehandshake-o class="h-10 w-10 text-black"/>
+            </a>
+        </div>
+    </article>
+
+    <article class="flex flex-none gap-4 items-center w-full">
+        <div class="flex flex-col justify-stretch items-center lg:w-[36%] w-full gap-2 lg:h-80 h-auto p-4 bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Identitas</h1>
@@ -168,60 +167,39 @@ new class extends Component
                 </div>
             @endforeach
         </div>
+
+        <div class="flex flex-col justify-stretch items-center  w-[64%] gap-2 lg:min-h-80 bg-white rounded-md shadow-md p-6">
+            
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
+                @foreach ($tentang as $te )  
+                <div class="flex w-full h-auto gap-1 items-center">
+                    <h1 class="lg:text-base text-sm text-black capitalize">{{ $te->name }}</h1>
+                </div>
+                @endforeach
+            </div>
+            @foreach ($tentang as $te )
+            <div class="flex flex-wrap">
+                <p class="lg:text-base text-sm lg:line-clamp-9 md:line-clamp-8 line-clamp-5 text-black text-justify">{{ $te->isi }}</p>
+
+            </div>
+            @endforeach
+
+        </div>
+        
     </article>
 
-    <article class="flex flex-none w-full h-100 bg-white rounded-md shadow-md">
+    <article class="flex w-full h-auto p-4 overflow-hidden bg-white rounded-md shadow-md items-center">
+        <!-- Container untuk Horizontal Scroll -->
+        <div class="flex items-center gap-8 w-300 py-2 overflow-x-auto scrollbar-none">
+            
+            @for ($i = 1; $i <= 12; $i++)
+                <div class="shrink-0 flex items-center justify-center w-32 h-16 bg-gray-50 rounded border border-gray-100 p-2">
+                    <span class="text-gray-400 font-bold text-sm tracking-wider">LOGO {{$i}}</span>
+                </div>
+                
+            @endfor
 
+        </div>
     </article>
 
 </section>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('visitorChart').getContext('2d');
-        
-        // Menangkap data dari Blade Laravel dan memasukkannya ke variabel JS
-        // Tambahkan fallback 0 agar JS tidak error jika variabel kosong
-        const todayVisitors = {{ $todayVisitors ?? 0 }};
-        const totalVisitors = {{ $totalVisitors ?? 0 }};
-
-        new Chart(ctx, {
-            type: 'bar', // Ubah ke 'doughnut' atau 'pie' jika ingin diagram lingkaran
-            data: {
-                labels: ['Hari Ini', 'Total Keseluruhan'],
-                datasets: [{
-                    label: 'Jumlah Pengunjung',
-                    data: [todayVisitors, totalVisitors],
-                    backgroundColor: [
-                        'rgba(37, 99, 235, 0.8)', // Warna setara blue-600 Tailwind
-                        'rgba(5, 150, 105, 0.8)'  // Warna setara emerald-600 Tailwind
-                    ],
-                    borderColor: [
-                        'rgb(29, 78, 216)', // blue-700
-                        'rgb(4, 120, 87)'   // emerald-700
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 6 // Membuat ujung grafik sedikit melengkung
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false, // Penting agar grafik mengikuti tinggi container h-64
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0 // Memastikan sumbu Y menampilkan angka bulat, bukan desimal
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false // Disembunyikan karena label di bawah sudah cukup jelas
-                    }
-                }
-            }
-        });
-    });
-</script>
