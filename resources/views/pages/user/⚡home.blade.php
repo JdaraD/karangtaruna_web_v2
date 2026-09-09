@@ -2,9 +2,21 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use App\Models\map;
 
 new class extends Component
 {
+    public $map;
+
+    public function loadMaps()
+    {
+        $this->map = map::first();
+    }
+
+    public function mount()
+    {
+        $this->loadMaps();
+    }
 
     public function render()
     {
@@ -193,9 +205,9 @@ new class extends Component
                         </div>
                     </div>
                 </diV>
-                <div class="flex w-[50%] h-125 bg-white rounded-lg shadow-md">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.8112020884155!2d106.71671107483074!3d-6.418299693572605!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69e62919a6edfb%3A0x63e7cbc78630da2!2sKantor%20Desa%20Waru!5e0!3m2!1sid!2sid!4v1785483080904!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" class="w-full h-full rounded-lg" allowfullscreen loading="lazy"></iframe>
-                </div>
+<div class="flex w-[50%] h-125 bg-white rounded-lg shadow-md overflow-hidden">
+    {!! $map->link_maps ?? '<iframe src="..." width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>' !!}
+</div>
             </div>
 
         </article>

@@ -3,11 +3,12 @@
 use Livewire\Component;
 use App\Models\colorWeb;
 use App\Models\colorAdmin;
+use App\Models\map;
 
 new class extends Component
 {
     public $warna_header, $warna_sidebar, $warna_runningText, $warna_footer, $warna_main;
-    public $colorWebs, $colorAdmins;
+    public $colorWebs, $colorAdmins, $maps;
 
 
     // load data
@@ -20,6 +21,11 @@ new class extends Component
     {
         $this->colorAdmins = colorAdmin::first();
     }
+
+    public function loadMaps()
+    {
+        $this->maps = map::first();
+    }
     // load data
 
     // function mount
@@ -27,6 +33,7 @@ new class extends Component
     {
         $this->loadColorWeb();
         $this->loadColorAdmin();
+        $this->loadMaps();
     }
     // function mount
 
@@ -148,15 +155,16 @@ new class extends Component
         </div>
         <form action="{{ route('admin.maps.store') }}" method="POST" class="flex flex-col gap-5 px-2">
             @csrf
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+            <div class="grid grid-cols-1 gap-4 w-full">
                 <div class="flex flex-col gap-1.5">
                     <label class="text-sm font-medium text-gray-700">Maps</label>
-                    <input type="url" name="link_maps" wire:model="link_maps" required placeholder="Link Maps" class="col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                    <!-- Menggunakan value old() atau dari variable data yang dikirim controller -->
+                    <input type="text" name="link_maps" value="{{ old('link_maps', $maps->link_maps ?? '') }}" required placeholder="Link Maps" class="col-span-1 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                 </div>
             </div>
             <div class="flex mt-1">
                 <button type="submit" class="bg-[#00c853] hover:bg-green-600 text-white font-medium py-1.5 px-4 rounded-md text-sm transition-colors duration-200">
-                    Simpan Tema Admin Panel
+                    Simpan Pengaturan Maps
                 </button>
             </div>
         </form>

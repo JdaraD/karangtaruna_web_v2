@@ -15,6 +15,7 @@ use App\Http\Controllers\admin\kolaborasiController;
 use App\Http\Controllers\admin\kontakAdminController;
 use App\Http\Controllers\admin\kontakBantuanController;
 use App\Http\Controllers\admin\legalController;
+use App\Http\Controllers\admin\mapsController;
 use App\Http\Controllers\admin\misiController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\pasalController;
@@ -112,4 +113,4 @@ Route::post('/admin/foto', [fotoController::class, 'store'])->name('admin.foto.s
 Route::post('/admin/color-web', [colorWebController::class, 'store'])->name('admin.colorWeb.store');
 Route::post('/admin/color-admin', [colorAdminController::class, 'store'])->name('admin.colorAdmin.store');
 Route::post('/admin/sponsor', [sponsorController::class, 'store'])->name('admin.sponsor.store');
-Route::post('/admin/maps', [mapsController::class, ' store'])->name('admin.maps.store');
+Route::post('/admin/maps', [mapsController::class, 'store'])->name('admin.maps.store');
