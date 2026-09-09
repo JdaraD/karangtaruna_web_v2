@@ -33,12 +33,17 @@ class mapsController extends Controller
         $request->validate([
                 'link_maps' => 'required', // Bisa diubah menjadi 'string' karena inputnya berupa tag iframe atau URL
             ]);
+        $iframeInput = $request->link_maps;
+
+            // Otomatis mengganti width dan height bawaan Google Maps menjadi 100%
+            $iframeInput = preg_replace('/width="[^"]+"/', 'width="100%"', $iframeInput);
+            $iframeInput = preg_replace('/height="[^"]+"/', 'height="100%"', $iframeInput);
 
         try {
             map::updateOrCreate(
                 ['id' => 1],
                 [
-                    'link_maps' => $request->link_maps, // Menyimpan tag iframe lengkap atau link embed
+                    'link_maps' => $iframeInput,
                 ]
             );
 

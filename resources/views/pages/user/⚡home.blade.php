@@ -205,9 +205,9 @@ new class extends Component
                         </div>
                     </div>
                 </diV>
-<div class="flex w-[50%] h-125 bg-white rounded-lg shadow-md overflow-hidden">
-    {!! $map->link_maps ?? '<iframe src="..." width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>' !!}
-</div>
+                <div class="flex w-[50%] h-125 bg-white rounded-lg shadow-md overflow-hidden">
+                    {!! $map->link_maps ?? '<iframe src="..." width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>' !!}
+                </div>
             </div>
 
         </article>
