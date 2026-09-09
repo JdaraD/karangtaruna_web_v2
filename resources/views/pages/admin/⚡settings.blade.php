@@ -141,6 +141,27 @@ new class extends Component
         </form>
     </div>
 
+    <!-- Card: Maps -->
+    <div class="bg-white rounded-md p-4 shadow-sm text-gray-800 flex flex-col gap-4 w-full">
+        <div class="bg-[#f4f5f7] p-3 rounded-md flex justify-between items-center">
+            <h2 class="font-semibold text-sm">Pengaturan Maps</h2>
+        </div>
+        <form action="{{ route('admin.maps.store') }}" method="POST" class="flex flex-col gap-5 px-2">
+            @csrf
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-sm font-medium text-gray-700">Maps</label>
+                    <input type="url" name="link_maps" wire:model="link_maps" required placeholder="Link Maps" class="col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                </div>
+            </div>
+            <div class="flex mt-1">
+                <button type="submit" class="bg-[#00c853] hover:bg-green-600 text-white font-medium py-1.5 px-4 rounded-md text-sm transition-colors duration-200">
+                    Simpan Tema Admin Panel
+                </button>
+            </div>
+        </form>
+    </div>
+
     {{-- Notifikasi --}}
     @if (session('success'))
         <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="absolute top-2 right-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
