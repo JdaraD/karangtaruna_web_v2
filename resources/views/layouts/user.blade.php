@@ -10,7 +10,7 @@
 
         @livewireStyles
     </head>
-    <body class="min-h-screen flex flex-col h-full w-full bg-white">
+    <body class="min-h-screen flex flex-col h-full w-full bg-white select-none">
 
         @livewire('user.navbar')
 

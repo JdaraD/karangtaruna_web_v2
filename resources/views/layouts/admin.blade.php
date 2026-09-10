@@ -10,7 +10,7 @@
 
         @livewireStyles
     </head>
-    <body x-data="{ sidebarOpen: false }" class="bg-gray-900 text-white flex min-h-screen">
+    <body x-data="{ sidebarOpen: false }" class="bg-gray-900 text-white flex min-h-screen select-none">
         @if (!request()->routeIs('login') && !request()->routeIs('registrasi'))
             @livewire('admin.sidebar')
         @endif

@@ -1,9 +1,28 @@
 <?php
 
 use Livewire\Component;
+use App\Models\kategoriUsaha;
+use App\Models\banner;
 
 new class extends Component
 {
+    public $kategoris, $banner;
+
+    public function loadKategori()
+    {
+        $this->kategoris = kategoriUsaha::all();
+    }
+
+    public function loadBanner()
+    {
+        $this->banner = banner::latest()->first();
+    }
+
+    public function mount()
+    {
+        $this->loadKategori();
+        $this->loadBanner();
+    }
     
     public function render()
     {
@@ -34,58 +53,53 @@ new class extends Component
     {{-- screen media --}}
 
     {{-- banner --}}
-    <article class="flex max-w-300 w-full h-20 bg-gray-100 rounded-md shadow-md">
-
-    </article>
+    @if (!$banner)
+        <article class="flex max-w-300 w-full h-20 bg-gray-100 rounded-md shadow-md animate-pulse">
+        </article>
+    @else
+        <article class="flex max-w-300 w-full h-20 bg-gray-100 rounded-md shadow-md">
+            <img src="{{ asset('storage/' . $banner->image) }}" alt="" class="w-full h-full object-cover rounded-md">
+        </article>
+    @endif
     {{-- banner --}}
 
     {{-- product --}}
     <article class="flex flex-col gap-6 w-[90%] h-full pt-6 pb-8">
         
-        <div class="flex flex-col gap-2 w-full h-full overflow-hidden">
-            <div class="flex items-center gap-2 w-fit h-full text-black hover:text-gray-500">
-                <a href="{{ route('kategori-detail') }}" class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base normal-case">Pupuk</a>
-                <x-heroicon-o-arrow-left class="w-6 h-6 text-black font-bold" />
-            </div>
-            <div class="flex w-full h-full scrollbar-thin scrollbar-thumb-black scrollbar-track-gray-200 overflow-y-auto gap-4 py-2 px-2 rounded-lg">
-                @for ($i = 1; $i <= 8; $i++)
-                    <a href="{{ route('detail-product') }}" class="flex flex-none justify-center items-center w-68 h-40 bg-white rounded-lg shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
-                        <img src="{{ asset('img/mbg.jpg') }}" alt="" class="w-full h-full object-cover rounded-lg">
-                    </a>
-                @endfor
+        @foreach ($kategoris as $kategori)
+            <div class="flex flex-col gap-2 w-full h-full overflow-hidden">
+                <div class="flex items-center gap-2 w-fit h-full text-black hover:text-gray-500">
+                    <a href="{{ route('kategori-detail', $kategori->id) }}" class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base normal-case">{{$kategori->nama_kategori}}</a>
+                    <x-heroicon-o-arrow-left class="w-6 h-6 text-black font-bold" />
+                </div>
+                <div class="flex w-full h-full scrollbar-thin scrollbar-thumb-black scrollbar-track-gray-200 overflow-y-auto gap-4 py-2 px-2 rounded-lg">
+                   @foreach ($kategori->products as $product)
 
-            </div>
-        </div>
+                        @php
+                            $images = $product->gambar
+                                ? json_decode($product->gambar, true)
+                                : [];
 
-        <div class="flex flex-col gap-2 w-full h-full overflow-hidden">
-            <div class="flex items-center gap-2 w-fit h-full text-black hover:text-gray-500">
-                <a href="{{ route('kategori-detail') }}" class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base normal-case">Alat Pertanian</a>
-                <x-heroicon-o-arrow-left class="w-6 h-6 text-black font-bold" />
-            </div>
-            <div class="flex w-full h-full scrollbar-thin scrollbar-thumb-black scrollbar-track-gray-200 overflow-y-auto gap-4 py-2 px-2 rounded-lg">
-                @for ($i = 1; $i <= 8; $i++)
-                    <a href="{{ route('detail-product') }}" class="flex flex-none justify-center items-center w-68 h-40 bg-white rounded-lg shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
-                        <img src="{{ asset('img/mbg.jpg') }}" alt="" class="w-full h-full object-cover rounded-lg">
-                    </a>
-                @endfor
+                            $firstImage = (
+                                is_array($images) && count($images) > 0
+                            )
+                                ? asset('storage/' . $images[0])
+                                : asset('img/no-image.jpg');
+                        @endphp
 
-            </div>
-        </div>
+                        <a href="{{ route('detail-product', $product->id) }}" class="flex flex-none justify-center items-center w-68 h-40 bg-white rounded-lg shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
+                            <img 
+                                src="{{ $firstImage }}"
+                                alt="{{ $product->nama_produk }}"
+                                class="w-full h-full object-cover rounded-lg"
+                            >
+                        </a>
 
-        <div class="flex flex-col gap-2 w-full h-full overflow-hidden">
-            <div class="flex items-center gap-2 w-fit h-full text-black hover:text-gray-500">
-                <a href="{{ route('kategori-detail') }}" class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base normal-case">Alat Rumah Tangga</a>
-                <x-heroicon-o-arrow-left class="w-6 h-6 text-black font-bold" />
-            </div>
-            <div class="flex w-full h-full scrollbar-thin scrollbar-thumb-black scrollbar-track-gray-200 overflow-y-auto gap-4 py-2 px-2 rounded-lg">
-                @for ($i = 1; $i <= 8; $i++)
-                    <a href="{{ route('detail-product') }}" class="flex flex-none justify-center items-center w-68 h-40 bg-white rounded-lg shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
-                        <img src="{{ asset('img/mbg.jpg') }}" alt="" class="w-full h-full object-cover rounded-lg">
-                    </a>
-                @endfor
+                    @endforeach
 
+                </div>
             </div>
-        </div>
+        @endforeach
 
     </article>
     {{-- product --}}
