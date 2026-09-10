@@ -3,19 +3,33 @@
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use App\Models\map;
+use App\Models\sponsor;
+use App\Models\albumFoto;
 
 new class extends Component
 {
-    public $map;
+    public $map, $sponsor, $albumFoto;
 
     public function loadMaps()
     {
         $this->map = map::first();
     }
 
+    public function loadSponsor()
+    {
+        $this->sponsor = sponsor::all();
+    }
+
+    public function loadAlbumFoto()
+    {
+        $this->albumFoto = albumFoto::all();
+    }
+
     public function mount()
     {
         $this->loadMaps();
+        $this->loadSponsor();
+        $this->loadAlbumFoto();
     }
 
     public function render()
@@ -102,24 +116,240 @@ new class extends Component
     {{-- Gallery Progress --}}
 
     {{-- Gallery Karang taruna --}}
-    <section class="flex flex-col gap-2 justify-center items-center w-full h-full py-8 bg-gray-100">
-        <article class="flex flex-col justify-center items-center gap-2 w-full h-full">
-            <p class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base text-black normal-case">Gallery Karang Taruna</p>
+    <section class="flex flex-col items-center w-full h-full py-8 bg-gray-100">
+
+        {{-- Judul --}}
+        <article class="flex flex-col items-center gap-2 w-full">
+            <p class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base text-black">
+                Gallery Karang Taruna
+            </p>
         </article>
 
+
+        {{-- Gallery --}}
         <article class="flex justify-center gap-2 w-[80%] h-90 mt-4">
-            <div class="flex w-[26%] h-full bg-gray-300 animate-pulse rounded-lg">
-                {{-- <img src="{{ asset('img/program.jpg') }}" alt="" class="w-full h-full object-cover rounded-lg"> --}}
-            </div>
+
+            {{-- ALBUM 1 --}}
+            @if (isset($albumFoto[0]) && $albumFoto[0]->coverFoto)
+                <a
+                    href="{{ route('foto-detail', $albumFoto[0]->id) }}"
+                    class="group relative flex w-[26%] h-full overflow-hidden rounded-lg cursor-pointer"
+                >
+                    <img
+                        src="{{ asset('storage/' . $albumFoto[0]->coverFoto->foto) }}"
+                        alt="{{ $albumFoto[0]->judul }}"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    >
+
+                    {{-- Overlay --}}
+                    <div
+                        class="absolute inset-0 flex items-center justify-center
+                            bg-black/0 transition-all duration-300
+                            group-hover:bg-black/40"
+                    >
+                        {{-- Folder Icon --}}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-12 h-12 text-white opacity-0 scale-75
+                                transition-all duration-300
+                                group-hover:opacity-100 group-hover:scale-100"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M2.25 12.75V6.75A2.25 2.25 0 0 1 4.5 4.5h4.379c.597 0 1.17.237 1.591.659l1.621 1.621h7.409a2.25 2.25 0 0 1 2.25 2.25v3.72M2.25 12.75h19.5m-19.5 0v4.5A2.25 2.25 0 0 0 4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25v-4.5"
+                            />
+                        </svg>
+                    </div>
+                </a>
+            @else
+                <div class="flex w-[26%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
+            @endif
+
+
+            {{-- BAGIAN TENGAH --}}
             <div class="flex flex-col gap-2 w-[48%] h-full">
+
+                {{-- ALBUM 2 & 3 --}}
                 <div class="flex gap-2 w-full h-[50%]">
-                    <div class="flex w-[60%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
-                    <div class="flex w-[40%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
+
+                    {{-- ALBUM 2 --}}
+                    @if (isset($albumFoto[1]) && $albumFoto[1]->coverFoto)
+                        <a
+                            href="{{ route('foto-detail', $albumFoto[1]->id) }}"
+                            class="group relative flex w-[60%] h-full overflow-hidden rounded-lg cursor-pointer"
+                        >
+                            <img
+                                src="{{ asset('storage/' . $albumFoto[1]->coverFoto->foto) }}"
+                                alt="{{ $albumFoto[1]->judul }}"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            >
+
+                            {{-- Overlay --}}
+                            <div
+                                class="absolute inset-0 flex items-center justify-center
+                                    bg-black/0 transition-all duration-300
+                                    group-hover:bg-black/40"
+                            >
+                                {{-- Folder Icon --}}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                    class="w-10 h-10 text-white opacity-0 scale-75
+                                        transition-all duration-300
+                                        group-hover:opacity-100 group-hover:scale-100"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M2.25 12.75V6.75A2.25 2.25 0 0 1 4.5 4.5h4.379c.597 0 1.17.237 1.591.659l1.621 1.621h7.409a2.25 2.25 0 0 1 2.25 2.25v3.72M2.25 12.75h19.5m-19.5 0v4.5A2.25 2.25 0 0 0 4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25v-4.5"
+                                    />
+                                </svg>
+                            </div>
+                        </a>
+                    @else
+                        <div class="flex w-[60%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
+                    @endif
+
+
+                    {{-- ALBUM 3 --}}
+                    @if (isset($albumFoto[2]) && $albumFoto[2]->coverFoto)
+                        <a
+                            href="{{ route('foto-detail', $albumFoto[2]->id) }}"
+                            class="group relative flex w-[40%] h-full overflow-hidden rounded-lg cursor-pointer"
+                        >
+                            <img
+                                src="{{ asset('storage/' . $albumFoto[2]->coverFoto->foto) }}"
+                                alt="{{ $albumFoto[2]->judul }}"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            >
+
+                            {{-- Overlay --}}
+                            <div
+                                class="absolute inset-0 flex items-center justify-center
+                                    bg-black/0 transition-all duration-300
+                                    group-hover:bg-black/40"
+                            >
+                                {{-- Folder Icon --}}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                    class="w-10 h-10 text-white opacity-0 scale-75
+                                        transition-all duration-300
+                                        group-hover:opacity-100 group-hover:scale-100"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M2.25 12.75V6.75A2.25 2.25 0 0 1 4.5 4.5h4.379c.597 0 1.17.237 1.591.659l1.621 1.621h7.409a2.25 2.25 0 0 1 2.25 2.25v3.72M2.25 12.75h19.5m-19.5 0v4.5A2.25 2.25 0 0 0 4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25v-4.5"
+                                    />
+                                </svg>
+                            </div>
+                        </a>
+                    @else
+                        <div class="flex w-[40%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
+                    @endif
+
                 </div>
-                <div class="flex w-full h-[50%] bg-gray-300 animate-pulse rounded-lg"></div>
+
+
+                {{-- ALBUM 4 --}}
+                @if (isset($albumFoto[3]) && $albumFoto[3]->coverFoto)
+                    <a
+                        href="{{ route('foto-detail', $albumFoto[3]->id) }}"
+                        class="group relative flex w-full h-[50%] overflow-hidden rounded-lg cursor-pointer"
+                    >
+                        <img
+                            src="{{ asset('storage/' . $albumFoto[3]->coverFoto->foto) }}"
+                            alt="{{ $albumFoto[3]->judul }}"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        >
+
+                        {{-- Overlay --}}
+                        <div
+                            class="absolute inset-0 flex items-center justify-center
+                                bg-black/0 transition-all duration-300
+                                group-hover:bg-black/40"
+                        >
+                            {{-- Folder Icon --}}
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="w-10 h-10 text-white opacity-0 scale-75
+                                    transition-all duration-300
+                                    group-hover:opacity-100 group-hover:scale-100"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M2.25 12.75V6.75A2.25 2.25 0 0 1 4.5 4.5h4.379c.597 0 1.17.237 1.591.659l1.621 1.621h7.409a2.25 2.25 0 0 1 2.25 2.25v3.72M2.25 12.75h19.5m-19.5 0v4.5A2.25 2.25 0 0 0 4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25v-4.5"
+                                />
+                            </svg>
+                        </div>
+                    </a>
+                @else
+                    <div class="flex w-full h-[50%] bg-gray-300 animate-pulse rounded-lg"></div>
+                @endif
+
             </div>
-            <div class="flex w-[26%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
+
+
+            {{-- ALBUM 5 --}}
+            @if (isset($albumFoto[4]) && $albumFoto[4]->coverFoto)
+                <a
+                    href="{{ route('foto-detail', $albumFoto[4]->id) }}"
+                    class="group relative flex w-[26%] h-full overflow-hidden rounded-lg cursor-pointer"
+                >
+                    <img
+                        src="{{ asset('storage/' . $albumFoto[4]->coverFoto->foto) }}"
+                        alt="{{ $albumFoto[4]->judul }}"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    >
+
+                    {{-- Overlay --}}
+                    <div
+                        class="absolute inset-0 flex items-center justify-center
+                            bg-black/0 transition-all duration-300
+                            group-hover:bg-black/40"
+                    >
+                        {{-- Folder Icon --}}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-12 h-12 text-white opacity-0 scale-75
+                                transition-all duration-300
+                                group-hover:opacity-100 group-hover:scale-100"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M2.25 12.75V6.75A2.25 2.25 0 0 1 4.5 4.5h4.379c.597 0 1.17.237 1.591.659l1.621 1.621h7.409a2.25 2.25 0 0 1 2.25 2.25v3.72M2.25 12.75h19.5m-19.5 0v4.5A2.25 2.25 0 0 0 4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25v-4.5"
+                            />
+                        </svg>
+                    </div>
+                </a>
+            @else
+                <div class="flex w-[26%] h-full bg-gray-300 animate-pulse rounded-lg"></div>
+            @endif
+
         </article>
+
     </section>
     {{-- Gallery Karang taruna --}}
 
@@ -221,10 +451,21 @@ new class extends Component
         </div>
 
         <div class="flex justify-center gap-4 w-[90%] h-auto max-w-full mt-4 animate-scroll px-4 py-2 rounded-md">
-            @for ($i = 1; $i <= 8; $i++)
-                <div class="flex flex-none justify-center items-center w-28 h-20 bg-white animate-pulse rounded-lg shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
-                </div>
-            @endfor
+            @if ($sponsor->isEmpty())
+                @for ($i = 1; $i <= 7; $i++)
+                    <div class="flex flex-none flex-col justify-center items-center w-28 h-20 bg-white rounded-lg animate-pulse shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
+                    </div>
+                @endfor
+            @else
+                @foreach ($sponsor as $sp)
+                    <div class="flex flex-none flex-col justify-center items-center w-auto p-4 h-auto bg-white rounded-lg shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
+                        <img src="{{ asset('storage/' . $sp->image) }}" alt="" class="h-20 w-20 object-cover">
+                        <span class="max-w-full text-sm font-semibold text-center text-gray-500 truncate">
+                            {{ $sp->name }}
+                        </span>
+                    </div>
+                @endforeach
+            @endif
         </div>
     </section>
     {{-- sponsorship --}}

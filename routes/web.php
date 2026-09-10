@@ -47,7 +47,7 @@ Route::livewire('/usaha-mandiri', 'pages::user.usaha-mandiri')->name('usahamandi
 Route::livewire('/kategori-detail', 'pages::user.kategori-detail')->name('kategori-detail');
 Route::livewire('/detail-product', 'pages::user.detail-product')->name('detail-product');
 Route::livewire('/foto', 'pages::user.foto')->name('foto');
-Route::livewire('/foto-detail', 'pages::user.foto-detail')->name('foto-detail');
+Route::livewire('/foto-detail/{id}', 'pages::user.foto-detail')->name('foto-detail');
 Route::livewire('/video', 'pages::user.video')->name('video');
 Route::livewire('/video-detail', 'pages::user.video-detail')->name('video-detail');
 Route::livewire('/event', 'pages::user.event')->name('event');

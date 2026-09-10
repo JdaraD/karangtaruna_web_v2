@@ -7,12 +7,13 @@ use App\Models\kegiatan;
 use App\Models\kolaborasi;
 use App\Models\Visitor;
 use App\Models\tentang;
+use App\Models\sponsor;
 use Carbon\Carbon;
 
 
 new class extends Component
 {
-    public $identity, $product, $kegiatan, $kolaborasi, $todayVisitors, $totalVisitors, $tentang;
+    public $identity, $product, $kegiatan, $kolaborasi, $todayVisitors, $totalVisitors, $tentang, $sponsor;
 
     // load data
     public function loadIdentity()
@@ -41,6 +42,11 @@ new class extends Component
             ->take(1)
             ->get();
     }
+
+    public function loadSponsor()
+    {
+        $this->sponsor = sponsor::all();
+    }
     // load data
 
     // function mount
@@ -51,6 +57,7 @@ new class extends Component
         $this->countKegiatan();
         $this->countKolaborasi();
         $this->loadTentang();
+        $this->loadSponsor();
 
         // Gunakan helper request() untuk mengambil IP di dalam Livewire
         $ipAddress = request()->ip(); 
@@ -101,7 +108,7 @@ new class extends Component
 };
 ?>
 
-<section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-157.5 h-full overflow-y-auto scrollbar-none">
+<section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-166 h-full overflow-y-auto scrollbar-none">
 
     <article class="flex flex-none gap-2 items-center">
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -188,16 +195,19 @@ new class extends Component
         
     </article>
 
-    <article class="flex w-full h-auto p-4 overflow-hidden bg-white rounded-md shadow-md items-center">
+    <article class="flex w-full h-auto p-2 overflow-hidden bg-white items-center">
         <!-- Container untuk Horizontal Scroll -->
-        <div class="flex items-center gap-8 w-300 py-2 overflow-x-auto scrollbar-none">
+        <div class="flex items-center p-2 gap-8 max-w-290 overflow-x-auto scrollbar-none">
             
-            @for ($i = 1; $i <= 12; $i++)
-                <div class="shrink-0 flex items-center justify-center w-32 h-16 bg-gray-50 rounded border border-gray-100 p-2">
-                    <span class="text-gray-400 font-bold text-sm tracking-wider">LOGO {{$i}}</span>
+            @foreach ($sponsor as $sp)
+                <div class="shrink-0 flex flex-col gap-2 items-center justify-center w-full h-full bg-gray-100 rounded-lg shadow-md p-2">
+                    <img src="{{ asset('storage/' . $sp->image) }}" alt="" class="h-20 w-20 object-cover">
+                    <span class="max-w-full text-sm font-semibold text-center text-gray-500 truncate">
+                        {{ $sp->name }}
+                    </span>
                 </div>
                 
-            @endfor
+            @endforeach
 
         </div>
     </article>

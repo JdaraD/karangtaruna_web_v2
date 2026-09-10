@@ -410,7 +410,7 @@ new class extends Component
             <div class="flex flex-col w-full max-w-2xl bg-white rounded-md shadow-xl overflow-hidden">
                 <div class="flex w-full gap-1 justify-between items-center bg-gray-100 border-b border-gray-200 p-4">
                     <h1 class="font-semibold text-lg text-black capitalize">Tambah Foto</h1>
-                    <button type="button" wire:click="btnCloseFoto" class="rounded-full p-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer"><x-css-close class="w-4 h-4" /></button>
+                    <button type="button" wire:click="btnCloseAddFoto" class="rounded-full p-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer"><x-css-close class="w-4 h-4" /></button>
                 </div>
 
                 <div class="p-4 overflow-y-auto max-h-[80vh]">
