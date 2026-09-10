@@ -445,12 +445,12 @@ new class extends Component
     {{-- Contact --}}
 
     {{-- sponsorship --}}
-    <section class="flex justify-center items-center flex-col bg-gray-100 gap-2 w-full h-full py-6 overflow-hidden">
-        <div class="flex flex-col justify-center items-center gap-2 w-full h-full">
+    <section class="flex justify-center items-center flex-col bg-gray-100 gap-0.1 w-full h-full py-2 overflow-hidden">
+        <div class="flex flex-col justify-center items-center w-full h-full">
             <p class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base text-black normal-case">Sponsorship</p>
         </div>
 
-        <div class="flex justify-center gap-4 w-[90%] h-auto max-w-full mt-4 animate-scroll px-4 py-2 rounded-md">
+        <div class="flex justify-center gap-4 w-[90%] h-auto max-w-full animate-scroll px-4 py-2 rounded-md">
             @if ($sponsor->isEmpty())
                 @for ($i = 1; $i <= 7; $i++)
                     <div class="flex flex-none flex-col justify-center items-center w-28 h-20 bg-white rounded-lg animate-pulse shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
