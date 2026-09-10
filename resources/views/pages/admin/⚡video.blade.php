@@ -144,16 +144,22 @@ new class extends Component
         $this->validate([
             'judul_video'     => 'required|string|max:255',
             'album_video_id'  => 'required',
-            'link_video'      => 'required|url',
+            'link_video'      => 'required',
             'deskripsi_video' => 'required|string',
         ]);
+        $iframeInput = $this->link_video;
+
+            // Otomatis mengganti width dan height bawaan Google Maps menjadi 100%
+            $iframeInput = preg_replace('/width="[^"]+"/', 'width="100%"', $iframeInput);
+            $iframeInput = preg_replace('/height="[^"]+"/', 'height="100%"', $iframeInput);
+            $iframeInput = preg_replace('/height="[^"]+"/', 'style="border-radius: 6px;"', $iframeInput);
 
         try {
             $video = Video::findOrFail($this->videoId);
             $video->update([
                 'judul_video'     => $this->judul_video,
                 'album_video_id'  => $this->album_video_id,
-                'link_video'      => $this->link_video,
+                'link_video'      => $iframeInput,
                 'deskripsi_video' => $this->deskripsi_video,
             ]);
 
@@ -290,17 +296,7 @@ new class extends Component
                         
                         <!-- IFRAME VIDEO YOUTUBE -->
                         <div class="w-full aspect-video rounded-md overflow-hidden bg-black">
-                            @php
-                                $url = $vid->link_video;
-                                if (str_contains($url, 'watch?v=')) {
-                                    $embedUrl = explode('&', str_replace('watch?v=', 'embed/', $url))[0]; 
-                                } elseif (str_contains($url, 'youtu.be/')) {
-                                    $embedUrl = str_replace('youtu.be/', 'www.youtube.com/embed/', $url);
-                                } else {
-                                    $embedUrl = $url; 
-                                }
-                            @endphp
-                            <iframe class="w-full h-full" src="{{ $embedUrl }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            {!! $vid->link_video !!}
                         </div>
 
                         <div class="flex w-full h-auto gap-1 p-2 justify-between items-center bg-[#618764]/40 rounded-md mt-1">
@@ -440,7 +436,7 @@ new class extends Component
                         <!-- LINK YOUTUBE -->
                         <div class="grid grid-cols-4 items-center gap-2">
                             <label class="text-sm font-semibold text-gray-800">Link YouTube</label>
-                            <input type="url" name="link_video" required placeholder="https://www.youtube.com/..." class="col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" name="link_video" required placeholder="https://www.youtube.com/..." class="col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
 
                         <!-- DESKRIPSI -->
@@ -490,7 +486,7 @@ new class extends Component
                         <!-- LINK YOUTUBE -->
                         <div class="grid grid-cols-4 items-center gap-2">
                             <label class="text-sm font-semibold text-gray-800">Link YouTube</label>
-                            <input type="url" wire:model="link_video" required class="col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" wire:model="link_video" required class="col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
 
                         <!-- DESKRIPSI -->
@@ -500,7 +496,7 @@ new class extends Component
                         </div>
 
                         <div class="flex justify-end mt-4">
-                            <button type="submit" class="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-600 shadow-md cursor-pointer font-semibold">Simpan Perubahan</button>
+                            <button type="submit" class="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-600 shadow-md cursor-pointer font-semibold">Edit</button>
                         </div>
                     </form>
                 </div>

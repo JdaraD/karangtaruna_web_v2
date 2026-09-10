@@ -16,7 +16,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->string('judul_video');
             $table->foreignId('album_video_id')->constrained('album_videos')->cascadeOnDelete();
-            $table->string('link_video');
+            $table->text('link_video');
             $table->text('deskripsi_video')->nullable();
             $table->timestamps();
         });

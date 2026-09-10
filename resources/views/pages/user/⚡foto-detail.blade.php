@@ -9,7 +9,7 @@ new class extends Component
 
     public function loadFoto($id)
     {
-        $this->album = AlbumFoto::with('fotos')
+        $this->album = albumFoto::with('fotos')
             ->where('is_active', true)
             ->findOrFail($id);
 

@@ -1,9 +1,21 @@
 <?php
 
 use Livewire\Component;
+use App\Models\albumVideo;
 
 new class extends Component
 {
+    public $albumVideo;
+
+    public function loadAlbumVideo()
+    {
+        $this->albumVideo = albumVideo::all();
+    }
+
+    public function mount()
+    {
+        $this->loadAlbumVideo();
+    }
     
     public function render()
     {
@@ -21,16 +33,46 @@ new class extends Component
         <h1 class="font-[poppins] font-semibold lg:text-2xl md:text-lg text-base normal-case">Video</h1>
 
         <div class="flex flex-wrap w-full h-full justify-center items-center lg:gap-4 md:gap-4 gap-2">
-            @for ($i = 1; $i <= 8; $i++)
-                <a href="{{ route('video-detail') }}" class="flex relative flex-col lg:w-82 md:w-80 w-30 lg:h-60 md:h-58 h-28 bg-gray-300 rounded-lg shadow-md hover:scale-102 transition-transform duration-120 ease-in-out">
-                    <div class="flex w-full h-full rounded-t-lg">
-                        <img src="{{ asset('img/program.jpg') }}" alt="" class="w-full h-full object-cover rounded-t-lg">
+            @foreach ($albumVideo as $av)
+                <a
+                    href="{{ route('video-detail', $av->id) }}"
+                    class="group flex relative flex-col lg:w-62 md:w-40 w-30 lg:h-40 md:h-38 h-28 bg-gray-300 rounded-lg shadow-md overflow-hidden hover:scale-102 transition-transform duration-120 ease-in-out"
+                >
+
+                    {{-- Nama Album --}}
+                    <div class="flex w-full h-full justify-center items-center">
+                        <p class="text-black font-[poppins] lg:text-2xl md:text-xl text-base capitalize font-semibold">
+                            {{ $av->nama_album }}
+                        </p>
                     </div>
-                    <div class="flex absolute bottom-0 w-full lg:h-10 md:h-10 h-6 justify-center items-center bg-gray-400/70 rounded-b-lg">
-                        <p class="text-black font-[poppins] lg:text-base md:text-sm text-xs font-semibold">Program 1</p>
+
+                    {{-- Overlay Hover --}}
+                    <div
+                        class="absolute inset-0 flex justify-center items-center
+                            bg-black/0 opacity-0
+                            group-hover:bg-black/40
+                            group-hover:opacity-100
+                            transition-all duration-300"
+                    >
+                        {{-- Icon Play Video --}}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            class="w-14 h-14 text-white scale-75
+                                group-hover:scale-100
+                                transition-transform duration-300"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm14.03-1.72a.75.75 0 0 1 0 1.44l-4.5 2.25A.75.75 0 0 1 10.5 13.5v-3a.75.75 0 0 1 1.28-.53l4.5 2.25Z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
                     </div>
+
                 </a>
-            @endfor
+            @endforeach
         </div>
 
     </article>

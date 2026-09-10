@@ -32,15 +32,21 @@ class videoController extends Controller
         $request->validate([
             'judul_video'     => 'required|string|max:255',
             'album_video_id'  => 'required', // Pastikan ID album valid
-            'link_video'      => 'required|url',
+            'link_video'      => 'required',
             'deskripsi_video' => 'required|string',
         ]);
+
+            $iframeInput = $request->link_video;
+
+            // Otomatis mengganti width dan height bawaan Google Maps menjadi 100%
+            $iframeInput = preg_replace('/width="[^"]+"/', 'width="100%"', $iframeInput);
+            $iframeInput = preg_replace('/height="[^"]+"/', 'height="100%"', $iframeInput);
 
         try {
             video::create([
                 'judul_video'     => $request->judul_video,
                 'album_video_id'  => $request->album_video_id,
-                'link_video'      => $request->link_video,
+                'link_video'      => $iframeInput,
                 'deskripsi_video' => $request->deskripsi_video,
                 'is_active'       => 1, // Default aktif
             ]);
