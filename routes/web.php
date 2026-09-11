@@ -53,7 +53,7 @@ Route::livewire('/video-detail{id}', 'pages::user.video-detail')->name('video-de
 Route::livewire('/event', 'pages::user.event')->name('event');
 Route::livewire('/news', 'pages::user.news')->name('news');
 Route::livewire('/kolaborasi', 'pages::user.kolaborasi')->name('kolaborasi');
-Route::livewire('/detail-kolaborasi', 'pages::user.detail-kolaborasi')->name('detail-kolaborasi');
+Route::livewire('/detail-kolaborasi/{id}', 'pages::user.detail-kolaborasi')->name('detail-kolaborasi');
 
 
 // controller frontend

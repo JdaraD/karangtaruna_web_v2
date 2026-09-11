@@ -19,4 +19,9 @@ class wilayahKolaborasi extends Model
     {
         return $this->hasMany(kolaborasi::class, 'wilayah_kolaborasi_id', 'id');
     }
+
+    public function coverFoto()
+    {
+        return $this->hasOne(kolaborasi::class, 'wilayah_kolaborasi_id')->oldest();
+    }
 }
