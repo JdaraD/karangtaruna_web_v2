@@ -16,7 +16,7 @@ new class extends Component
     {
         return $this->view()
             ->layout('layouts.user', [
-                'title' => "Berita : { $this->event->name}"
+                'title' => "Event : {$this->event->judul}"
             ]);
     }
 };
@@ -35,7 +35,7 @@ new class extends Component
                 href="{{ route('event') }}"
                 class="font-[poppins] font-semibold lg:text-lg md:text-base text-sm text-gray-500 hover:text-black transition"
             >
-                Berita
+                Event
             </a>
 
             <span class="text-gray-400">
@@ -60,25 +60,11 @@ new class extends Component
             {{-- =================================================
                 GAMBAR UTAMA
             ================================================== --}}
-            {{-- @php
-                $images = $event->image
-                    ? json_decode($event->image, true)
-                    : [];
-
-                $images = is_array($images)
-                    ? $images
-                    : [];
-
-                $firstImage = !empty($images)
-                    ? asset('storage/' . $images[0])
-                    : asset('img/no-image.jpg');
-            @endphp --}}
-
 
             <div class="flex justify-center items-center w-full bg-gray-200">
 
                 <img
-                    src="{{ asset('storage/') . $event->image }}"
+                    src="{{ asset('storage/'. $event->gambar)}}"
                     alt="{{ $event->name }}"
                     class="w-full lg:h-125 md:h-100 h-62.5 object-cover"
                 >
@@ -120,11 +106,11 @@ new class extends Component
                 <div class="w-full border-b border-gray-300"></div>
 
 
-                {{-- ISI BERITA --}}
+                {{-- ISI Event --}}
                 <div
                     class="font-[poppins] text-black text-sm md:text-base leading-relaxed text-justify whitespace-pre-line"
                 >
-                    {{ $event->isi_berita }}
+                    {{ $event->deskripsi }}
                 </div>
 
             </div>
@@ -147,7 +133,7 @@ new class extends Component
                 </span>
 
                 <span class="font-[poppins] text-sm font-semibold">
-                    Kembali ke Berita
+                    Kembali ke Event
                 </span>
 
             </a>

@@ -16,7 +16,7 @@ new class extends Component
     {
         return $this->view()
             ->layout('layouts.user', [
-                'title' => $this->news->name
+                'title' => "Berita : {$this->event->name}"
             ]);
     }
 };

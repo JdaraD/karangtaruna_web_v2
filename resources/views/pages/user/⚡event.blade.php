@@ -1,9 +1,21 @@
 <?php
 
 use Livewire\Component;
+use App\Models\event;
 
 new class extends Component
 {
+    public $event;
+
+    public function loadEvent()
+    {
+        $this->event = event::all();
+    }
+
+    public function mount()
+    {
+        $this->loadEvent();
+    }
     
     public function render()
     {
@@ -23,21 +35,21 @@ new class extends Component
         </div>
 
         <div class="flex flex-col w-full h-full gap-6">
-            @for ($i = 1; $i <= 8; $i++)
+            @foreach ($event as $et)
 
-            <div class="flex w-full h-full gap-4 bg-gray-100 rounded-lg shadow-md p-4 hover:scale-102 transition-transform duration-120 ease-in-out">
+            <a href="{{ route('detail-event', $et->id) }}" class="flex w-full h-full gap-4 bg-gray-100 rounded-lg shadow-md p-4 hover:scale-102 transition-transform duration-120 ease-in-out">
                 <div class="flex w-90 h-40 bg-gray-400 animate-pulse rounded-lg">
-                    {{-- <img src="" alt="" class="w-full h-full object-cover rounded-lg"> --}}
+                    <img src="{{ asset('storage/' . $et->gambar) }}" alt="" class="w-full h-full object-cover rounded-lg">
                     
                 </div>
 
                 <div class="flex flex-col w-full h-full gap-2">
-                    <h1 class="font-[poppins] font-semibold lg:text-lg md:text-base text-sm normal-case">Event 1</h1>
-                    <p class="font-[poppins] lg:text-base md:text-sm text-xs text-justify">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
+                    <h1 class="font-[poppins] font-semibold lg:text-lg md:text-base text-sm normal-case">{{ $et->judul }}</h1>
+                    <p class="font-[poppins] lg:text-base md:text-sm text-xs text-justify line-clamp-5">{{ $et->deskripsi }}</p>
 
                 </div>
-            </div>
-            @endfor
+            </a>
+            @endforeach
         </div>
 
     </article>
