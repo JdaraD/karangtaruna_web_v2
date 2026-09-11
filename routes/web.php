@@ -51,7 +51,9 @@ Route::livewire('/foto-detail/{id}', 'pages::user.foto-detail')->name('foto-deta
 Route::livewire('/video', 'pages::user.video')->name('video');
 Route::livewire('/video-detail{id}', 'pages::user.video-detail')->name('video-detail');
 Route::livewire('/event', 'pages::user.event')->name('event');
+Route::livewire('/detail-event/{id}', 'pages::user.detail-event')->name('detail-event');
 Route::livewire('/news', 'pages::user.news')->name('news');
+Route::livewire('/detail-news/{id}', 'pages::user.detail-news')->name('detail-news');
 Route::livewire('/kolaborasi', 'pages::user.kolaborasi')->name('kolaborasi');
 Route::livewire('/detail-kolaborasi/{id}', 'pages::user.detail-kolaborasi')->name('detail-kolaborasi');
 
