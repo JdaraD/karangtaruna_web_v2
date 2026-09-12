@@ -1,10 +1,42 @@
 <?php
 
 use Livewire\Component;
+use App\Models\identity;
+use App\Models\tentang;
+use App\Models\kontakAdmin;
+use App\Models\KontakBantuan;
 
 new class extends Component
 {
-    //
+    public $identity, $tentang, $admins, $bantuans;
+
+    public function loadIdentity()
+    {
+        $this->identity = identity::latest()->first();
+    }
+
+    public function loadTentang()
+    {
+        $this->tentang = tentang::latest()->first();
+    }
+
+    public function loadAdmin()
+    {
+        $this->admins = kontakAdmin::latest()->take(2)->get();
+    }
+
+    public function loadBantuan()
+    {
+        $this->bantuans = KontakBantuan::all();
+    }
+
+    public function mount()
+    {
+        $this->loadIdentity();
+        $this->loadTentang();
+        $this->loadAdmin();
+        $this->loadBantuan();
+    }
 };
 ?>
 
@@ -14,27 +46,46 @@ new class extends Component
         <div class="grid grid-cols-3 h-full py-2 lg:gap-4 md:gap-4 gap-2 size-[94%]">
 
             <div class="flex flex-col gap-2 h-full">
-                    
-                <div class="flex row-span-1 items-center gap-2">
-                    {{-- logo Start --}}
-                    <img src="{{ asset('img/logo.png') }}" alt="" class="lg:w-16 lg:h-18 md:w-14 md:h-16 w-12 h-14 rounded-full">
-                    {{-- logo Ends --}}
+                @if (!$identity)
+                    <div class="flex row-span-1 items-center gap-2">
+                        {{-- logo Start --}}
+                        <div alt="" class="lg:w-16 lg:h-18 md:w-14 md:h-16 w-12 h-14 rounded-full bg-gray-100 animate-pulse"></div>
+                        {{-- logo Ends --}}
 
-                    {{-- identity name --}}
-                    <div>
-                        <p class="font-[poppins] font-medium lg:text-sm md:text-sm text-[10px] text-white normal-case">Karang Taruna</p>
-                        <p class="font-[poppins] font-medium lg:text-xs md:text-[10px] text-[8px] text-white normal-case">Desa Waru</p>
+                        {{-- identity name --}}
+                        <div>
+                            <p class="font-[poppins] font-medium lg:text-sm md:text-sm text-[10px] text-white normal-case">Nama Perusahan / Organisasi</p>
+                        </div>
+                        {{-- identity name --}}
+                        
                     </div>
-                    {{-- identity name --}}
+                @else
+                    <div class="flex row-span-1 items-center gap-2">
+                        {{-- logo Start --}}
+                        <img src="{{ asset('storage/' . $identity->image) }}" alt="" class="lg:w-16 lg:h-18 md:w-14 md:h-16 w-12 h-14 rounded-full">
+                        {{-- logo Ends --}}
+
+                        {{-- identity name --}}
+                        <div>
+                            <p class="font-[poppins] font-medium lg:text-sm md:text-sm text-[10px] text-white normal-case">{{$identity->name}}</p>
+                        </div>
+                        {{-- identity name --}}
+                        
+                    </div>
                     
-                </div>
+                @endif
                 
                 {{-- Deskripsi --}}
                 <div class="row-span-3 h-full">
                     
                     <p class="pb-2 lg:text-sm md:text-sm text-[10px] font-[poppins] font-semibold text-white normal-case">Deskripsi</p>
-                    <p class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] text-justify text-white lg:line-clamp-9 md:line-clamp-9 line-clamp-5 normal-case">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, molestias. Nulla rerum, facilis officiis quaerat, voluptate et cumque, ea perspiciatis ipsa mollitia consequatur similique alias? Qui animi odio assumenda corrupti.</p>
-                    <a href="#" class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] text-justify text-white hover:text-blue-300 normal-case">Selengkapnya...</a>
+                    @if (!$tentang)
+                        <p class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] text-justify text-white lg:line-clamp-9 md:line-clamp-9 line-clamp-5 normal-case">Deskripsi Perushaan Kosong</p>
+                    @else
+                        <p class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] text-justify text-white lg:line-clamp-9 md:line-clamp-9 line-clamp-5 normal-case">{{$tentang->isi}}</p>
+                        <a href="#" class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] text-justify text-white hover:text-blue-300 normal-case">Selengkapnya...</a>
+                        
+                    @endif
                     
                 </div>
                 {{-- Deskripsi --}}
@@ -46,31 +97,36 @@ new class extends Component
                 <div class="flex h-[10%] justify-center items-center">
                     <p class="lg:text-sm md:text-sm text-xs font-[poppins] font-medium text-white normal-case">Kontak</p>
                 </div>
-                <div class="h-[90%]">
-
+                <div class="flex flex-col gap-2 h-[90%] ">
                     {{-- address --}}
-                    <p class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] font-medium text-white normal-case text-justify pb-4">Desa waru jln yang mana aja</p>
+                    <div class="flex gap-1">
+                        <p class="text-xs text-white">Alamat :</p>
+                        <p class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] font-medium text-white normal-case text-justify pb-4">Desa waru jln yang mana aja</p>
+                    </div>
                     {{-- address --}}
+                    
+                    @foreach ($admins as $admin)
+                        {{-- icons 1 --}}
+                        <p class="font-semibold text-xs text-white capitalize">{{$admin->name}}</p>
+                        <div class="flex gap-2 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="lg:size-5 md:size-5 size-3" fill="white">
+                                <path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/>
+                            </svg>
+                            <address class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] font-medium text-white">{{$admin->no_hp}}</address>
 
-                    {{-- icons 1 --}}
-                    <div class="flex gap-2 mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="lg:size-5 md:size-5 size-3" fill="white">
-                            <path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/>
-                        </svg>
-                        <address class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] font-medium text-white">00823213123</address>
+                        </div>
+                        {{-- icons 1 --}}
 
-                    </div>
-                    {{-- icons 1 --}}
+                        {{-- icons 2 --}}
+                        <div class="flex gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="lg:size-5 md:size-5 size-3" fill="white">
+                                <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>
+                            </svg>
+                            <address class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] font-medium text-white">{{$admin->gmail}}</address>
 
-                    {{-- icons 2 --}}
-                    <div class="flex gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="lg:size-5 md:size-5 size-3" fill="white">
-                            <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>
-                        </svg>
-                        <address class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] font-medium text-white">info@karangtaruna.com</address>
-
-                    </div>
-                    {{-- icons 2 --}}
+                        </div>
+                        {{-- icons 2 --}}
+                    @endforeach
                 </div>    
 
             </div>
@@ -83,6 +139,7 @@ new class extends Component
 
                 <div>
                     <div class="h-[90%]">
+                        @foreach($bantuans as $bantuan)
                         {{-- icons 1 --}}
                         <div class="flex gap-2 mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="lg:size-5 md:size-5 size-3" fill="white">
@@ -90,12 +147,13 @@ new class extends Component
                             </svg>
                             
                             <div class="flex gap-2">
-                                <p class="lg:text-xs md:text-xs text-[8px] font-[poppins] font-medium normal-case text-white">ahmad :</p>
-                                <address class="lg:text-xs md:text-xs text-[8px] font-[poppins] font-medium normal-case text-white">08123456789</address>
+                                <p class="lg:text-xs md:text-xs text-[8px] font-[poppins] font-medium normal-case text-white capitalize">{{$bantuan->name}} {{$bantuan->wilayah}} :</p>
+                                <address class="lg:text-xs md:text-xs text-[8px] font-[poppins] font-medium normal-case text-white">{{$bantuan->no_hp}}</address>
                             </div>
                             
                         </div>
                         {{-- icons 1 --}}
+                        @endforeach
                     </div>
                 </div>
             </div>
