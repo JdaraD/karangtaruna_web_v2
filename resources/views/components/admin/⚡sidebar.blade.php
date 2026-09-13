@@ -151,6 +151,13 @@ new class extends Component
                 <span>Kontak</span>
             </a>
 
+            <!-- alamat -->
+            <a href="{{ route('admin.alamat') }}" 
+            class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all {{ request()->routeIs('admin.news.*') ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-slate-800 hover:text-white' }}">
+                <x-entypo-address class="w-5 h-5" />
+                <span>Alamat</span>
+            </a>
+
             <!-- Sponsor -->
             <a href="{{ route('admin.sponsor') }}" 
             class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all {{ request()->routeIs('admin.news.*') ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-slate-800 hover:text-white' }}">

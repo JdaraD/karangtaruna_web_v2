@@ -85,6 +85,7 @@ Route::livewire('/admin.manajement-account', 'pages::admin.management-account')-
 Route::livewire('/admin.settings', 'pages::admin.settings')->name('admin.settings');
 Route::livewire('/admin.mail', 'pages::admin.mail')->name('admin.mail');
 Route::livewire('/admin.sponsor', 'pages::admin.sponsor')->name('admin.sponsor');
+Route::livewire('/admin.alamat', 'pages::admin.alamat')->name('admin.alamat');
 
 
 // controller backend
