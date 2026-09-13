@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Slider;
+use App\Models\sliderUsaha;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Format;
 use Intervention\Image\ImageManager;
 
-class SliderController extends Controller
+class sliderUsahaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,14 +35,14 @@ class SliderController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'image' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
+            'image' => 'required|image|mimes:png,jpg,jpeg,webp|max:2048',
             'tanggal_publish' => 'required|date'
         ]);
 
         try {
             $file = $request->file('image');
 
-            $filename = time(). '_' . uniqid() . '.webp';
+            $filename = time() . '_' . uniqid() . '.webp';
 
             $manager = ImageManager::usingDriver(Driver::class);
 
@@ -50,29 +50,30 @@ class SliderController extends Controller
                 file_get_contents($file->getRealPath())
             );
 
+            // Resize dengan mempertahankan aspect ratio
             $image->scaleDown(
                 width: 3360,
                 height: 1080,
             );
 
+            // Encode menjadi WebP quality 80
             $encoded = $image->encodeUsingFormat(
                 Format::WEBP,
                 quality: 100
             );
 
-            $path = "uploads/slider/{$filename}";
+            $path = "uploads/SliderUsaha/{$filename}";
 
             Storage::disk('public')->put(
                 $path,
                 $encoded
             );
 
-            Slider::create([
+            sliderUsaha::create([
                 'name' => $request->name,
                 'image' => $path,
-                'tanggal_publish' => $request->tanggal_publish
+                'tanggal_publish' => $request->tanggal_publish,
             ]);
-
             return redirect()->route('admin.banner')->with('addSuccess', 'Data berhasil ditambah!');
         } catch (\Throwable $th) {
             return redirect()->route('admin.banner')->with('addGagal', 'Data gagal ditambah!');

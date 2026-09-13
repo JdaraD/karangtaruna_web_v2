@@ -3,6 +3,7 @@
 use Livewire\Component;
 use App\Models\Banner;
 use App\Models\Slider;
+use App\Models\sliderUsaha;
 use Livewire\WithFileUploads;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -20,11 +21,15 @@ new class extends Component
     public $bannerId;
     public $slider;
     public $sliderId;
+    public $sliderUsaha;
+    public $sliderUsahaId;
 
     public $overlayAddBanner = false;
     public $overlayEditBanner = false;
     public $overlayAddSlider = false;
     public $overlayEditSlider = false;
+    public $overlayAddSliderUsaha = false;
+    public $overlayEditSliderUsaha = false;
 
     public $deleteSuccess;
     public $deleteGagal;
@@ -42,6 +47,11 @@ new class extends Component
         $this->slider = Slider::get();
     }
 
+    public function loadSliderUsaha()
+    {
+        $this->sliderUsaha = sliderUsaha::get();
+    }
+
     // load data
 
     // view data
@@ -49,6 +59,7 @@ new class extends Component
     {
         $this->loadBanner();
         $this->loadSlider();
+        $this->loadSliderUsaha();
     }
     // view data
 
@@ -120,6 +131,40 @@ new class extends Component
             'tanggal_publish'
         ]);
     }
+
+    public function btnAddSliderUsaha()
+    {
+        $this->overlayAddSliderUsaha = true;
+    }
+
+    public function btnCloseSliderUsaha()
+    {
+        $this->overlayAddSliderUsaha = false;
+    }
+
+    public function btnEditSliderUsaha($id)
+    {
+        $sliderUsaha = sliderUsaha::findOrFail($id);
+
+        $this->sliderUsahaId = $sliderUsaha->id;
+        $this->name = $sliderUsaha->name;
+        $this->currentImage = $sliderUsaha->image;
+        $this->tanggal_publish = $sliderUsaha->tanggal_publish;
+
+        $this->image = null;
+        $this->overlayEditSliderUsaha = true;
+    }
+
+    public function btnCloseEditSliderUsaha()
+    {
+        $this->overlayEditSliderUsaha = false;
+        $this->reset([
+            'sliderId',
+            'name',
+            'image',
+            'tanggal_publish'
+        ]);
+    }
     // button function
 
     // update function
@@ -182,58 +227,112 @@ new class extends Component
     }
 
     public function updateSlider()
-        {
-            $rules = [
-                'name' => 'required',
-                'tanggal_publish' => 'required'
+    {
+        $rules = [
+            'name' => 'required',
+            'tanggal_publish' => 'required'
+        ];
+
+        if ($this->image) {
+            $rules['image'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
+        }
+
+        $this->validate($rules);
+
+        try {
+            $slider = Slider::findOrFail($this->sliderId);
+
+            $dataToUpdate = [
+                'name' => $this->name,
+                'tanggal_publish' => $this->tanggal_publish
             ];
 
-            if ($this->image) {
-                $rules['image'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
-            }
+            if ($this->image instanceof UploadedFile) {
+                $filename = time() . '_' . uniqid() . '.webp';
 
-            $this->validate($rules);
+                $manager = ImageManager::usingDriver(Driver::class);
+                $image = $manager->decode(file_get_contents($this->image->getRealPath()));
+                $image->scaleDown(width: 3360, height: 1080);
+                $encoded = $image->encodeUsingFormat(Format::WEBP, quality: 100);
 
-            try {
-                $slider = Slider::findOrFail($this->sliderId);
+                $path = "uploads/slider/{$filename}";
+                Storage::disk('public')->put($path, (string) $encoded);
 
-                $dataToUpdate = [
-                    'name' => $this->name,
-                    'tanggal_publish' => $this->tanggal_publish
-                ];
-
-                if ($this->image instanceof UploadedFile) {
-                    $filename = time() . '_' . uniqid() . '.webp';
-
-                    $manager = ImageManager::usingDriver(Driver::class);
-                    $image = $manager->decode(file_get_contents($this->image->getRealPath()));
-                    $image->scaleDown(width: 1200, height: 80);
-                    $encoded = $image->encodeUsingFormat(Format::WEBP, quality: 80);
-
-                    $path = "uploads/slider/{$filename}";
-                    Storage::disk('public')->put($path, (string) $encoded);
-
-                    if ($slider->image && Storage::disk('public')->exists($slider->image)) {
-                        Storage::disk('public')->delete($slider->image);
-                    }
-
-                    $dataToUpdate['image'] = $path;
+                if ($slider->image && Storage::disk('public')->exists($slider->image)) {
+                    Storage::disk('public')->delete($slider->image);
                 }
-                    $slider->update($dataToUpdate);
 
-                    $this->loadSlider();
-
-                    $this->editSuccess = 'Data Berhasil Diedit!';
-                    $this->editGagal = '';
-                    $this->overlayEditSlider = false;
-
-                    $this->image = null;
-            } catch (\Throwable $th) {
-                $this->editGagal = 'Data Gagal Diedit!';
-                $this->editSuccess = '';
-                // dd($th->getMessage());
+                $dataToUpdate['image'] = $path;
             }
+                $slider->update($dataToUpdate);
+
+                $this->loadSlider();
+
+                $this->editSuccess = 'Data Berhasil Diedit!';
+                $this->editGagal = '';
+                $this->overlayEditSlider = false;
+
+                $this->image = null;
+        } catch (\Throwable $th) {
+            $this->editGagal = 'Data Gagal Diedit!';
+            $this->editSuccess = '';
+            // dd($th->getMessage());
         }
+    }
+
+    public function updateSliderUsaha()
+    {
+        $rules = [
+            'name' => 'required',
+            'tanggal_publish' => 'required'
+        ];
+
+        if ($this->image) {
+            $rules['image'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
+        }
+
+        $this->validate($rules);
+
+        try {
+            $slider = Slider::findOrFail($this->sliderId);
+
+            $dataToUpdate = [
+                'name' => $this->name,
+                'tanggal_publish' => $this->tanggal_publish
+            ];
+
+            if ($this->image instanceof UploadedFile) {
+                $filename = time() . '_' . uniqid() . '.webp';
+
+                $manager = ImageManager::usingDriver(Driver::class);
+                $image = $manager->decode(file_get_contents($this->image->getRealPath()));
+                $image->scaleDown(width: 3360, height: 1080);
+                $encoded = $image->encodeUsingFormat(Format::WEBP, quality: 100);
+
+                $path = "uploads/sliderUsaha/{$filename}";
+                Storage::disk('public')->put($path, (string) $encoded);
+
+                if ($slider->image && Storage::disk('public')->exists($slider->image)) {
+                    Storage::disk('public')->delete($slider->image);
+                }
+
+                $dataToUpdate['image'] = $path;
+            }
+                $slider->update($dataToUpdate);
+
+                $this->loadSlider();
+
+                $this->editSuccess = 'Data Berhasil Diedit!';
+                $this->editGagal = '';
+                $this->overlayEditSlider = false;
+
+                $this->image = null;
+        } catch (\Throwable $th) {
+            $this->editGagal = 'Data Gagal Diedit!';
+            $this->editSuccess = '';
+            // dd($th->getMessage());
+        }
+    }
     // update function
 
     // delete function
@@ -269,6 +368,22 @@ new class extends Component
             $this->deleteSuccess = '';
         }
     }
+
+    public function btnDeleteSliderUsaha($id)
+    {
+        try {
+            $slider = Slider::findOrFail($id);
+            $slider->delete();
+
+            $this->loadSlider();
+
+            $this->deleteSuccess = 'Data Berhasil Dihapus!';
+            $this->deleteGagal = '';
+        } catch (\Throwable $th) {
+            $this->deleteGagal = 'Data Gagal Dihapus!';
+            $this->deleteSuccess = '';
+        }
+    }
     // delete function
     
     public function render()
@@ -281,7 +396,7 @@ new class extends Component
 };
 ?>
 
-<section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-157.5 h-full overflow-y-auto scrollbar-none">
+<section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-166.5 h-full overflow-y-auto scrollbar-none">
     <article class="flex flex-none gap-2 items-center">
         <x-bi-image class="h-6 w-6" />
         <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base">Banner & Slider</h1>
@@ -329,7 +444,7 @@ new class extends Component
         <div class="flex flex-col justify-stretch gap-4 items-center w-full h-fit p-4 bg-white shadow-md rounded-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
-                    <h1 class="font-semibold text-base text-black capitalize">Slider</h1>
+                    <h1 class="font-semibold text-base text-black capitalize">Slider Home</h1>
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
                     <button wire:click="btnAddSlider" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
@@ -363,6 +478,42 @@ new class extends Component
             </div>
         </div>
 
+        <div class="flex flex-col justify-stretch gap-4 items-center w-full h-fit p-4 bg-white shadow-md rounded-md">
+            <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
+                <div class="flex w-full h-auto gap-1 items-center">
+                    <h1 class="font-semibold text-base text-black capitalize">Slider Usaha</h1>
+                </div>
+                <div class="flex w-full h-auto gap-1 justify-end items-center">
+                    <button wire:click="btnAddSliderUsaha" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
+                        <x-bi-plus class="h-6 w-6 text-white"/>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-64 gap-2 p-2 overflow-y-auto scrollbar-none">
+                @foreach ($sliderUsaha as $s)
+                    <div class="flex w-full h-36.75 gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
+                        <div class="flex w-[70%] h-full">
+                            <img src="{{ asset('storage/'. $s->image) }}" alt="" class="w-full h-32 object-cover rounded-md">
+                        </div>
+                        <div class="flex w-[30%] h-full flex-col gap-1">
+                            <div class="flex gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
+                                <p class="text-base font-semibold capitalize">{{ $s->name }}</p>
+                                <div class="flex gap-1">
+                                    <button wire:click="btnEditSliderUsaha({{ $s->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
+                                        <x-bi-pencil class="h-4 w-4 text-white"/>
+                                    </button>
+                                    <button wire:click="btnDeleteSliderUsaha({{ $s->id }})" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                        <x-bi-trash class="h-4 w-4 text-white"/>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="text-base font-semibold text-justify line-clamp-4">{{ $s->tanggal_publish }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
 
     </article>
 
@@ -653,6 +804,150 @@ new class extends Component
         
     @endif
     {{-- overlay Edit Slider --}}
+
+    {{-- overlay Add SliderUsaha --}}
+    @if ($overlayAddSliderUsaha)
+        <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
+            <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
+                
+                <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
+                    <div class="flex w-full h-auto gap-1 items-center">
+                        <h1 class="font-semibold text-base text-black capitalize">Tambah Slider Usaha</h1>
+                    </div>
+                    <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
+                        <button wire:click="btnCloseSliderUsaha" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
+                            <x-css-close class="w-3 h-3" />
+                        </button>
+                    </div>
+                </div>
+
+                <form action="{{ route('admin.sliderUsaha.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
+                    @csrf
+                    
+                    <div class="flex flex-col w-full gap-5 pt-2">
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
+                            <label for="name" class="text-sm font-semibold text-gray-800">
+                                Nama
+                            </label>
+    
+                            <input type="text" name="name" required id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        </div>
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
+                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
+                                Image
+                            </label>
+    
+                               <div class="md:col-span-3">
+                                    <input type="file" name="image" required id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+
+                                    @error('image')
+                                        <span class="text-sm text-red-500">{{ $message }}</span>
+                                    @enderror
+
+                                    <p class="mt-1 text-xs text-gray-500">
+                                        Format: JPG, JPEG, PNG, atau WEBP. Ukuran 1200x80. Maksimal 2 MB.
+                                    </p>
+                                </div>
+                        </div>
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
+                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
+                                Tanggal
+                            </label>
+    
+                           <input type="date" name="tanggal_publish" required id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        </div>
+    
+                    </div>
+    
+                    <div class="flex w-full h-full justify-end items-end">
+                        <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
+                            Tambah
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+        </article>
+        
+    @endif
+    {{-- overlay Add SliderUsaha --}}
+
+    {{-- overlay Edit SliderUsaha --}}
+    @if ($overlayEditSliderUsaha)
+        <article class="absolute flex top-0 left-0 items-center justify-center w-full h-full bg-gray-400/60 z-50">
+            <div class="flex flex-col w-fit h-fit gap-4 p-4 bg-white rounded-md">
+                
+                <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
+                    <div class="flex w-full h-auto gap-1 items-center">
+                        <h1 class="font-semibold text-base text-black capitalize">Edit Slider Usaha</h1>
+                    </div>
+                    <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
+                        <button type="button" wire:click="btnCloseEditSliderUsaha" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
+                            <x-css-close class="w-3 h-3" />
+                        </button>
+                    </div>
+                </div>
+
+                <form wire:submit.prevent="updateSliderUsaha " class="flex flex-col gap-4">
+                    @csrf
+                    
+                    <div class="flex flex-col w-full gap-5 pt-2">
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
+                            <label for="name" class="text-sm font-semibold text-gray-800">
+                                Nama
+                            </label>
+    
+                            <input type="text" name="name" wire:model="name" id="name" placeholder="Masukkan Nama Admin" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        </div>
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
+                            <label for="image" class="text-sm font-semibold text-gray-800 pt-2">
+                                Image
+                            </label>
+    
+                            <div class="md:col-span-3">
+                                <input type="file" name="image" wire:model="image" id="image" accept="image/png,image/jpeg,image/jpg,image/webp" class="w-full rounded-md text-sm text-gray-700 border border-gray-300 bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+
+                                @error('image')
+                                    <span class="text-sm text-red-500">{{ $message }}</span>
+                                @enderror
+
+                                @if ($currentImage)
+                                    <img src="{{ asset('storage/' . $currentImage) }}" class="w-28 h-20 object-cover rounded-md">
+                                @endif
+
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Format: JPG, JPEG, PNG, atau WEBP. Ukuran: 1200x80. Maksimal 2 MB.
+                                </p>
+                            </div>
+                        </div>
+    
+                        <div class="grid grid-cols-1 md:grid-cols-4 items-start gap-2">
+                            <label for="tanggal_publish" class="text-sm font-semibold text-gray-800 pt-2">
+                                Tanggal
+                            </label>
+    
+                           <input type="date" wire:model="tanggal_publish" name="tanggal_publish" id="tanggal_publish" placeholder="Masukkan Nomor Hp (08xxxxxxxx)" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        </div>
+    
+                    </div>
+    
+                    <div class="flex w-full h-full justify-end items-end">
+                        <button type="submit" class="flex justify-center items-center p-2 rounded-md bg-green-500 hover:bg-green-700 shadow-md cursor-pointer">
+                            Edit
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+        </article>
+        
+    @endif
+    {{-- overlay Edit SliderUsaha --}}
 
 
     {{-- notifikasi Add --}}

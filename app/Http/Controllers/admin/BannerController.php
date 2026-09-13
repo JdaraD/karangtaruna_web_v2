@@ -59,7 +59,7 @@ class BannerController extends Controller
             // Encode menjadi WebP quality 80
             $encoded = $image->encodeUsingFormat(
                 Format::WEBP,
-                quality: 80
+                quality: 100
             );
 
             $path = "uploads/banner/{$filename}";
