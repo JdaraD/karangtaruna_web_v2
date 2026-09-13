@@ -526,7 +526,7 @@ new class extends Component
                     </div>
                 </div>
 
-                <form action="{{ route('slider.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
+                <form action="{{ route('admin.slider.store') }}" method="POST" class="flex flex-col gap-4" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
