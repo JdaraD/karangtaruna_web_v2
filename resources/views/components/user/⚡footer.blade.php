@@ -147,7 +147,7 @@ new class extends Component
                             </svg>
                             
                             <div class="flex gap-2">
-                                <p class="lg:text-xs md:text-xs text-[8px] font-[poppins] font-medium normal-case text-white capitalize">{{$bantuan->name}} {{$bantuan->wilayah}} :</p>
+                                <p class="lg:text-xs md:text-xs text-[8px] font-[poppins] font-medium text-white capitalize">{{$bantuan->name}} {{$bantuan->wilayah}} :</p>
                                 <address class="lg:text-xs md:text-xs text-[8px] font-[poppins] font-medium normal-case text-white">{{$bantuan->no_hp}}</address>
                             </div>
                             
@@ -163,8 +163,10 @@ new class extends Component
 
     {{-- copyright --}}
     <div class=" text-center py-2 text-xs flex justify-center items-center gap-2">
-        <img src="{{ asset('img/logo.png') }}" alt="Logo" class="w-4 h-5">
-        <p class="font-[poppins] font-medium lg:text-sm md:text-[10px] text-[8px] text-white normal-case">Copyright &copy; {{ date('Y') }} Karang Taruna Desa Waru. All rights reserved.</p>
+        @if ( $identity )
+            <img src="{{ asset('storage/' . $identity->image) }}" alt="Logo" class="w-4 h-5">
+            <p class="font-[poppins] font-medium lg:text-sm md:text-[10px] text-[8px] text-white normal-case">Copyright &copy; {{ date('Y') }} {{ $identity->name }}. All rights reserved.</p>
+        @endif
     </div>
         
     {{-- copyright --}}
