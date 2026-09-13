@@ -5,7 +5,7 @@ use App\Models\alamat;
 
 new class extends Component
 {
-    public $alamat, $alamatId, $data;
+    public $alamat, $alamatId, $data, $name;
 
     public $overlayAlamat = false;
     public $overlayEditAlamat = false;
@@ -40,7 +40,7 @@ new class extends Component
         $alamat = alamat::findOrFail($id);
 
         $this->alamatId = $alamat->id;
-        $this->alamat = $alamat->alamat;
+        $this->name = $alamat->name;
 
         $this->overlayEditAlamat = true;
     }
@@ -50,14 +50,14 @@ new class extends Component
         $this->overlayEditAlamat = false;
         $this->reset([
             'alamatId',
-            'alamat',
+            'name',
         ]);
     }
 
     public function updateAlamat()
     {
         $this->validate([
-            'alamat' => 'required',
+            'name' => 'required',
         ]);
 
         try {
@@ -66,7 +66,7 @@ new class extends Component
             );
 
             $alamat->update([
-                'alamat' => $this->alamat,
+                'name' => $this->name,
             ]);
 
             $this->loadAlamat();
@@ -100,7 +100,7 @@ new class extends Component
     public function render()
     {
         return $this->view()
-            ->layout('layouts.Alamat', [
+            ->layout('layouts.admin', [
                 'title' => 'Alamat'
             ]);
     }
@@ -129,10 +129,10 @@ new class extends Component
 
             <div class="grid lg:grid-cols-3 md:grid-cols-3 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-56 gap-2 p-2 overflow-y-auto scrollbar-none">
                 @if ($data)
-                    <div class="flex w-full max-h-26 h-full gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
+                    <div class="flex w-full h-auto gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
                         <div class="flex w-full h-full flex-col gap-1">
                             <div class="flex gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                                <p class="text-base font-semibold capitalize">{{ $data->alamat }}</p>
+                                <span></span>
                                 <div class="flex gap-1">
                                     <button wire:click="btnOpenEditAlamat({{ $data->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                         <x-bi-pencil class="h-4 w-4 text-white"/>
@@ -142,6 +142,7 @@ new class extends Component
                                     </button>
                                 </div>
                             </div>
+                            <p class="text-base font-semibold capitalize">{{ $data->name }}</p>
                         </div>
                     </div>
                 @endif
@@ -171,12 +172,12 @@ new class extends Component
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
     
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="alamat" class="text-sm font-semibold text-gray-800">
+                        <div class="flex items-center gap-2">
+                            <label for="name" class="text-sm font-semibold text-gray-800">
                                 Alamat
                             </label>
     
-                            <input type="text" name="alamat" id="alamat" placeholder="Masukatn Alamat" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" name="name" id="name" placeholder="Masukatn Alamat" class="w-100 rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>
@@ -215,12 +216,12 @@ new class extends Component
                     
                     <div class="flex flex-col w-full gap-5 pt-2">
     
-                        <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
-                            <label for="alamat" class="text-sm font-semibold text-gray-800">
+                        <div class="flex items-center gap-2">
+                            <label for="name" class="text-sm font-semibold text-gray-800">
                                 Alamat
                             </label>
     
-                            <input type="text" wire:model="alamat" name="alamat" id="alamat" placeholder="Masukatn Alamat" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" wire:model="name" name="name" id="alamat" placeholder="Masukatn Alamat" class="w-100 rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>

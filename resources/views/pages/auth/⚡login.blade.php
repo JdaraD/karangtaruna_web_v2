@@ -1,10 +1,35 @@
 <?php
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 new class extends Component
 {
-    
+    public $email;
+    public $password;
+    public $remember = false;
+
+    protected $rules = [
+        'email' => 'required|email',
+        'password' => 'required',
+    ];
+
+    public function login()
+    {
+        $this->validate();
+
+        // Coba autentikasi menggunakan Auth Laravel
+        if (Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+            session()->regenerate();
+
+            // Redirect ke halaman dashboard atau halaman setelah login sukses
+            return redirect()->intended('/dashboard');
+        }
+
+        // Jika gagal, tambahkan error ke form
+        $this->addError('email', 'Email atau kata sandi yang Anda masukkan salah.');
+    }
+
     public function render()
     {
         return $this->view()

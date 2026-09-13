@@ -64,10 +64,14 @@ Route::livewire('/detail-kolaborasi/{id}', 'pages::user.detail-kolaborasi')->nam
 Route::post('/kirim-pesan', [mailController::class, 'store'])->name('mail.store');
 
 
-Route::livewire('/login', 'pages::auth.login')->name('login');
-Route::livewire('/registrasi', 'pages::auth.registrasi')->name('registrasi');
-
 // Route backend
+Route::middleware('guest')->group(function () {
+    Route::livewire('/login', 'pages::auth.login')->name('login');
+    Route::livewire('/registrasi', 'pages::auth.registrasi')->name('registrasi');
+});
+
+Route::middleware('auth')->group(function () {
+
 Route::livewire('/admin', 'pages::admin.dashboard')->name('admin.dashboard');
 Route::livewire('/admin.about-us', 'pages::admin.about-us')->name('admin.about-us');
 Route::livewire('/admin.struktur', 'pages::admin.struktur')->name('admin.struktur');
@@ -121,3 +125,5 @@ Route::post('/admin/color-admin', [colorAdminController::class, 'store'])->name(
 Route::post('/admin/sponsor', [sponsorController::class, 'store'])->name('admin.sponsor.store');
 Route::post('/admin/maps', [mapsController::class, 'store'])->name('admin.maps.store');
 Route::post('/admin/alamat', [alamatController::class, 'store'])->name('admin.alamat.store');
+
+});

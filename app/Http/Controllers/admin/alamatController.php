@@ -30,17 +30,17 @@ class alamatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'alamat' => 'required',
+            'name' => 'required',
         ]);
 
         try {
             alamat::create([
-                'alamat' => $request->name,
+                'name' => $request->name,
             ]);
 
             return redirect()->route('admin.alamat')->with('addSuccess', 'Data berhasil ditambah!');
             } catch(\Throwable $th) {
-                return redirect()->route('admin.alamat')->with('addGagal', 'Data gagal ditambah!');
+                return redirect()->route('admin.alamat')->with('addGagal', 'Data gagal ditambah!'. $th->getMessage());
         }
     }
 

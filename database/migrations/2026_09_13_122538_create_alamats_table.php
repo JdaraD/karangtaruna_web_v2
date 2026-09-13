@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('alamats', function (Blueprint $table) {
             $table->id();
             $table->boolean('is_active')->default(1);
-            $table->text('alamat');
+            $table->text('name');
             $table->timestamps();
         });
     }

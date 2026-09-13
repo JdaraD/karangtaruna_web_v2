@@ -11,6 +11,6 @@ class alamat extends Model
 
     protected $fillable = [
         'is_active',
-        'alamat'
+        'name'
     ];
 }
