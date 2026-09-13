@@ -2,6 +2,8 @@
 
 use Livewire\Component;
 use App\Models\user;
+use App\Models\identity;
+
 
 new class extends Component
 {
@@ -11,6 +13,17 @@ new class extends Component
     public $password;
     public $password_confirmation;
     public $terms;
+    public $identity;
+
+    public function loadIdentity()
+    {
+        $this->identity = identity::latest()->first();
+    }
+
+    public function mount()
+    {
+        $this->loadIdentity();
+    }
 
     protected $rules = [
         'name' => 'required|string|max:255',
@@ -80,16 +93,16 @@ new class extends Component
         
         <div class="w-full md:w-5/12 p-8 md:p-12 bg-linear-to-br from-indigo-900/80 via-slate-900/90 to-indigo-950/80 text-white flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/10">
             <div class="relative z-10">
-                <div class="flex items-center space-x-3 mb-10">
-                    <div class="w-12 h-12 rounded-2xl bg-linear-to-tr from-cyan-400 to-indigo-500 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
+                @if ($identity)
+                <div class="flex items-center space-x-3 mb-8">
+                    <div class="rounded-2xl p-1 bg-linear-to-tr from-cyan-400 to-indigo-500 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                        <img src="{{ asset('storage/' .$identity->image) }}" alt="" class="w-18 h-16 object-cover">
                     </div>
                     <span class="text-2xl font-bold tracking-wider bg-clip-text text-transparent bg-linear-to-r from-white to-slate-300">
-                        SYNERGY INC.
+                        {{ $identity->name }}
                     </span>
                 </div>
+                @endif
 
                 <h2 class="text-3xl font-extrabold leading-tight mb-6">
                     Mulai Perjalanan<br/>Digital Anda<br/>Bersama Kami.

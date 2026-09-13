@@ -2,12 +2,30 @@
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use App\Models\identity;
+use App\Models\User;
 
 new class extends Component
 {
-    public $email;
+    public $email, $identity, $user;
     public $password;
     public $remember = false;
+
+    public function loadIdentity()
+    {
+        $this->identity = identity::latest()->first();
+    }
+
+    public function loadUser()
+    {
+        $this->user = User::get();
+    }
+
+    public function mount()
+    {
+        $this->loadIdentity();
+        $this->loadUser();
+    }
 
     protected $rules = [
         'email' => 'required|email',
@@ -55,29 +73,29 @@ new class extends Component
     <div class="relative z-10 w-full max-w-4xl bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
         
         <div class="w-full md:w-1/2 p-8 md:p-12 bg-linear-to-br from-indigo-900/80 via-slate-900/90 to-indigo-950/80 text-white flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/10 relative">
+            @if ($identity)
             <div class="relative z-10">
                 <div class="flex items-center space-x-3 mb-8">
-                    <div class="w-12 h-12 rounded-2xl bg-linear-to-tr from-cyan-400 to-indigo-500 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
+                    <div class="rounded-2xl p-1 bg-linear-to-tr from-cyan-400 to-indigo-500 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                        <img src="{{ asset('storage/' .$identity->image) }}" alt="" class="w-18 h-16 object-cover">
                     </div>
                     <span class="text-2xl font-bold tracking-wider bg-clip-text text-transparent bg-linear-to-r from-white to-slate-300">
-                        SYNERGY INC.
+                        {{ $identity->name }}
                     </span>
                 </div>
-
-                <h2 class="text-3xl font-extrabold leading-tight mb-4">
-                    Innovate.<br/>Connect.<br/>Succeed.
+                    
+                    <h2 class="text-3xl font-extrabold leading-tight mb-4">
+                        Innovate.<br/>Connect.<br/>Succeed.
                 </h2>
                 <p class="text-slate-300 text-sm leading-relaxed">
-                    Selamat datang di platform terintegrasi kami. Akses seluruh kebutuhan manajemen dan analisis Anda dalam satu tempat.
+                    Selamat datang di platform terintegrasi kami. Akses seluruh kebutuhan manajemen dan analisis dalam satu tempat.
                 </p>
             </div>
 
             <div class="mt-8 pt-6 border-t border-white/10 text-xs text-slate-400 relative z-10">
-                &copy; {{ date('Y') }} Synergy Inc. All rights reserved.
+                &copy; {{ date('Y') }} {{ $identity->name }} All rights reserved.
             </div>
+            @endif
         </div>
 
         <div class="w-full md:w-1/2 p-8 md:p-12 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md flex flex-col justify-center">
@@ -127,9 +145,15 @@ new class extends Component
                         <span wire:loading wire:target="login">Memproses...</span>
                     </button>
     
-                    <div class="flex w-full h-auto justify-end">
-                        <a href="{{ route('registrasi') }}" class="text-xs font-semibold capitalize text-white hover:text-gray-100 hover:underline">Registrasi Akun</a>
-                    </div>
+                    @if ($user->isEmpty())
+                        <div class="flex w-full h-auto justify-end">
+                            <a href="{{ route('registrasi') }}" class="text-xs font-semibold capitalize text-white hover:text-gray-100 hover:underline">Registrasi Akun</a>
+                        </div>
+                    @else
+                        <div class="hidden w-full h-auto justify-end">
+                            <a href="{{ route('registrasi') }}" class="text-xs font-semibold capitalize text-white hover:text-gray-100 hover:underline">Registrasi Akun</a>
+                        </div>
+                    @endif
 
                 </div>
             </form>
