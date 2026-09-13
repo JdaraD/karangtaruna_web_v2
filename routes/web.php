@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\alamatController;
 use App\Http\Controllers\admin\albumFotoController;
 use App\Http\Controllers\admin\albumVideoController;
 use App\Http\Controllers\admin\anggotaController;
@@ -119,3 +120,4 @@ Route::post('/admin/color-web', [colorWebController::class, 'store'])->name('adm
 Route::post('/admin/color-admin', [colorAdminController::class, 'store'])->name('admin.colorAdmin.store');
 Route::post('/admin/sponsor', [sponsorController::class, 'store'])->name('admin.sponsor.store');
 Route::post('/admin/maps', [mapsController::class, 'store'])->name('admin.maps.store');
+Route::post('/admin/alamat', [alamatController::class, 'store'])->name('admin.alamat.store');

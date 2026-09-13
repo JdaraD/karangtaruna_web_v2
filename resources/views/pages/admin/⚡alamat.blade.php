@@ -5,10 +5,25 @@ use App\Models\alamat;
 
 new class extends Component
 {
-    public $alamat, $alamatId;
+    public $alamat, $alamatId, $data;
 
     public $overlayAlamat = false;
     public $overlayEditAlamat = false;
+
+    public $deleteSuccess;
+    public $deleteGagal;
+    public $editSuccess;
+    public $editGagal;
+
+    public function loadAlamat()
+    {
+        $this->data = alamat::latest()->first();
+    }
+
+    public function mount()
+    {
+        $this->loadAlamat();
+    }
 
     public function btnOpenAlamat()
     {
@@ -72,7 +87,7 @@ new class extends Component
             $alamat = alamat::findOrFail($id);
             $alamat->delete();
 
-            $this->loadKontakAlamat();
+            $this->loadAlamat();
 
             $this->deleteSuccess = 'Data Berhasil Dihapus!';
             $this->deleteGagal = '';
@@ -113,31 +128,23 @@ new class extends Component
             </div>
 
             <div class="grid lg:grid-cols-3 md:grid-cols-3 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-56 gap-2 p-2 overflow-y-auto scrollbar-none">
-                @foreach ($kontakAlamat as $ka)
+                @if ($data)
                     <div class="flex w-full max-h-26 h-full gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
                         <div class="flex w-full h-full flex-col gap-1">
                             <div class="flex gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                                <p class="text-base font-semibold capitalize">{{ $ka->name }}</p>
+                                <p class="text-base font-semibold capitalize">{{ $data->alamat }}</p>
                                 <div class="flex gap-1">
-                                    <button wire:click="btnOpenEditAlamat({{ $ka->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
+                                    <button wire:click="btnOpenEditAlamat({{ $data->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                         <x-bi-pencil class="h-4 w-4 text-white"/>
                                     </button>
-                                    <button wire:click="btndeleteAlamat({{ $ka->id }})" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
+                                    <button wire:click="btndeleteAlamat({{ $data->id }})" class="flex bg-red-500 hover:bg-red-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Hapus">
                                         <x-bi-trash class="h-4 w-4 text-white"/>
                                     </button>
                                 </div>
                             </div>
-                            <div class="flex gap-2 items-center">
-                                <p class="text-base font-semibold text-justify line-clamp-4">Gmail :</p>
-                                <p class="text-base font-semibold text-justify line-clamp-4">{{ $ka->gmail }}</p>
-                            </div>
-                            <div class="flex gap-2 items-center">
-                                <p class="text-base font-semibold text-justify line-clamp-4">Nomor Hp :</p>
-                                <p class="text-base font-semibold text-justify line-clamp-4">{{ $ka->no_hp }}</p>
-                            </div>
                         </div>
                     </div>
-                @endforeach
+                @endif
             </div>
         </div>
 
@@ -150,7 +157,7 @@ new class extends Component
                 
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Tambah Kontak Alamat</h1>
+                        <h1 class="font-semibold text-base text-black capitalize">Tambah Alamat</h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
                         <button wire:click="btnCloseAlamat" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
@@ -169,7 +176,7 @@ new class extends Component
                                 Alamat
                             </label>
     
-                            <input type="text" name="alamat" id="alamat" placeholder="Masukkan Alamat" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" name="alamat" id="alamat" placeholder="Masukatn Alamat" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>
@@ -194,7 +201,7 @@ new class extends Component
                 
                 <div class="flex w-full h-fit gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                     <div class="flex w-full h-auto gap-1 items-center">
-                        <h1 class="font-semibold text-base text-black capitalize">Edit Kontak Alamat</h1>
+                        <h1 class="font-semibold text-base text-black capitalize">Edit Alamat</h1>
                     </div>
                     <div class="flex w-[30%] h-auto gap-1 justify-end items-center">
                         <button type="button" wire:click="btnCloseEditAlamat" class=" top-4 right-4 rounded-full p-1 bg-red-500 hover:bg-red-700 cursor-pointer">
@@ -213,7 +220,7 @@ new class extends Component
                                 Alamat
                             </label>
     
-                            <input type="text" wire:model="alamat" name="alamat" id="alamat" placeholder="Masukkan Alamat" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            <input type="text" wire:model="alamat" name="alamat" id="alamat" placeholder="Masukatn Alamat" class="md:col-span-3 w-full rounded-md text-black border border-gray-300 bg-gray-100 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                         </div>
     
                     </div>
