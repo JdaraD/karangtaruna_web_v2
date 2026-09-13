@@ -70,6 +70,7 @@ new class extends Component
             ]);
 
             $this->loadAlamat();
+            $this->overlayEditAlamat = false;
 
             $this->editSuccess = 'Data Berhasil Diedit!';
             $this->editGagal = '';

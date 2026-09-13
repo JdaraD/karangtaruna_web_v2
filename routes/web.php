@@ -32,6 +32,7 @@ use App\Http\Controllers\admin\videoController;
 use App\Http\Controllers\admin\visiController;
 use App\Http\Controllers\admin\wilayahKolaborasiController;
 use App\Http\Controllers\user\mailController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -125,5 +126,13 @@ Route::post('/admin/color-admin', [colorAdminController::class, 'store'])->name(
 Route::post('/admin/sponsor', [sponsorController::class, 'store'])->name('admin.sponsor.store');
 Route::post('/admin/maps', [mapsController::class, 'store'])->name('admin.maps.store');
 Route::post('/admin/alamat', [alamatController::class, 'store'])->name('admin.alamat.store');
+
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    
+    return redirect('/login');
+})->name('logout');
 
 });
