@@ -44,7 +44,7 @@ new class extends Component
     <article class="flex w-full h-full justify-center items-center pt-6 rounded-md">
         <div class="flex flex-wrap w-[90%] h-full gap-4">
             <div class="flex h-full lg:w-[40%] w-full justify-center items-center order-1">
-                <div class="flex h-90 lg:w-102.5 md:w-90 w-full shrink-0 flex-none bg-gray-100 rounded-md shadow-md animate-pulse">
+                <div class="flex h-90 lg:w-102.5 md:w-90 w-full shrink-0 flex-none bg-gray-100 rounded-md shadow-md">
                     <img src="{{ asset('storage/' . $kegiatans->gambar) }}" alt="" class="w-full h-full object-contain">
                 </div>
             </div>
