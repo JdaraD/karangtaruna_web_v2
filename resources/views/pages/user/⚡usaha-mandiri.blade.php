@@ -3,10 +3,11 @@
 use Livewire\Component;
 use App\Models\kategoriUsaha;
 use App\Models\banner;
+use App\Models\sliderUsaha;
 
 new class extends Component
 {
-    public $kategoris, $banner;
+    public $kategoris, $banner, $sliders;
 
     public function loadKategori()
     {
@@ -18,10 +19,16 @@ new class extends Component
         $this->banner = banner::latest()->first();
     }
 
+    public function loadSliderUsaha()
+    {
+        $this->sliders = sliderUsaha::latest()->take(6)->get();
+    }
+
     public function mount()
     {
         $this->loadKategori();
         $this->loadBanner();
+        $this->loadSliderUsaha();
     }
     
     public function render()
@@ -37,17 +44,49 @@ new class extends Component
 <section class="flex flex-col gap-6 w-full h-full justify-center items-center">
     {{-- screen media --}}
     <article class="relative flex justify-center overflow-hidden w-full lg:aspect-28/9 md:aspect-24/9 aspect-video">
-        <div class="flex w-full h-full transition-transform duration-1000 ease-in-out">
-            <div class="w-full h-full shrink-0">
-                <img src="{{ asset('img/background.jpg') }}" alt="" class="w-full h-full object-cover">
-
+        <!-- Wrapper Slider (Tambahkan id="slider-container") -->
+        <div x-data="{
+            currentIndex: 0,
+            totalSlides: {{ count($sliders) }},
+            interval: null,
+            init() {
+                if (this.totalSlides > 1) {
+                    this.startAutoSlide();
+                }
+            },
+            goToSlide(index) {
+                this.currentIndex = (index >= this.totalSlides) ? 0 : (index < 0 ? this.totalSlides - 1 : index);
+                this.resetAutoSlide();
+            },
+            startAutoSlide() {
+                this.interval = setInterval(() => {
+                    this.currentIndex = (this.currentIndex + 1) % this.totalSlides;
+                }, 3000); // 30 detik (Ubah sementara ke 3000 / 3 detik untuk testing)
+            },
+            resetAutoSlide() {
+                clearInterval(this.interval);
+                this.startAutoSlide();
+            }
+        }" class="relative flex justify-center overflow-hidden w-full lg:aspect-28/9 md:aspect-24/9 aspect-video">
+            
+            <!-- Wrapper Slider -->
+            <div class="flex w-full h-full transition-transform duration-1000 ease-in-out" :style="`transform: translateX(-${currentIndex * 100}%)`">
+                @foreach($sliders as $index => $slider)
+                    <div class="w-full h-full shrink-0">
+                        <img src="{{ asset('storage/' . $slider->image) }}" alt="{{ $slider->name }}" class="w-full h-full object-cover">
+                    </div>
+                @endforeach
             </div>
-        </div>
-        <div class="absolute flex gap-2 justify-center items-center bottom-8 w-30 h-10 bg-[#9CB080] opacity-70 z-30 rounded-md">
-            <div class="h-4 w-4 rounded-full bg-white shadow-md z-35 hover:scale-110 hover:bg-[#618764] transition-transform ease-in-out duration-120 cursor-pointer"></div>
-            <div class="h-4 w-4 rounded-full bg-white shadow-md z-35 hover:scale-110 hover:bg-[#618764] transition-transform ease-in-out duration-120 cursor-pointer"></div>
-            <div class="h-4 w-4 rounded-full bg-white shadow-md z-35 hover:scale-110 hover:bg-[#618764] transition-transform ease-in-out duration-120 cursor-pointer"></div>
-            <div class="h-4 w-4 rounded-full bg-white shadow-md z-35 hover:scale-110 hover:bg-[#618764] transition-transform ease-in-out duration-120 cursor-pointer"></div>
+
+            <!-- Tombol Navigasi / Dots -->
+            <div class="absolute flex gap-2 justify-center items-center bottom-8 px-4 h-10 bg-[#9CB080] opacity-70 z-30 rounded-md">
+                @foreach($sliders as $index => $slider)
+                    <div @click="goToSlide({{ $index }})" 
+                        :class="currentIndex === {{ $index }} ? 'bg-[#618764] scale-110' : 'bg-white'"
+                        class="h-4 w-4 rounded-full shadow-md z-35 hover:scale-110 hover:bg-[#618764] transition-transform ease-in-out duration-120 cursor-pointer">
+                    </div>
+                @endforeach
+            </div>
         </div>
     </article>
     {{-- screen media --}}
