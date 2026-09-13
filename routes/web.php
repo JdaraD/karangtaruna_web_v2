@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Route;
 // Route frontend
 Route::livewire('/', 'pages::user.home')->name('home');
 Route::livewire('/about', 'pages::user.about-us')->name('about-us');
-Route::livewire('/struktur-karar', 'pages::user.struktur-katar')->name('struktur-katar');
+Route::livewire('/struktur-katar', 'pages::user.struktur-katar')->name('struktur-katar');
 Route::livewire('/legal', 'pages::user.legal')->name('legal');
 Route::livewire('/kegiatan', 'pages::user.kegiatan')->name('kegiatan');
 Route::livewire('/kegiatan-detail{id}', 'pages::user.kegiatan-detail')->name('kegiatan-detail');
