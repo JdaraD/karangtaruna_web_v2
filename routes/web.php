@@ -73,7 +73,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
-Route::livewire('/admin', 'pages::admin.dashboard')->name('admin.dashboard');
+Route::livewire('/Dashboard', 'pages::admin.dashboard')->name('admin.dashboard');
 Route::livewire('/admin.about-us', 'pages::admin.about-us')->name('admin.about-us');
 Route::livewire('/admin.struktur', 'pages::admin.struktur')->name('admin.struktur');
 Route::livewire('/admin.legal', 'pages::admin.legal')->name('admin.legal');

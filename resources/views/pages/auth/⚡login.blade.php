@@ -41,7 +41,7 @@ new class extends Component
             session()->regenerate();
 
             // Redirect ke halaman dashboard atau halaman setelah login sukses
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('/Dashboard');
         }
 
         // Jika gagal, tambahkan error ke form

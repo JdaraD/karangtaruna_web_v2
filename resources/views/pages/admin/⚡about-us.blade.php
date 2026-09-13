@@ -646,7 +646,7 @@ new class extends Component
             @endforeach
         </div>
 
-        <div wire:poll.1s class="flex flex-col justify-stretch gap-2 items-center lg:w-[62.7%] w-full lg:h-76 h-auto p-4 bg-white shadow-md rounded-md">
+        <div wire:poll.1s class="flex flex-col justify-stretch gap-2 items-center lg:w-[62.4%] w-full lg:h-76 h-auto p-4 bg-white shadow-md rounded-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 @foreach ($tentang as $te )  
                 <div class="flex w-full h-auto gap-1 items-center">
@@ -749,7 +749,7 @@ new class extends Component
             </div>
         </div>
 
-        <div wire:poll.1s class="flex flex-col justify-stretch items-center lg:w-[49.7%] w-full gap-2 lg:h-76 h-44 p-4 bg-white rounded-md shadow-md">
+        <div wire:poll.1s class="flex flex-col justify-stretch items-center lg:w-[49.4%] w-full gap-2 lg:h-76 h-44 p-4 bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Misi</h1>

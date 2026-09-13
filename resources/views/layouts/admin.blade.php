@@ -5,6 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>{{ $title ?? config('app.name') }}</title>
+        @php
+            // Mengambil data setting langsung jika tidak pakai view composer
+            $globalSetting = App\Models\identity::first(); 
+        @endphp
+
+        @if($globalSetting && $globalSetting->image)
+            <!-- Jika logo disimpan berupa nama file/path -->
+            <link rel="icon" type="image/png/webp" href="{{ asset('storage/' . $globalSetting->image) }}">
+        @endif
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
