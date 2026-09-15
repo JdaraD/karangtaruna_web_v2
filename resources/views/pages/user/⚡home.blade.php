@@ -161,7 +161,7 @@ new class extends Component
     </section>
     {{-- Gallery Progress --}}
 
-    {{-- Gallery Karang taruna --}}
+        {{-- Gallery Karang taruna --}}
     <section class="flex flex-col items-center w-full h-full py-8 bg-gray-100">
 
         {{-- Judul --}}
@@ -413,7 +413,7 @@ new class extends Component
     {{-- Gallery Karang taruna --}}
 
     {{-- Contact --}}
-    <section class="flex flex-col gap-2 w-full h-full bg-gray-200 py-8">
+        <section class="flex flex-col gap-2 w-full h-full bg-gray-200 py-8">
         <article class="flex flex-col justify-center items-center gap-2 w-full h-full">
             <p class="font-[poppins] font-semibold lg:text-2xl text-lg text-black normal-case">Contact</p>
         </article>
@@ -426,7 +426,7 @@ new class extends Component
                         <p class="text-center capitalize font-semibold lg:text-lg md:text-base text-sm">hubungi kami</p>
 
                         <!-- Form standar HTML/Laravel -->
-                        <form action="{{ route('mail.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full h-full">
+                        <form action="{{ route('mail.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 w-full h-full">
                             @csrf <!-- Wajib ada untuk keamanan form di Laravel -->
                             
                             <div class="space-y-4 font-[poppins]">
@@ -444,7 +444,7 @@ new class extends Component
                                 </div>
                                 <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
                                     <label for="no_telp" class="font-semibold">Nomor Hp:</label>
-                                    <input type="text" name="no_telp" id="no_telp" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" oninput="this.value = this.value.replace(/[^0-9]/g, '')" inputmode="numeric required />
+                                    <input type="text" name="no_telp" id="no_telp" class="w-full h-8 border border-[#9CB080] rounded-lg px-2 bg-gray-100" oninput="this.value = this.value.replace(/[^0-9]/g, '')" inputmode="numeric required "/>
                                 </div>
                                 <div class="grid grid-cols-[100px_1fr] items-start text-sm gap-0.5">
                                     <label for="keperluan" class="font-semibold">Keperluan :</label>
@@ -494,7 +494,7 @@ new class extends Component
                         </div>
                     </div>
                 </diV>
-                <div class="flex w-full md:w-[49%] md:h-125 h-94 bg-white rounded-lg shadow-md overflow-hidden order-2">
+                <div class="flex w-full md:w-[49%] md:h-125 h-64 bg-white rounded-lg shadow-md overflow-hidden order-2">
                     {!! $map->link_maps ?? '<iframe src="..." width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>' !!}
                 </div>
             </div>

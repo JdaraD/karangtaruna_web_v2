@@ -115,10 +115,10 @@ new class extends Component
         <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base ">Dashboard</h1>
     </article>
 
-    <article class="grid grid-cols-2 md:gap-4 gap-2 items-center w-full">
+    <article class="grid md:grid-cols-3 grid-cols-2 md:gap-4 gap-2 items-center w-full">
         
         <!-- Card Visitor (Melebar penuh di Mobile, menduduki kolom pertama di layar besar) -->
-        <div class="col-span-2 md:col-span-1 flex justify-between items-center w-full lg:h-18 md:h-16 h-14 px-4 bg-white rounded-md shadow-md">
+        <div class="md:col-span-1 col-span-1 flex justify-between items-center w-full lg:h-18 md:h-16 h-14 px-4 bg-white rounded-md shadow-md">
             <div class="flex gap-8 w-full justify-around md:justify-start">
                 <div>
                     <h4 class="text-gray-500 text-sm">Pengunjung Hari Ini</h4>
@@ -131,7 +131,7 @@ new class extends Component
             </div>
         </div>
 
-        <div class="col-span-2 md:col-span-1 flex md:gap-4 gap-2 items-center">
+        <div class="md:col-span-2 col-span-1 flex md:gap-4 gap-2 items-center w-full">
             <!-- Card Usaha Mandiri -->
             <div class="flex md:flex-row flex-col justify-between items-center w-full lg:h-18 md:h-16 h-14 md:p-4 p-2 bg-white rounded-md shadow-md">
                 <p class="lg:text-xl md:text-base text-[10px] font-semibold text-black">Usaha Mandiri : {{ $product }}</p>
@@ -160,8 +160,8 @@ new class extends Component
 
     </article>
 
-    <article class="flex flex-none flex-wrap gap-4 items-center w-full">
-        <div class="flex flex-col justify-stretch items-center md:w-[35%] w-full gap-2 lg:h-80 h-auto p-4 bg-white rounded-md shadow-md">
+    <article class="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-2 items-center w-full">
+        <div class="md:col-span-1 col-span-1 flex flex-col justify-stretch items-center w-full gap-2 lg:h-80 h-auto p-4 bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Identitas</h1>
@@ -185,7 +185,7 @@ new class extends Component
             @endforeach
         </div>
 
-        <div class="flex flex-col justify-stretch items-center md:w-[63%] w-full gap-2 lg:min-h-80 bg-white rounded-md shadow-md p-6">
+        <div class="md:col-span-1 col-span-1 flex flex-col justify-stretch items-center w-full gap-2 lg:min-h-80 bg-white rounded-md shadow-md p-6">
             
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 @foreach ($tentang as $te )  

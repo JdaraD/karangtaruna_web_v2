@@ -34,7 +34,7 @@
 
                 <!-- Konten Utama Admin -->
             @if (!request()->routeIs('login') && !request()->routeIs('registrasi'))
-                <main class="relative flex w-full h-full overflow-hidden md:p-6 p-2.5">
+                <main class="relative flex w-full h-full overflow-hidden md:p-6 p-2">
                     {{ $slot }} <!-- Halaman Livewire Admin Masuk Di Sini -->
                 </main>
             @else

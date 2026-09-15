@@ -2,10 +2,17 @@
 
 use Livewire\Component;
 use App\Models\runningText;
+use App\Models\identity;
 
 new class extends Component
 {
     public $runningText;
+    public $identity;
+
+    public function loadIdentity()
+    {
+        $this->identity = identity::latest()->first();
+    }
 
     public function loadRunningText()
     {
@@ -17,6 +24,7 @@ new class extends Component
     public function mount()
     {
         $this->loadRunningText();
+        $this->loadIdentity();
     }
 };
 ?>
@@ -31,16 +39,28 @@ new class extends Component
             <div class="relative flex w-[90%] h-18 justify-between items-center px-4 md:px-8 mx-auto">
                 
                 {{-- Logo & Identity --}}
-                <div class="flex w-full h-full justify-center items-center lg:gap-2 md:gap-4 gap-2">
-                    {{-- logo --}}
-                    <img src="{{ asset('img/logo.png') }}" alt="" class="lg:w-18 lg:h-20 md:w-16 md:h-16 w-14 h-14 rounded-full">
+                @if (!$identity)
+                    <div class="flex w-full h-full justify-center items-center lg:gap-2 md:gap-4 gap-2">
+                        {{-- logo --}}
+                        <div class="lg:w-18 lg:h-18 md:w-16 md:h-16 w-14 h-14 rounded-full bg-gray-200 animate-pulse"></div>
+                        
+                        {{-- identity name --}}
+                        <a href="{{ route('about-us') }}" class="flex flex-col w-full">
+                            <p class="font-[poppins] font-medium lg:text-base md:text-sm text-sm text-white">Nama Organisasi/Perusahaan</p>
+                        </a>
+                    </div>
+                @else
+                    <div class="flex w-full h-full justify-center items-center lg:gap-2 md:gap-4 gap-2">
+                        {{-- logo --}}
+                        <img src="{{ asset('storage/' .$identity->image ) }}" alt="Logo" class="lg:w-18 lg:h-20 md:w-16 md:h-16 w-14 h-14 rounded-full">
+                        
+                        {{-- identity name --}}
+                        <a href="{{ route('about-us') }}" class="flex flex-col w-full">
+                            <p class="font-[poppins] font-medium lg:text-base md:text-sm text-sm text-white">{{$identity->name}}</p>
+                        </a>
+                    </div>
                     
-                    {{-- identity name --}}
-                    <a href="{{ route('about-us') }}" class="flex flex-col w-full">
-                        <p class="font-[poppins] font-medium lg:text-base md:text-sm text-sm text-white">Karang Taruna</p>
-                        <p class="font-[poppins] font-normal lg:text-sm md:text-sm text-xs text-gray-200">Desa Waru</p>
-                    </a>
-                </div>
+                @endif
 
                 {{-- Desktop Menu (LG & MD) --}}
                 <div class="hidden lg:flex items-center gap-2 lg:gap-4">
@@ -190,7 +210,11 @@ new class extends Component
             <!-- Header Mobile Menu -->
             <div class="flex items-center justify-between border-b border-white/20 pb-4 mb-6">
                 <div class="flex items-center gap-3">
-                    <img src="{{ asset('img/logo.png') }}" alt="Logo" class="w-10 h-10 rounded-full border border-white/30">
+                    @if (!$identity)
+                        <div class="lg:w-14 lg:h-14 md:w-12 md:h-14 w-10 h-12 rounded-full object-cover animate-pulse bg-gray-200"></div>
+                    @else
+                        <img src="{{ asset('storage/' .$identity->image ) }}" alt="Logo" class="lg:w-14 lg:h-16 md:w-12 md:h-14 w-10 h-12 rounded-full">
+                    @endif
                     <span class="font-semibold text-white text-base">Menu Navigasi</span>
                 </div>
                 <button @click="mobileMenuOpen = false" class="text-white hover:text-gray-200 cursor-pointer">
@@ -268,7 +292,11 @@ new class extends Component
 
         <!-- Footer Off-Canvas -->
         <div class="p-6 border-t border-white/20 bg-black/10">
-            <p class="text-xs text-center text-gray-200">© Karang Taruna Desa Waru</p>
+            @if (!$identity)
+                <p class="text-xs text-center text-gray-200">© {{date('Y')}} Nama Organisasi/Perusahaan</p>
+            @else
+                <p class="text-xs text-center text-gray-200">© {{date('Y')}} {{$identity->name}}</p>
+            @endif
         </div>
     </div>
 </nav>
