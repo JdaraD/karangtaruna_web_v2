@@ -86,7 +86,7 @@ new class extends Component
     </article>
 
     <article class="flex flex-col w-[90%] h-full gap-2 pt-8">
-        <div class="flex flex-wrap justify-center lg:gap-4 md:gap-4 gap-y-14 w-full h-full rounded-md p-4">
+        <div class="flex flex-wrap justify-center lg:gap-4 md:gap-4 gap-y-14 w-full h-full rounded-md">
             <div class="relative flex flex-col justify-center items-center h-full lg:w-[49%] md:w-[49%] w-full">
                 <div class="absolute flex justify-center items-center -top-12 w-24 h-24 rounded-full bg-[#2B5748] shadow-md hover:scale-105 transition-transform duration-120 ease-in-out">
                     <p class="font-semibold text-white normal-case text-2xl">Visi</p>
@@ -126,11 +126,11 @@ new class extends Component
     </article>
 
     <article class="flex flex-wrap justify-center w-[90%] h-full gap-6">
-        <div class="flex justify-center items-center h-100 lg:w-[49%] md:w-[49%] w-full bg-gray-200 shadow-md rounded-md">
+        <div class="flex justify-center items-center md:h-100 h-80 lg:w-[49%] md:w-[49%] w-full bg-gray-200 shadow-md rounded-md">
             @if (!$identity)
                 <div class="lg:h-80 lg:w-80 md:h-74 md:w-74 w-64 h-64 rounded-full bg-gray-100 animate-pulse"></div>
             @else
-                <img src="{{ asset('storage/' . $identity->image) }}" alt="" class="lg:h-86 lg:w-80 md:h-80 md:w-74 w-70 h-64 rounded-full">
+                <img src="{{ asset('storage/' . $identity->image) }}" alt="" class="lg:h-84 lg:w-80 md:h-74 md:w-80 w-60 h-64 rounded-full">
             @endif
         </div>
         <div class="flex flex-col gap-4 px-4 py-4 h-100 lg:w-[49%] md:w-[49%] w-full bg-gray-200 shadow-md rounded-md">
