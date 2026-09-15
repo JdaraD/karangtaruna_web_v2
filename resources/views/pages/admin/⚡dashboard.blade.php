@@ -108,7 +108,7 @@ new class extends Component
 };
 ?>
 
-<section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-166 h-full overflow-y-auto scrollbar-none">
+<section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-157.5 h-full overflow-y-auto scrollbar-none">
 
     <article class="flex flex-none gap-2 items-center">
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -195,7 +195,7 @@ new class extends Component
         
     </article>
 
-    <article class="flex w-full h-auto p-2 overflow-hidden bg-white items-center">
+    <article class="flex w-full h-auto p-2 overflow-hidden bg-white items-center rounded-md">
         <!-- Container untuk Horizontal Scroll -->
         <div class="flex items-center p-2 gap-8 max-w-290 overflow-x-auto scrollbar-none">
             

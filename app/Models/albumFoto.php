@@ -19,12 +19,12 @@ class albumFoto extends Model
     // Satu album memiliki banyak foto
     public function fotos()
     {
-        return $this->hasMany(Foto::class, 'judul_id');
+        return $this->hasMany(foto::class, 'judul_id');
     }
 
     // Helper untuk mengambil foto pertama sebagai sampul/cover
     public function coverFoto()
     {
-        return $this->hasOne(Foto::class, 'judul_id')->oldest();
+        return $this->hasOne(foto::class, 'judul_id')->oldest();
     }
 }
