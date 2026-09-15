@@ -108,16 +108,18 @@ new class extends Component
 };
 ?>
 
-<section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-157.5 h-full overflow-y-auto scrollbar-none">
+<section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-157 h-full overflow-y-auto scrollbar-none">
 
     <article class="flex flex-none gap-2 items-center">
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
         <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base ">Dashboard</h1>
     </article>
 
-    <article class="flex flex-none flex-wrap md:gap-4 gap-2 items-center justify-between w-full">
-        <div class="flex justify-between items-center w-full lg:h-24 md:h-18 h-14 px-4 bg-white rounded-md shadow-md">
-            <div class="flex gap-8">
+    <article class="grid grid-cols-2 md:gap-4 gap-2 items-center w-full">
+        
+        <!-- Card Visitor (Melebar penuh di Mobile, menduduki kolom pertama di layar besar) -->
+        <div class="col-span-2 md:col-span-1 flex justify-between items-center w-full lg:h-18 md:h-16 h-14 px-4 bg-white rounded-md shadow-md">
+            <div class="flex gap-8 w-full justify-around md:justify-start">
                 <div>
                     <h4 class="text-gray-500 text-sm">Pengunjung Hari Ini</h4>
                     <p class="lg:text-2xl md:text-lg text-base font-bold text-blue-600">{{ $todayVisitors }}</p>
@@ -129,33 +131,37 @@ new class extends Component
             </div>
         </div>
 
-        <div class="flex flex-none md:gap-4 gap-2 items-center justify-between w-full">
-            <div class="flex flex-col md:flex-row justify-between items-center w-full lg:h-24 md:h-18 h-14 px-4 bg-white rounded-md shadow-md">
+        <div class="col-span-2 md:col-span-1 flex md:gap-4 gap-2 items-center">
+            <!-- Card Usaha Mandiri -->
+            <div class="flex md:flex-row flex-col justify-between items-center w-full lg:h-18 md:h-16 h-14 md:p-4 p-2 bg-white rounded-md shadow-md">
                 <p class="lg:text-xl md:text-base text-[10px] font-semibold text-black">Usaha Mandiri : {{ $product }}</p>
                 <a href="{{ route('admin.usaha') }}" class="flex justify-center items-center">
-                    <x-gmdi-business-center class="lg:h-10 md:h-8 h-6 lg:w-10 md:w-8 w-6 text-black " />
+                    <x-gmdi-business-center class="lg:h-10 md:h-8 h-6 lg:w-10 md:w-8 w-6 text-black" />
                 </a>
             </div>
     
-            <div class="flex flex-col md:flex-row justify-between items-center w-full lg:h-24 md:h-18 h-14 px-4 bg-white rounded-md shadow-md">
+            <!-- Card Kegiatan -->
+            <div class="flex md:flex-row flex-col justify-between items-center w-full lg:h-18 md:h-16 h-14 md:p-4 p-2 bg-white rounded-md shadow-md">
                 <p class="lg:text-xl md:text-base text-[10px] font-semibold text-black">Kegiatan : {{ $kegiatan }}</p>
                 <a href="{{ route('admin.kegiatan') }}" class="flex justify-center items-center">
                     <x-bi-activity class="lg:h-10 md:h-8 h-6 lg:w-10 md:w-8 w-6 text-black"/>
                 </a>
             </div>
     
-            <div class="flex flex-col md:flex-row justify-between items-center w-full lg:h-24 md:h-18 h-14 px-4 bg-white rounded-md shadow-md">
+            <!-- Card Kolaborasi -->
+            <div class="flex md:flex-row flex-col justify-between items-center w-full lg:h-18 md:h-16 h-14 md:p-4 p-2 bg-white rounded-md shadow-md">
                 <p class="lg:text-xl md:text-base text-[10px] font-semibold text-black">Kolaborasi : {{ $kolaborasi }}</p>
                 <a href="{{ route('admin.kolaborasi') }}" class="flex justify-center items-center">
                     <x-iconpark-cooperativehandshake-o class="lg:h-10 md:h-8 h-6 lg:w-10 md:w-8 w-6 text-black"/>
                 </a>
             </div>
+
         </div>
 
     </article>
 
     <article class="flex flex-none flex-wrap gap-4 items-center w-full">
-        <div class="flex flex-col justify-stretch items-center lg:w-[36%] w-full gap-2 lg:h-80 h-auto p-4 bg-white rounded-md shadow-md">
+        <div class="flex flex-col justify-stretch items-center md:w-[35%] w-full gap-2 lg:h-80 h-auto p-4 bg-white rounded-md shadow-md">
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 <div class="flex w-full h-auto gap-1 items-center">
                     <h1 class="font-semibold text-base text-black capitalize">Identitas</h1>
@@ -179,7 +185,7 @@ new class extends Component
             @endforeach
         </div>
 
-        <div class="flex flex-col justify-stretch items-center lg:w-[64%] w-full gap-2 lg:h-80 h-auto bg-white rounded-md shadow-md p-6">
+        <div class="flex flex-col justify-stretch items-center md:w-[63%] w-full gap-2 lg:min-h-80 bg-white rounded-md shadow-md p-6">
             
             <div class="flex w-full h-auto gap-1 justify-between items-center bg-gray-100 rounded-md p-2">
                 @foreach ($tentang as $te )  
