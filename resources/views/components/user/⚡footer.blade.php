@@ -5,10 +5,11 @@ use App\Models\identity;
 use App\Models\tentang;
 use App\Models\kontakAdmin;
 use App\Models\KontakBantuan;
+use App\Models\alamat;
 
 new class extends Component
 {
-    public $identity, $tentang, $admins, $bantuans;
+    public $identity, $tentang, $admins, $bantuans, $alamat;
 
     public function loadIdentity()
     {
@@ -18,6 +19,11 @@ new class extends Component
     public function loadTentang()
     {
         $this->tentang = tentang::latest()->first();
+    }
+
+    public function loadAlamat()
+    {
+        $this->alamat = alamat::latest()->first();
     }
 
     public function loadAdmin()
@@ -36,16 +42,17 @@ new class extends Component
         $this->loadTentang();
         $this->loadAdmin();
         $this->loadBantuan();
+        $this->loadAlamat();
     }
 };
 ?>
 
 <div class="relative select-none bottom-0 bg-black w-full">
     {{-- infomasi --}}
-    <div class="flex justify-center items-center align-content-center w-full h-full">
-        <div class="grid grid-cols-3 h-full py-2 lg:gap-4 md:gap-4 gap-2 size-[94%]">
+    <div class="flex justify-center items-center align-content-center w-full h-full p-2">
+        <div class="grid grid-cols-3 h-full lg:gap-4 md:gap-4 gap-2 w-full">
 
-            <div class="flex flex-col gap-2 h-full">
+            <div class="col-span-1 flex flex-col gap-2 h-full">
                 @if (!$identity)
                     <div class="flex row-span-1 items-center gap-2">
                         {{-- logo Start --}}
@@ -78,7 +85,7 @@ new class extends Component
                 {{-- Deskripsi --}}
                 <div class="row-span-3 h-full">
                     
-                    <p class="pb-2 lg:text-sm md:text-sm text-[10px] font-[poppins] font-semibold text-white normal-case">Deskripsi</p>
+                    <p class="pb-2 lg:text-sm md:text-sm text-[10px] font-[poppins] text-white normal-case">Deskripsi</p>
                     @if (!$tentang)
                         <p class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] text-justify text-white lg:line-clamp-9 md:line-clamp-9 line-clamp-5 normal-case">Deskripsi Perushaan Kosong</p>
                     @else
@@ -92,22 +99,28 @@ new class extends Component
                 
             </div>
 
-            <div class="h-full" id="kontak">
+            <div class="col-span-1 h-full w-full" id="kontak">
 
                 <div class="flex h-[10%] justify-center items-center">
                     <p class="lg:text-sm md:text-sm text-xs font-[poppins] font-medium text-white normal-case">Kontak</p>
                 </div>
-                <div class="flex flex-col gap-2 h-[90%] ">
+                <div class="flex flex-col md:gap-2 gap-1 h-[90%] w-full">
                     {{-- address --}}
-                    <div class="flex gap-1">
-                        <p class="text-xs text-white">Alamat :</p>
-                        <p class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] font-medium text-white normal-case text-justify pb-4">Desa waru jln yang mana aja</p>
+                    <div class="flex md:flex-row flex-col gap-1">
+                        @if (!$alamat)
+                            <p class="lg:text-xs md:text-xs text-[10px] text-white">Alamat :</p>
+                            <p class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] font-medium text-white normal-case text-justify">Alamat Organisasi/Perusahaan</p>
+                        @else
+                            <p class="lg:text-xs md:text-xs text-[10px] text-white">Alamat :</p>
+                            <p class="lg:text-xs md:text-[10px] text-[8px] font-[poppins] font-medium text-white normal-case text-justify">{{$alamat->name}}</p>
+                        @endif
                     </div>
                     {{-- address --}}
                     
                     @foreach ($admins as $admin)
                         {{-- icons 1 --}}
-                        <p class="font-semibold text-xs text-white capitalize">{{$admin->name}}</p>
+                        <p class="md:text-xs text-[10px] text-white capitalize">{{$admin->name}}</p>
+                        <div class="border-b border-gray-100/60 w-[50%]"></div>
                         <div class="flex gap-2 mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="lg:size-5 md:size-5 size-3" fill="white">
                                 <path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/>
@@ -131,7 +144,7 @@ new class extends Component
 
             </div>
 
-            <div class="h-full">
+            <div class="col-span-1 h-full w-full">
 
                 <div class="flex h-[10%] justify-center items-center">
                     <p class="lg:text-sm md:text-sm text-xs font-[poppins] font-medium text-white normal-case">Bantuan</p>
