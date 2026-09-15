@@ -93,10 +93,10 @@ new class extends Component
 
     {{-- banner --}}
     @if (!$banner)
-        <article class="flex max-w-300 w-full h-20 bg-gray-100 rounded-md shadow-md animate-pulse">
+        <article class="flex max-w-300 md:w-full w-[90%] h-20 bg-gray-100 rounded-md shadow-md animate-pulse">
         </article>
     @else
-        <article class="flex max-w-300 w-full h-20 bg-gray-100 rounded-md shadow-md">
+        <article class="flex max-w-300 md:w-full w-[90%] h-20 bg-gray-100 rounded-md shadow-md">
             <img src="{{ asset('storage/' . $banner->image) }}" alt="" class="w-full h-full object-cover rounded-md">
         </article>
     @endif
@@ -126,7 +126,7 @@ new class extends Component
                                 : asset('img/no-image.jpg');
                         @endphp
 
-                        <a href="{{ route('detail-product', $product->id) }}" class="flex flex-none justify-center items-center w-68 h-40 bg-white rounded-lg shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
+                        <a href="{{ route('detail-product', $product->id) }}" class="flex flex-none justify-center items-center md:w-68 md:h-40 w-48 h-28 bg-white rounded-lg shadow-lg hover:scale-102 transition-transform ease-in-out duration-120">
                             <img 
                                 src="{{ $firstImage }}"
                                 alt="{{ $product->nama_produk }}"

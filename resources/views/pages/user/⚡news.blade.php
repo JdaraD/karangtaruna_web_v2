@@ -263,7 +263,7 @@ new class extends Component
                     >
 
                         {{-- IMAGE --}}
-                        <div class="flex lg:w-90 md:w-80 w-60 lg:h-40 md:h-30 h-20 shrink-0 bg-gray-300 rounded-lg overflow-hidden">
+                        <div class="flex lg:w-90 md:w-80 w-22 lg:h-40 md:h-30 h-16 shrink-0 bg-gray-300 rounded-lg overflow-hidden">
 
                             @if ($newsImage)
 
@@ -300,7 +300,7 @@ new class extends Component
                             </p>
 
 
-                            <p class="font-[poppins] lg:text-base md:text-sm text-xs text-justify lg:line-clamp-0 md:line-clamp-0 line-clamp-3">
+                            <p class="font-[poppins] lg:text-base md:text-sm text-xs text-justify md:line-clamp-4 line-clamp-1">
 
                                 {{ $item->isi_berita }}
 
@@ -562,7 +562,7 @@ new class extends Component
                         >
 
                             {{-- IMAGE --}}
-                            <div class="flex lg:w-48 md:w-40 w-32 lg:h-20 md:h-16 h-12 shrink-0 bg-gray-300 rounded-lg overflow-hidden">
+                            <div class="flex lg:w-48 md:w-40 w-22 lg:h-20 md:h-16 h-18 shrink-0 bg-gray-300 rounded-lg overflow-hidden">
 
                                 @if ($item->gambar)
 
@@ -599,7 +599,7 @@ new class extends Component
                                 </p>
 
 
-                                <p class="font-[poppins] lg:text-sm md:text-xs text-xs text-justify line-clamp-3">
+                                <p class="font-[poppins] lg:text-sm md:text-xs text-xs text-justify md:line-clamp-3 line-clamp-1">
 
                                     {{ $item->deskripsi }}
 
