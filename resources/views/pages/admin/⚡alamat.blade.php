@@ -130,7 +130,7 @@ new class extends Component
 
             <div class="grid lg:grid-cols-3 md:grid-cols-3 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-56 gap-2 p-2 overflow-y-auto scrollbar-none">
                 @if ($data)
-                    <div class="flex w-full h-auto gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
+                    <div class="flex w-full h-full max-h-34 gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
                         <div class="flex w-full h-full flex-col gap-1">
                             <div class="flex gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
                                 <span></span>
@@ -143,7 +143,7 @@ new class extends Component
                                     </button>
                                 </div>
                             </div>
-                            <p class="text-base font-semibold capitalize">{{ $data->name }}</p>
+                            <p class="md:text-base text-sm font-semibold capitalize line-clamp-4">{{ $data->name }}</p>
                         </div>
                     </div>
                 @endif

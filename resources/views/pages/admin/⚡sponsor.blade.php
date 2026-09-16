@@ -178,7 +178,7 @@ new class extends Component
         <div wire.poll.1s class="flex gap-4 justify-start w-full max-w-300 scrollbar-none overflow-x-auto p-2">
             @forelse ($sponsor as $sp)
                 <div class="flex flex-none flex-col gap-2 justify-center items-center rounded-md w-44 p-4 h-auto shadow-md bg-gray-200">
-                    <div class="flex w-full h-auto justify-between items-center bg-gray-100 rounded-md px-2 py-1">
+                    <div class="flex w-full h-auto justify-between items-center rounded-md px-2 py-1">
                         <p class="text-sm font-semibold capitalize text-black truncate" title="{{ $sp->name }}">{{ $sp->name }}</p>
                     </div>
                     

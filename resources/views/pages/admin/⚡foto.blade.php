@@ -230,7 +230,7 @@ new class extends Component
 };
 ?>
 
-<section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-157.5 h-full overflow-y-auto scrollbar-none">
+<section class="flex flex-col gap-4 w-full shrink-0 3xl:h-210 lg:h-166 h-full overflow-y-auto scrollbar-none">
     <article class="flex flex-none gap-2 items-center">
         <x-bi-image class="h-5 w-5" />
         <h1 class="font-semibold capitalize lg:text-2xl md:text-base text-base">Foto</h1>
@@ -290,11 +290,11 @@ new class extends Component
             </div>
 
             <!-- Grid Card -->
-            <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 w-full gap-2 p-2 overflow-y-auto scrollbar-none">
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 w-full md:h-76 h-64 gap-2 p-2 overflow-y-auto scrollbar-none">
                 @foreach ($fotos as $ft)
-                    <div wire:key="foto-{{ $ft->id }}" class="flex flex-col w-full h-auto gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
+                    <div wire:key="foto-{{ $ft->id }}" class="flex flex-col w-full md:h-auto h-54 gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
                         <div class="flex w-full h-[80%]">
-                            <img src="{{ asset('storage/' . $ft->foto) }}" alt="Foto" class="w-full h-46 object-cover rounded-md bg-white">
+                            <img src="{{ asset('storage/' . $ft->foto) }}" alt="Foto" class="w-full h-40 object-cover rounded-md bg-white">
                         </div>
                         <div class="flex w-full h-full gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
                             <!-- Perbaikan cara memanggil relasi: $ft->albumFoto->judul -->

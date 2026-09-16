@@ -185,7 +185,7 @@ new class extends Component
                 </div>
                 <div class="flex w-full h-auto gap-1 justify-end items-center">
                     <div class="flex w-29 h-6">
-                        <input type="date" name="tanggal" id="tanggal" class="w-full h-full text-black">
+                        <input type="date" name="tanggal" id="tanggal" class="w-full h-full md:text-base text-sm text-black">
                     </div>
                     <button wire:click="btnOpenAdd" class="flex bg-green-500 hover:bg-green-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Tambah/Edit">
                         <x-bi-plus class="h-6 w-6 text-white"/>

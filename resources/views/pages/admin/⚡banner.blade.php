@@ -419,12 +419,12 @@ new class extends Component
             <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-64 gap-2 p-2 overflow-y-auto scrollbar-none">
                 @foreach ($banner as $b)
                     <div class="flex w-full h-36.75 gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
-                        <div class="flex w-[70%] h-full">
+                        <div class="flex md:w-[70%] w-[60%] h-full">
                             <img src="{{ asset('storage/'. $b->image) }}" alt="" class="w-full h-32 object-cover rounded-md">
                         </div>
-                        <div class="flex w-[30%] h-full flex-col gap-1">
-                            <div class="flex gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                                <p class="text-base font-semibold capitalize">{{ $b->name }}</p>
+                        <div class="flex md:w-[30%] w-[40%] h-full flex-col gap-1">
+                            <div class="flex md:flex-row flex-col gap-1 p-1 justify-between bg-[#618764]/40 rounded-md">
+                                <p class="md:text-base text-sm font-semibold capitalize">{{ $b->name }}</p>
                                 <div class="flex gap-1">
                                     <button wire:click="btnEditBanner({{ $b->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                         <x-bi-pencil class="h-4 w-4 text-white"/>
@@ -456,11 +456,11 @@ new class extends Component
             <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-64 gap-2 p-2 overflow-y-auto scrollbar-none">
                 @foreach ($slider as $s)
                     <div class="flex w-full h-36.75 gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
-                        <div class="flex w-[70%] h-full">
+                        <div class="flex md:w-[70%] w-[60%] h-full">
                             <img src="{{ asset('storage/'. $s->image) }}" alt="" class="w-full h-32 object-cover rounded-md">
                         </div>
-                        <div class="flex w-[30%] h-full flex-col gap-1">
-                            <div class="flex gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
+                        <div class="flex md:w-[30%] w-[40%] h-full flex-col gap-1">
+                            <div class="flex md:flex-row flex-col gap-1 p-1 justify-between bg-[#618764]/40 rounded-md">
                                 <p class="text-base font-semibold capitalize">{{ $s->name }}</p>
                                 <div class="flex gap-1">
                                     <button wire:click="btnEditSlider({{ $s->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
@@ -493,12 +493,12 @@ new class extends Component
             <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 w-full 3xl:h-70 lg:h-40 md:h-40 h-64 gap-2 p-2 overflow-y-auto scrollbar-none">
                 @foreach ($sliderUsaha as $s)
                     <div class="flex w-full h-36.75 gap-2 p-2 bg-[#9CB080] rounded-md shadow-md hover:scale-102 duration-120 ease-in-out transition-transform">
-                        <div class="flex w-[70%] h-full">
+                        <div class="flex md:w-[70%] w-[60%] h-full">
                             <img src="{{ asset('storage/'. $s->image) }}" alt="" class="w-full h-32 object-cover rounded-md">
                         </div>
-                        <div class="flex w-[30%] h-full flex-col gap-1">
-                            <div class="flex gap-1 p-1 justify-between items-center bg-[#618764]/40 rounded-md">
-                                <p class="text-base font-semibold capitalize">{{ $s->name }}</p>
+                        <div class="flex md:w-[30%] w-[40%] h-full flex-col gap-1">
+                            <div class="flex md:flex-row flex-col gap-1 p-1 justify-between bg-[#618764]/40 rounded-md">
+                                <p class="md:text-base text-sm font-semibold capitalize">{{ $s->name }}</p>
                                 <div class="flex gap-1">
                                     <button wire:click="btnEditSliderUsaha({{ $s->id }})" class="flex bg-yellow-500 hover:bg-yellow-700 justify-center items-center w-6 h-6 rounded-md shadow-md cursor-pointer" title="Lihat">
                                         <x-bi-pencil class="h-4 w-4 text-white"/>
