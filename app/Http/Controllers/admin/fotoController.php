@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Foto;
+use App\Models\foto;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver; 
@@ -34,37 +34,39 @@ class fotoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            // PERBAIKAN: Ubah 'judul' menjadi 'album_fotos'
-            'judul_id' => 'required|exists:album_fotos,id', 
+            'judul_id' => 'required|exists:album_fotos,id',
             'foto'     => 'required|array',
-            'foto.*'   => 'image|mimes:png,jpg,jpeg,webp|max:2048',
+            'foto.*'   => 'image|mimes:png,jpg,jpeg,webp|max:2048'
         ]);
 
         try {
             if ($request->hasFile('foto')) {
+                // Menggunakan syntax Intervention Image seperti contoh Anda
                 $manager = ImageManager::usingDriver(Driver::class);
 
                 foreach ($request->file('foto') as $file) {
                     $filename = time() . '_' . uniqid() . '.webp';
                     
+                    // Decode dan kompres gambar
                     $img = $manager->decode(file_get_contents($file->getRealPath()));
-                    $img->scaleDown(width: 1200); 
-                    $encoded = $img->encode(new WebpEncoder(quality: 80));
+                    $img->scaleDown(width: 800); // Sesuaikan ukuran yang diinginkan
+                    $encoded = $img->encode(new WebpEncoder(quality: 100));
 
-                    $path = "uploads/fotos/{$filename}";
+                    $path = "uploads/foto/{$filename}";
                     Storage::disk('public')->put($path, (string) $encoded);
                     
-                    Foto::create([
+                    // Simpan SETIAP gambar sebagai 1 baris baru di database (bukan JSON)
+                    foto::create([
                         'judul_id'  => $request->judul_id,
                         'foto'      => $path,
-                        'is_active' => 1,
+                        'is_active' => 1
                     ]);
                 }
             }
 
-            return redirect()->route('admin.foto')->with('addSuccess', 'Data berhasil ditambah!');
+            return redirect()->route('admin.foto')->with('addSuccess', 'Data gambar berhasil ditambah!');
         } catch (\Throwable $th) {
-            return redirect()->route('admin.foto')->with('addGagal', 'Data gagal ditambah!');
+            return redirect()->route('admin.foto')->with('addGagal', 'Data gagal ditambah! ' . $th->getMessage());
         }
     }
 

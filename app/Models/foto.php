@@ -20,6 +20,6 @@ class foto extends Model
     // Banyak foto milik satu album
     public function albumFoto()
     {
-        return $this->belongsTo(AlbumFoto::class, 'judul_id');
+        return $this->belongsTo(albumFoto::class, 'judul_id');
     }
 }

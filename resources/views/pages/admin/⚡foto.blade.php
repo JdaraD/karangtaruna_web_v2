@@ -84,7 +84,7 @@ new class extends Component
 
     public function btnOpenEditFoto($id)
     {
-        $item = Foto::findOrFail($id);
+        $item = foto::findOrFail($id);
         
         $this->fotoId = $item->id;
         $this->judul_id = $item->judul_id; 
@@ -131,52 +131,50 @@ new class extends Component
 
     public function updateFoto()
     {
-        $rules = [
-            // PERBAIKAN: Ubah validasi ke tabel album_fotos
-            'judul_id' => 'required|exists:album_fotos,id',
-        ];
-
-        if ($this->foto instanceof UploadedFile) {
-            $rules['foto'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
-        }
-
-        $this->validate($rules);
+        $this->validate([
+            'judul_id' => 'required',
+            'foto'     => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048'
+        ]);
 
         try {
-            $item = Foto::findOrFail($this->fotoId);
-
-            $dataToUpdate = [
-                // PERBAIKAN: Simpan berdasarkan judul_id
+            $item = foto::findOrFail($this->fotoId);
+            
+            $updateData = [
                 'judul_id' => $this->judul_id,
             ];
 
-            if ($this->foto instanceof UploadedFile) {
-                $filename = time() . '_' . uniqid() . '.webp';
-
-                $manager = ImageManager::usingDriver(Driver::class);
-                $img = $manager->decode(file_get_contents($this->foto->getRealPath()));
-                $img->scaleDown(width: 1200);
-                $encoded = $img->encode(new WebpEncoder(quality: 80));
-
-                $path = "uploads/fotos/{$filename}";
-                Storage::disk('public')->put($path, (string) $encoded);
-
+            // Jika ada gambar baru yang diupload
+            if ($this->foto) {
+                // Hapus gambar lama dari storage
                 if ($item->foto && Storage::disk('public')->exists($item->foto)) {
                     Storage::disk('public')->delete($item->foto);
                 }
 
-                $dataToUpdate['foto'] = $path;
+                // Gunakan syntax Intervention V3 seperti contoh Anda
+                $manager = ImageManager::usingDriver(Driver::class);
+                
+                $filename = time() . '_' . uniqid() . '.webp';
+                
+                // Proses gambar Livewire (menggunakan getRealPath dari temporary file)
+                $img = $manager->decode(file_get_contents($this->foto->getRealPath()));
+                $img->scaleDown(width: 800);
+                $encoded = $img->encode(new WebpEncoder(quality: 100));
+                
+                $path = "uploads/foto/{$filename}";
+                Storage::disk('public')->put($path, (string) $encoded);
+
+                $updateData['foto'] = $path;
             }
 
-            $item->update($dataToUpdate);
+            $item->update($updateData);
 
-            $this->loadFoto(); // Pastikan data direfresh
+            $this->loadFoto();
             $this->btnCloseEditFoto();
-            
+
             $this->editSuccess = 'Data Berhasil Diedit';
             $this->editGagal = '';
         } catch (\Throwable $th) {
-            $this->editGagal = 'Data Gagal Diedit';
+            $this->editGagal = 'Data Gagal Diedit! ' . $th->getMessage();
             $this->editSuccess = '';
         }
     }
@@ -502,7 +500,7 @@ new class extends Component
     @endif
 
     @if (session('addGagal'))
-        <div class="absolute top-2 right-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)"  class="absolute top-2 right-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
             <span class="block sm:inline">{{ session('addGagal') }}</span>
         </div>
     @endif
